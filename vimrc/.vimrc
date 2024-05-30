@@ -1,0 +1,12 @@
+set encoding=UTF-8
+set termencoding=UTF-8
+set nocompatible
+set backspace=indent,eol,start
+set autoindent
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set smarttab
+set ruler
+set paste
+syntax on
