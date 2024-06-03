@@ -6,7 +6,7 @@ return {
 				icons = {
 					package_installed = "",
 					package_pending = "",
-					package_uninstalled = "",
+					package_uninstalle = "",
 				},
 			},
 		},
@@ -19,9 +19,6 @@ return {
 	},
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-		config = function()
-			vim.cmd("MasonToolsUpdate")
-		end,
 		opts = {
 			ensure_installed = {
 				"tsserver",
