@@ -25,4 +25,7 @@ mkdir -p ~/.local/share/fonts/
 wget -qO- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip | busybox unzip - -d ~/.local/share/fonts
 fc-cache -f
 
+sudo update-alternatives --set editor /usr/bin/nvim
+sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
+
 stow --target=$HOME --dir=$HOME/dotfiles */
