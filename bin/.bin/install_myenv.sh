@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 RELEASE=$(lsb_release -c | tail -n1 | cut -d":" -f2 | xargs)
+sed "s/$RELEASE/testing" /etc/apt/sources.list | tee /etc/apt/sources.list
 
 apt update
 apt install -y \ 
