@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-RELEASE=$(lsb_release -c | tail -n1 | cut -d":" -f2 | xargs)
-sed "s/$RELEASE/testing" /etc/apt/sources.list | sudo tee /etc/apt/sources.list
+cat <<EOF > /etc/apt/sources.list
+deb http://deb.debian.org/debian testing main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian-security/ testing-security main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian testing-updates main contrib non-free non-free-firmware
+EOF
 
 sudo apt update
 sudo apt install -y i3 i3blocks dunst curl wget alacritty ranger git gnupg xbanish feh picom xinit stow htop neovim tmux btop batcat ripgrep fish zoxide zathura
