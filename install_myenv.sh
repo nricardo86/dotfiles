@@ -4,6 +4,8 @@ cat <<EOF | sudo tee /etc/apt/sources.list
 deb http://deb.debian.org/debian testing main contrib non-free non-free-firmware
 deb http://deb.debian.org/debian-security/ testing-security main contrib non-free non-free-firmware
 deb http://deb.debian.org/debian testing-updates main contrib non-free non-free-firmware
+deb http://debian.c3sl.ufpr.br/debian/ bookworm-backports main contrib non-free non-free-firmware
+deb https://deb.debian.org/debian unstable main contrib non-free-firmware
 EOF
 
 sudo apt update
