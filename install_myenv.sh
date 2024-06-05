@@ -11,7 +11,7 @@ EOF
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 sudo apt update
 sudo apt dist-upgrade -y
-sudo apt install -y i3 i3blocks fontconfig dunst nodejs npm python3-pip gcc zip luarocks curl jq wget alacritty ranger git gnupg pcscd vnstat acpi acpid xbanish feh picom xinit stow htop neovim tmux btop bat ripgrep fish zoxide zathura
+sudo apt install -y i3 i3blocks eza fontconfig dunst nodejs npm python3-pip python3-venv gcc zip luarocks curl jq wget alacritty ranger git gnupg pcscd vnstat acpi acpid xbanish feh picom xinit stow htop neovim tmux btop bat ripgrep fish zoxide zathura
 
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
 sudo apt update
