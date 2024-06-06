@@ -39,13 +39,13 @@ sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
 
 mkdir ~/.{ssh,gnupg,config,bkp}
-mv ~/.{bash*,profile,hushlogin,gtkrc-2.0,vimrc} ~/.bkp/
+mv ~/.{bash*,profile,uslogin,gtkrc-2.0,vimrc} ~/.bkp/
 
 stow --target=$HOME --dir=$HOME/dotfiles */
 
-crontab -l 2>/dev/null
-echo "@hourly DISPLAY=:0 $HOME/.bin/disp.sh" | crontab -
-crontab -l 2>/dev/null
-echo "@hourly DISPLAY=:0 feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/" | crontab -
-crontab -l 2>/dev/null
-echo "*/10 * * * * DISPLAY=:0 $HOME/.bin/xlockidle.sh -t 9" | crontab -
+cat <<EOF | crontab -
+$(crontab -l)
+@hourlysDISPLAY=:0 $HOME/.bin/disp.sh
+@hourly DISPLAY=:0 feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
+*/10 * * * * DISPLAY=:0 $HOME/.bin/xlockidle.sh -t 9
+EOF
