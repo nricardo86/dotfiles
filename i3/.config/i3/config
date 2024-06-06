@@ -136,7 +136,7 @@ client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
 client.background       #F8F8F2
 
 bar {
-  font pango:Roboto 18
+  font pango:JetBrainsMono 18
   padding 2px 10px
   separator_symbol | 
   tray_padding 10
