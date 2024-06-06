@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
 cat <<EOF | sudo tee /etc/apt/sources.list
 deb http://deb.debian.org/debian testing main contrib non-free non-free-firmware
 deb http://deb.debian.org/debian-security/ testing-security main contrib non-free non-free-firmware
@@ -41,7 +43,7 @@ sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
 mkdir ~/.{ssh,gnupg,config,bkp}
 mv ~/.{bash*,profile,uslogin,gtkrc-2.0,vimrc} ~/.bkp/
 
-stow --target=$HOME --dir=$HOME/dotfiles */
+stow --target=$HOME --dir=$SCRIPT_DIR */
 
 cat <<EOF | crontab -
 $(crontab -l)
