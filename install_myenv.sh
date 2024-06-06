@@ -38,4 +38,7 @@ fc-cache -f
 sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
 
+mkdir ~/.{ssh,gnupg,config,bkp}
+mv ~/.{bash*,profile,hushlogin,gtkrc-2.0,vimrc} ~/.bkp/
+
 stow --target=$HOME --dir=$HOME/dotfiles */
