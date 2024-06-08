@@ -9,12 +9,6 @@ set -gx fish_user_paths \
   $HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin \
   $HOME/.config/tmux/plugins/tmuxifier/bin
 
-eval (tmuxifier init - fish)
-
-. $HOME/.asdf/asdf.fish
-
-zoxide init fish | source
-
 if type -q exa
   abbr ls "exa --icons"
   abbr l "exa --icons -lg"
@@ -34,7 +28,7 @@ abbr nmc "nmcli --ask"
 abbr wtf6 "curl -fSs6 myip.wtf/json | jq"
 abbr wtf "curl -fSs4 myip.wtf/json | jq"
 abbr dd "dd status=progress"
-abbr s "du -hd0"
+abbr s "du -hcs"
 abbr free "free -mh"
 abbr lpbln "ssh bln lp -o fit-to-page"
 abbr lp "lp -o fit-to-page"
@@ -73,3 +67,9 @@ gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
 rmdir $HOME/Desktop 2>/dev/null
+
+zoxide init fish | source
+. $HOME/.asdf/asdf.fish
+eval (tmuxifier init - fish)
+# eval "$(oh-my-posh init fish --config $HOME/.config/ohmyposh/zen.toml | source)"
+fzf_configure_bindings
