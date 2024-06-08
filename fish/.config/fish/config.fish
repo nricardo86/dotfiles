@@ -16,6 +16,7 @@ if type -q exa
 end
 
 abbr za "zathura"
+abbr cd "z"
 abbr aptr "sudo apt autoremove --purge (deborphan)"
 abbr apti "sudo apt install"
 abbr aptu "sudo apt update && sudo apt upgrade"
