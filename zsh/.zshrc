@@ -15,22 +15,23 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
+zinit light olets/zsh-abbr
 
 # Add in snippets
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
-zinit snippet OMZP::aws
-zinit snippet OMZP::kubectl
-zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
+# export defaults
+export EDITOR=nvim
+export BROWSER=brave-browser-stable
+export TERM=tmux-256color
+export PATH=$HOME/.local/bin:$HOME/.bin:$PATH
+
 # Load completions
-autoload -Uz compinit && compinit
+autoload -Uz compinit; compinit
 
 zinit cdreplay -q
-
-eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 
 # Keybindings
 bindkey -e
@@ -58,11 +59,33 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# Aliases
-alias ls='exa --icons'
-alias l='exa --icons -lg'
-alias la='exa --icons -lag'
-
 # Shell integrations
 eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init zsh)"
+. "$HOME/.asdf/asdf.sh"
+eval "$(tmuxifier init - zsh)"
+eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
+
+rmdir $HOME/Desktop 2>/dev/null
+
+if [ -z $(pgrep ssh-agent) ];then
+  eval "$(ssh-agent -c)"
+  export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
+  export SSH_AGENT_PID=$SSH_AGENT_PID
+fi
+
+if [ -z $(pgrep gpg-agent) ]; then
+   export GPG_TTY=$(tty)
+   export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
+   gpgconf --launch gpg-agent
+   gpg-connect-agent updatestartuptty /bye > /dev/null
+fi
+
+if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
+   exec startx /usr/bin/i3
+fi
+
+#Aliases
+. $HOME/.zsh_alias
+

@@ -158,12 +158,12 @@ bar {
   status_command i3blocks
 }
 
-#exec --no-startup-id systemctl --user restart pulseaudio.service
-exec --no-startup-id xbanish -t 5
-exec --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
-exec_always --no-startup-id sleep 10; bluetoothctl connect B8:F6:53:E6:78:C8
+exec_always --no-startup-id sleep 3; bluetoothctl connect B8:F6:53:E6:78:C8
 exec_always --no-startup-id rm $HOME/.disp-day; rm $HOME/.xidleoff
 exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; bash -c "$HOME/.bin/disp.sh -m eDP-1 -b 1"; bash -c "$HOME/.bin/disp.sh -m DP-3 -b 0.5"; feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
-exec_always --no-startup-id pkill dunst; dunst
+exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
+
+exec_always --no-startup-id killall xbanish; xbanish -t 5
+exec_always --no-startup-id killall dunst; dunst
 exec_always --no-startup-id killall autotiling; autotiling
 exec_always --no-startup-id killall picom; picom -Cb

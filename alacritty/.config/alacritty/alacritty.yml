@@ -64,6 +64,5 @@ key_bindings:
   - { key: Plus, mods: Control, action: IncreaseFontSize }
   - { key: Minus, mods: Control, action: DecreaseFontSize }
   - { key: 0, mods: Control, action: ResetFontSize }
-
-shell:
-  program: /usr/bin/fish
+# shell:
+#   program: /usr/bin/fish
