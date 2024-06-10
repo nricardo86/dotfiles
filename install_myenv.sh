@@ -12,12 +12,12 @@ EOF
 
 sudo apt update
 sudo apt dist-upgrade -y
-sudo apt install -y i3 i3blocks bc eza rsync fontconfig autotiling dunst libbz2-dev libsqlite3-dev tk libffi-dev restic pass flameshot npm nodejs python3 python3-pip python3-venv gcc zip luarocks curl jq wget alacritty ranger git gnupg scdaemon vnstat acpi acpid xbanish feh picom xinit stow htop neovim tmux btop bat ripgrep fish zsh zoxide zathura
+sudo apt install -y i3 i3blocks bc eza deborphan rsync fontconfig autotiling dunst libbz2-dev libsqlite3-dev tk libffi-dev restic pass flameshot npm nodejs python3 python3-pip python3-venv gcc zip luarocks curl jq wget alacritty ranger git gnupg scdaemon vnstat acpi acpid xbanish feh picom xinit stow htop neovim tmux btop bat ripgrep fish zsh zoxide zathura
 
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
 wget -O- https://deb.librewolf.net/keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/librewolf.gpg
-sudo tee /etc/apt/sources.list.d/librewolf.sources <<EOF >/dev/null
+cat <<EOF | sudo tee /etc/apt/sources.list.d/librewolf.sources
 Types: deb
 URIs: https://deb.librewolf.net
 Suites: bookworm
@@ -40,14 +40,15 @@ fc-cache -f
 sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
 
-mkdir ~/.{ssh,gnupg,config,bkp,zsh,wallpaper,bin}
 mv ~/.{bash*,profile,huslogin,gtkrc-2.0,vimrc,ssh,gnupg,zsh*,bin,wallpaper} ~/.bkp/
+mkdir ~/.{ssh,gnupg,config,bkp,zsh,wallpaper,bin}
 
 for i in $(find . -maxdepth 3 -type d | grep ".config/" | cut -d"/" -f4); do
     mkdir -pv ~/.config/$i
 done
 
 stow --target=$HOME --dir=$SCRIPT_DIR --dotfiles */
+chsh -s $(which fish)
 
 cat <<EOF | crontab -
 $(crontab -l)
