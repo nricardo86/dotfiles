@@ -41,13 +41,13 @@ sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
 
 mkdir ~/.{ssh,gnupg,config,bkp,zsh,wallpaper,bin}
-mv ~/.{bash*,profile,huslogin,gtkrc-2.0,vimrc} ~/.bkp/
+mv ~/.{bash*,profile,huslogin,gtkrc-2.0,vimrc,ssh,gnupg,zsh*,bin,wallpaper} ~/.bkp/
 
 for i in $(find . -maxdepth 3 -type d | grep ".config/" | cut -d"/" -f4); do
     mkdir -pv ~/.config/$i
 done
 
-stow --target=$HOME --dir=$SCRIPT_DIR */
+stow --target=$HOME --dir=$SCRIPT_DIR --dotfiles */
 
 cat <<EOF | crontab -
 $(crontab -l)
