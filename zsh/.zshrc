@@ -69,18 +69,16 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 rmdir $HOME/Desktop 2>/dev/null
 
 if [ -z $(pgrep ssh-agent) ];then
-  eval "$(ssh-agent -c)"
-  export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
-  export SSH_AGENT_PID=$SSH_AGENT_PID
+   eval "$(ssh-agent -c)"
+   export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
+   export SSH_AGENT_PID=$SSH_AGENT_PID
 fi
 
-if [ -z $(pgrep gpg-agent) ]; then
-   export GPG_TTY=$(tty)
-   export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+export GPG_TTY=$(tty)
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
-   gpgconf --launch gpg-agent
-   gpg-connect-agent updatestartuptty /bye > /dev/null
-fi
+gpgconf --launch gpg-agent
+gpg-connect-agent updatestartuptty /bye > /dev/null
 
 if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
    exec startx /usr/bin/i3

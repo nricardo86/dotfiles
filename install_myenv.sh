@@ -12,7 +12,7 @@ EOF
 
 sudo apt update
 sudo apt dist-upgrade -y
-sudo apt install -y i3 i3blocks bc eza rsync fontconfig autotiling dunst libbz2-dev libsqlite3-dev tk libffi-dev restic pass flameshot npm nodejs python3 python3-pip python3-venv gcc zip luarocks curl jq wget alacritty ranger git gnupg scdaemon vnstat acpi acpid xbanish feh picom xinit stow htop neovim tmux btop bat ripgrep fish zoxide zathura
+sudo apt install -y i3 i3blocks bc eza rsync fontconfig autotiling dunst libbz2-dev libsqlite3-dev tk libffi-dev restic pass flameshot npm nodejs python3 python3-pip python3-venv gcc zip luarocks curl jq wget alacritty ranger git gnupg scdaemon vnstat acpi acpid xbanish feh picom xinit stow htop neovim tmux btop bat ripgrep fish zsh zoxide zathura
 
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg

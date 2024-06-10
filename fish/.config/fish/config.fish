@@ -5,8 +5,6 @@ set -gx TERM tmux-256color
 set -gx fish_user_paths \
   $HOME/.local/bin \
   $HOME/.bin \
-  $HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin \
-  $HOME/.config/tmux/plugins/tmuxifier/bin
 
 if type -q exa
   abbr ls "exa --icons"
@@ -71,5 +69,4 @@ rmdir $HOME/Desktop 2>/dev/null
 zoxide init fish | source
 . $HOME/.asdf/asdf.fish
 eval (tmuxifier init - fish)
-# eval "$(starship init fish | source)"
 fzf_configure_bindings
