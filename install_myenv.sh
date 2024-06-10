@@ -40,8 +40,12 @@ fc-cache -f
 sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
 
-mkdir ~/.{ssh,gnupg,config,bkp}
-mv ~/.{bash*,profile,uslogin,gtkrc-2.0,vimrc} ~/.bkp/
+mkdir ~/.{ssh,gnupg,config,bkp,zsh,wallpaper,bin}
+mv ~/.{bash*,profile,huslogin,gtkrc-2.0,vimrc} ~/.bkp/
+
+for i in $(find . -maxdepth 3 -type d | grep ".config/" | cut -d"/" -f4); do
+    mkdir -pv ~/.config/$i
+done
 
 stow --target=$HOME --dir=$SCRIPT_DIR */
 
