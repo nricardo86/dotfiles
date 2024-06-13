@@ -1,6 +1,6 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
-SETUVAR --export SSH_AGENT_PID:3279
+SETUVAR --export SSH_AGENT_PID:803
 SETUVAR --export SSH_AUTH_SOCK:/run/user/1000/gnupg/S\x2egpg\x2dagent\x2essh
 SETUVAR __fish_initialized:3400
 SETUVAR fish_color_autosuggestion:969896

@@ -29,10 +29,11 @@ bindsym Mod4+i exec bash -c "$HOME/.local/bin/LocalSend-1.13.1-linux-x86-64.AppI
 bindsym Mod4+m exec bash -c "$HOME/.bin/touchPad.sh"
 bindsym Mod4+y exec bash -c "$HOME/.bin/disp.sh -d"
 bindsym Mod4+u exec bash -c "$HOME/.bin/xlockidle.sh -l"
-bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-18' -nb '#000' -nf '#FFF' -sb '#10f'"
-bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-18' -sb '#040' -nf '#FFF' -nb '#000'
+bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-14' -nb '#000' -nf '#FFF' -sb '#10f'"
+bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-14' -sb '#040' -nf '#FFF' -nb '#000'
 bindsym Print exec flameshot gui
 bindsym XF86PowerOff exec bash -c "$HOME/.bin/lockscreen.sh"
+bindsym Ctrl+shift+l exec bash -c "$HOME/.bin/lockscreen.sh"
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +25%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
@@ -136,7 +137,7 @@ client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
 client.background       #F8F8F2
 
 bar {
-  font pango:JetBrainsMono 18
+  font pango:JetBrainsMono 12
   padding 2px 10px
   separator_symbol | 
   tray_padding 10
@@ -161,9 +162,9 @@ bar {
 #exec --no-startup-id systemctl --user restart pulseaudio.service
 exec --no-startup-id xbanish -t 5
 exec --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
-exec_always --no-startup-id sleep 10; bluetoothctl connect B8:F6:53:E6:78:C8
+# exec_always --no-startup-id sleep 10; bluetoothctl connect B8:F6:53:E6:78:C8
 exec_always --no-startup-id rm $HOME/.disp-day; rm $HOME/.xidleoff
-exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; bash -c "$HOME/.bin/disp.sh -m eDP-1 -b 1"; bash -c "$HOME/.bin/disp.sh -m DP-3 -b 0.5"; feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
+exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; 
 exec_always --no-startup-id pkill dunst; dunst
 exec_always --no-startup-id killall autotiling; autotiling
 exec_always --no-startup-id killall picom; picom -Cb
