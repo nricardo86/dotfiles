@@ -33,7 +33,7 @@ bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-1
 bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-14' -sb '#040' -nf '#FFF' -nb '#000'
 bindsym Print exec flameshot gui
 bindsym XF86PowerOff exec bash -c "$HOME/.bin/lockscreen.sh"
-bindsym Ctrl+shift+l exec bash -c "$HOME/.bin/lockscreen.sh"
+bindsym XF86ScreenSaver exec bash -c "$HOME/.bin/lockscreen.sh"
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +25%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
