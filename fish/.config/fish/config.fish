@@ -38,7 +38,6 @@ abbr jbl "bluetoothctl connect B8:F6:53:E6:78:C8"
 abbr newKey 'gpg-connect-agent "scd serialno" "learn --force" /bye'
 abbr reloadAgent 'gpg-connect-agent reloadagent /bye'
 abbr feh 'feh --scale-down'
-abbr o 'open'
 abbr fm 'ranger'
 abbr wq 'sudo wg-quick'
 abbr um 'udisksctl mount -b'

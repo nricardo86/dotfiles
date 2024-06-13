@@ -40,9 +40,10 @@ fc-cache -f
 sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --set x-terminal-emulator /usr/bin/alacritty
 
+mkdir ~/.bkp
 mv ~/.{bash*,profile,huslogin,gtkrc-2.0,vimrc,ssh,gnupg,zsh*,bin,wallpaper} ~/.bkp/
-mkdir ~/.{ssh,gnupg,config,bkp,zsh,wallpaper,bin}
 
+mkdir -p ~/.{ssh,gnupg,config,zsh,wallpaper,bin,.local/bin}
 for i in $(find . -maxdepth 3 -type d | grep ".config/" | cut -d"/" -f4); do
     mkdir -pv ~/.config/$i
 done
