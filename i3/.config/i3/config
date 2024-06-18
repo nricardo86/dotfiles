@@ -13,7 +13,7 @@ popup_during_fullscreen smart
 default_orientation auto
 
 floating_modifier Mod1
-for_window [class="Pavucontrol"] floating enable
+for_window [class="pavucontrol"] floating enable
 for_window [class="Tor Browser"] floating enable
 for_window [class="electrum"] floating enable
 for_window [class="FeatherWallet"] floating enable
