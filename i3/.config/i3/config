@@ -19,6 +19,9 @@ for_window [class="electrum"] floating enable
 for_window [class="FeatherWallet"] floating enable
 for_window [class="Virt-manager"] floating enable
 for_window [class="KiCad"] floating enable
+for_window [class="Lxappearance"] floating enable
+for_window [class="qt5ct"] floating enable
+for_window [class="localsend_app"] floating enable
 
 bindsym Mod4+o exec libreoffice --nolockcheck
 bindsym Mod4+p exec gtk-launch ranger
