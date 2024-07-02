@@ -44,12 +44,8 @@ mkdir ~/.bkp
 mv ~/.{bash*,profile,huslogin,gtkrc-2.0,vimrc,ssh,gnupg,zsh*,bin,wallpaper} ~/.bkp/
 
 mkdir -p ~/.{ssh,gnupg,config,zsh,wallpaper,bin,.local/bin}
-for i in $(find . -maxdepth 3 -type d | grep ".config/" | cut -d"/" -f4); do
-    mkdir -pv ~/.config/$i
-done
 
 stow --target=$HOME --dir=$SCRIPT_DIR --dotfiles */
-chsh -s $(which fish)
 
 cat <<EOF | crontab -
 $(crontab -l)
@@ -57,3 +53,5 @@ $(crontab -l)
 @hourly DISPLAY=:0 feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
 */10 * * * * DISPLAY=:0 $HOME/.bin/xlockidle.sh -t 9
 EOF
+
+chsh -s $(which fish)

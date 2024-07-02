@@ -2,9 +2,14 @@
 set -gx BROWSER brave-browser-stable
 set -gx TERM tmux-256color
 
-set -gx fish_user_paths \
-  $HOME/.local/bin \
-  $HOME/.bin \
+set -Ux PYENV_ROOT $HOME/.pyenv
+fish_add_path $PYENV_ROOT/bin
+fish_add_path $HOME/.local/bin
+fish_add_path $HOME/.bin
+
+# set -gx fish_user_paths \
+#   $HOME/.local/bin \
+#   $HOME/.bin \
 
 if type -q exa
   abbr ls "exa --icons"
@@ -66,6 +71,8 @@ gpg-connect-agent updatestartuptty /bye > /dev/null
 rmdir $HOME/Desktop 2>/dev/null
 
 zoxide init fish | source
+pyenv init - | source
 . $HOME/.asdf/asdf.fish
 eval (tmuxifier init - fish)
+fzf --fish | source
 fzf_configure_bindings
