@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 pkill picom
-slock && picom -Cb
-rm $HOME/.xidleoff
+slock && picom -b
+if [ -e $HOME/.xidleoff ]; then
+    rm $HOME/.xidleoff
+fi
