@@ -49,7 +49,7 @@ stow --target=$HOME --dir=$SCRIPT_DIR --dotfiles */
 
 cat <<EOF | crontab -
 $(crontab -l)
-@hourlysDISPLAY=:0 $HOME/.bin/disp.sh
+@hourly DISPLAY=:0 $HOME/.bin/disp.sh
 @hourly DISPLAY=:0 feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
 */10 * * * * DISPLAY=:0 $HOME/.bin/xlockidle.sh -t 9
 EOF
