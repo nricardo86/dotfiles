@@ -11,7 +11,7 @@ interval=5
 [memory]
 command=free -mh | grep Mem | awk '{print $7}'
 label=mem  
-label=󰣇  
+label=    
 interval=30
 
 [bandwidth3]
@@ -54,5 +54,5 @@ interval=30
 
 [time]
 color=#FFFF00
-command=date '+  %d/%m/%Y  %H:%M:%S'
+command=date '+   %d/%m/%Y  %H:%M:%S'
 interval=1 

@@ -13,7 +13,7 @@ fi
 # fi
 
 if [ $(pactl get-source-mute @DEFAULT_SOURCE@ | awk '{print $2}') == 'yes' ]; then
-    show+=$(echo " / Muted")
+    show+=$(echo " /  Muted")
 fi
 
 echo "${show[@]}"

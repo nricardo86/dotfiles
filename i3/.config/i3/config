@@ -20,6 +20,7 @@ for_window [class="FeatherWallet"] floating enable
 for_window [class="Virt-manager"] floating enable
 for_window [class="KiCad"] floating enable
 for_window [class="Lxappearance"] floating enable
+for_window [class="qt5ct"] floating enable
 for_window [class="qt6ct"] floating enable
 for_window [class="localsend_app"] floating enable
 
@@ -41,7 +42,7 @@ bindsym shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @D
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
 bindsym shift+XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -25% 
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle 
-# bindsym XF86AudioMicMute exec --no-startup-id amixer -D pulse sset Capture toggle
+bindsym XF86AudioMicMute exec --no-startup-id amixer -D pulse sset Capture toggle
 #bindsym XF86AudioPlay exec --no-startup-id 
 bindsym XF86MonBrightnessDown exec bash -c "$HOME/.bin/disp.sh -b -"
 bindsym XF86MonBrightnessUp exec bash -c "$HOME/.bin/disp.sh -b +"
@@ -139,7 +140,7 @@ client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
 client.background       #F8F8F2
 
 bar {
-  font pango:JetBrainsMono 12
+  font pango:JetBrainsMono 14
   padding 2px 10px
   separator_symbol | 
   tray_padding 10
