@@ -28,8 +28,7 @@ bindsym Mod4+o exec libreoffice --nolockcheck
 bindsym Mod4+p exec gtk-launch ranger
 bindsym Mod4+b exec brave --profile-directory="Default"
 bindsym Mod4+t exec alacritty
-# bindsym Mod4+i exec bash -c "$HOME/.local/bin/LocalSend-1.13.1-linux-x86-64.AppImage"
-# bindsym Mod4+m exec bash -c "$HOME/.bin/touchPad.sh"
+bindsym Mod4+m exec bash -c "$HOME/.bin/touchPad.sh"
 bindsym Mod4+y exec bash -c "$HOME/.bin/disp.sh -d"
 bindsym Mod4+u exec bash -c "$HOME/.bin/xlockidle.sh -l"
 bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-14' -nb '#000' -nf '#FFF' -sb '#10f'"
@@ -163,9 +162,11 @@ bar {
 }
 
 exec_always --no-startup-id rm $HOME/.disp-day; rm $HOME/.xidleoff
-exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
-# exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
-
+exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; 
+exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -m eDP-1 -b 1.0"
+exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -m DP-3 -b 0.5"
+exec_always --no-startup-id feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
+exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
 exec_always --no-startup-id killall xbanish; xbanish -t 5
 exec_always --no-startup-id killall dunst; dunst
 exec_always --no-startup-id killall autotiling; autotiling
