@@ -162,9 +162,9 @@ bar {
 }
 
 exec_always --no-startup-id rm $HOME/.disp-day; rm $HOME/.xidleoff
-exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
-# exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
-
+exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"
+exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -m LVDS-1 -b 1.0"
+exec_always --no-startup-id feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
 exec_always --no-startup-id killall xbanish; xbanish -t 5
 exec_always --no-startup-id killall dunst; dunst
 exec_always --no-startup-id killall autotiling; autotiling
