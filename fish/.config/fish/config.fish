@@ -55,7 +55,8 @@ gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
 zoxide init fish | source
-pyenv init - | source
 eval (tmuxifier init - fish)
 fzf --fish | source
 fzf_configure_bindings
+pyenv init - | source
+source $HOME/.asdf/asdf.fish
