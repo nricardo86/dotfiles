@@ -1,13 +1,18 @@
 #!/bin/bash
 show=()
-if [ $(pulsemixer --list-sinks | grep Default | cut -d',' -f3 | cut -d' ' -f3) == 1 ]; then
-  #echo -n "Muted"
-  show+=$(echo "Muted")
+if [ $(pactl get-sink-mute @DEFAULT_SINK@ | awk '{ print $2 }') == 'yes' ]; then
+    show+=$(echo "Muted")
 else
-    show+=$(pulsemixer --list-sinks | grep Default | cut -d\' -f2)
+    show+=$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{ print $5 }')
 fi
+# if [ $(pulsemixer --list-sinks | grep Default | cut -d',' -f3 | cut -d' ' -f3) == 1 ]; then
+#echo -n "Muted"
+# show+=$(echo "Muted")
+# else
+# show+=$(pulsemixer --list-sinks | grep Default | cut -d\' -f2)
+# fi
 
-if [ $(pulsemixer --list-sources | grep Default | cut -d"," -f3 | cut -d" " -f3) == 1 ]; then
+if [ $(pactl get-source-mute @DEFAULT_SOURCE@ | awk '{print $2}') == 'yes' ]; then
     show+=$(echo " / Muted")
 fi
 

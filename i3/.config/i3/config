@@ -1,5 +1,5 @@
 set $borda 4 
-font Pango:JetBrainsMono 16
+font Pango:JetBrainsMono 14
 new_window pixel $borda
 default_border pixel $borda
 default_floating_border pixel $borda
@@ -20,28 +20,28 @@ for_window [class="FeatherWallet"] floating enable
 for_window [class="Virt-manager"] floating enable
 for_window [class="KiCad"] floating enable
 for_window [class="Lxappearance"] floating enable
-for_window [class="qt5ct"] floating enable
+for_window [class="qt6ct"] floating enable
 for_window [class="localsend_app"] floating enable
 
 bindsym Mod4+o exec libreoffice --nolockcheck
 bindsym Mod4+p exec gtk-launch ranger
-bindsym Mod4+b exec brave-browser --profile-directory="Default"
-bindsym Mod4+shift+b exec brave-browser --profile-directory="Profile 1"
+bindsym Mod4+b exec brave --profile-directory="Default"
 bindsym Mod4+t exec alacritty
-bindsym Mod4+i exec bash -c "$HOME/.local/bin/LocalSend-1.13.1-linux-x86-64.AppImage"
-bindsym Mod4+m exec bash -c "$HOME/.bin/touchPad.sh"
+# bindsym Mod4+i exec bash -c "$HOME/.local/bin/LocalSend-1.13.1-linux-x86-64.AppImage"
+# bindsym Mod4+m exec bash -c "$HOME/.bin/touchPad.sh"
 bindsym Mod4+y exec bash -c "$HOME/.bin/disp.sh -d"
 bindsym Mod4+u exec bash -c "$HOME/.bin/xlockidle.sh -l"
-bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-18' -nb '#000' -nf '#FFF' -sb '#10f'"
-bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-18' -sb '#040' -nf '#FFF' -nb '#000'
+bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-14' -nb '#000' -nf '#FFF' -sb '#10f'"
+bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-14' -sb '#040' -nf '#FFF' -nb '#000'
 bindsym Print exec flameshot gui
 bindsym XF86PowerOff exec bash -c "$HOME/.bin/lockscreen.sh"
+bindsym Mod4+Delete exec bash -c "$HOME/.bin/lockscreen.sh"
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +25%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
 bindsym shift+XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -25% 
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle 
-bindsym XF86AudioMicMute exec --no-startup-id amixer -D pulse sset Capture toggle
+# bindsym XF86AudioMicMute exec --no-startup-id amixer -D pulse sset Capture toggle
 #bindsym XF86AudioPlay exec --no-startup-id 
 bindsym XF86MonBrightnessDown exec bash -c "$HOME/.bin/disp.sh -b -"
 bindsym XF86MonBrightnessUp exec bash -c "$HOME/.bin/disp.sh -b +"
@@ -139,7 +139,7 @@ client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
 client.background       #F8F8F2
 
 bar {
-  font pango:JetBrainsMono 18
+  font pango:JetBrainsMono 12
   padding 2px 10px
   separator_symbol | 
   tray_padding 10
@@ -161,10 +161,9 @@ bar {
   status_command i3blocks
 }
 
-exec_always --no-startup-id sleep 3; bluetoothctl connect B8:F6:53:E6:78:C8
 exec_always --no-startup-id rm $HOME/.disp-day; rm $HOME/.xidleoff
-exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; bash -c "$HOME/.bin/disp.sh -m eDP-1 -b 1"; bash -c "$HOME/.bin/disp.sh -m DP-3 -b 0.5"; feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
-exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
+exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; feh --no-fehbg --bg-scale --randomize $HOME/.wallpaper/
+# exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
 
 exec_always --no-startup-id killall xbanish; xbanish -t 5
 exec_always --no-startup-id killall dunst; dunst

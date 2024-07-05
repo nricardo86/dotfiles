@@ -2,14 +2,8 @@
 set -gx BROWSER brave-browser-stable
 set -gx TERM tmux-256color
 
-set -Ux PYENV_ROOT $HOME/.pyenv
-fish_add_path $PYENV_ROOT/bin
 fish_add_path $HOME/.local/bin
 fish_add_path $HOME/.bin
-
-# set -gx fish_user_paths \
-#   $HOME/.local/bin \
-#   $HOME/.bin \
 
 if type -q exa
   abbr ls "exa --icons"
@@ -19,12 +13,8 @@ end
 
 abbr za "zathura"
 abbr cd "z"
-abbr aptr "sudo apt autoremove --purge (deborphan)"
-abbr apti "sudo apt install"
-abbr aptu "sudo apt update && sudo apt upgrade"
 abbr wttr "curl wttr.in/"
 abbr rsync "rsync -avhP"
-abbr cal "ncal -C"
 abbr cb "xsel -bc && xsel -pc && xsel -sc"
 abbr xcp "xclip -sel clipboard"
 abbr nmc "nmcli --ask"
@@ -33,13 +23,9 @@ abbr wtf "curl -fSs4 myip.wtf/json | jq"
 abbr dd "dd status=progress"
 abbr s "du -hcs"
 abbr free "free -mh"
-abbr lpbln "ssh bln lp -o fit-to-page"
-abbr lp "lp -o fit-to-page"
-abbr b "batcat"
+abbr b "bat"
 abbr df "df -hT"
 abbr mkdir "mkdir -pv"
-abbr bose "bluetoothctl connect 4C:87:5D:A1:3A:D2"
-abbr jbl "bluetoothctl connect B8:F6:53:E6:78:C8"
 abbr newKey 'gpg-connect-agent "scd serialno" "learn --force" /bye'
 abbr reloadAgent 'gpg-connect-agent reloadagent /bye'
 abbr feh 'feh --scale-down'
@@ -68,11 +54,8 @@ set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
-rmdir $HOME/Desktop 2>/dev/null
-
 zoxide init fish | source
 pyenv init - | source
-. $HOME/.asdf/asdf.fish
 eval (tmuxifier init - fish)
 fzf --fish | source
 fzf_configure_bindings

@@ -3,12 +3,15 @@ separator_block_width=40
 markup=none
 
 [cpu_usage]
-label=CPU
+command=~/.config/i3blocks/cpu_usage
+label=cpu 
+label=   
 interval=5
 
 [memory]
 command=free -mh | grep Mem | awk '{print $7}'
-label=Free
+label=mem  
+label=󰣇  
 interval=30
 
 [bandwidth3]
@@ -27,6 +30,8 @@ interval=5
 
 [temperature]
 command=sensors | grep "Package id 0" | awk '{print $4}' | cut -d'+' -f2
+label=temp 
+label= 
 interval=5
 
 [volume]
@@ -42,11 +47,12 @@ label=󰃞
 interval=1
 
 [battery]
+command=~/.config/i3blocks/battery
 label=Bat:
 label=󰂄 
 interval=30
 
 [time]
 color=#FFFF00
-command=date '+%d/%m/%Y %H:%M:%S'
+command=date '+  %d/%m/%Y  %H:%M:%S'
 interval=1 
