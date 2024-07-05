@@ -7,11 +7,10 @@ alias cal='ncal -C'
 alias dd='dd status=progress'
 alias free='free -mh'
 alias lp='lp -o fit-to-page'
-alias lpbln="ssh bln lp -o fit-to-page"
 alias df='df -hT'
 alias mkdir='mkdir -pv'
 alias feh='feh --scale-down'
-alias b="bat"
+alias b="batcat"
 alias fmu="fusermount -u"
 alias um="udisksctl mount -b"
 alias uu="udisksctl unmount -b"

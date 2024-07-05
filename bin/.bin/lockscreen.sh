@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 pkill picom
-slock && picom -Cb
+i3lock -nfe -c 000000 && picom -b
 rm $HOME/.xidleoff

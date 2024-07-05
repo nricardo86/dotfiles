@@ -21,20 +21,22 @@ abbr nmc "nmcli --ask"
 abbr wtf6 "curl -fSs6 myip.wtf/json | jq"
 abbr wtf "curl -fSs4 myip.wtf/json | jq"
 abbr dd "dd status=progress"
-abbr s "du -hcs"
+abbr cal "ncal -C"
 abbr free "free -mh"
-abbr b "bat"
+abbr b "batcat"
 abbr df "df -hT"
+abbr s "du -hcs"
 abbr mkdir "mkdir -pv"
 abbr newKey 'gpg-connect-agent "scd serialno" "learn --force" /bye'
 abbr reloadAgent 'gpg-connect-agent reloadagent /bye'
 abbr feh 'feh --scale-down'
-abbr fm 'ranger'
 abbr wq 'sudo wg-quick'
 abbr um 'udisksctl mount -b'
 abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr tat 'tmux at -t'
+abbr lp 'lp -o fit-to-page'
+abbr lpbln 'ssh bln | lp -o fit-to-page'
 
 if test -z (pgrep ssh-agent)
   eval (ssh-agent -c)
