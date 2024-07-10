@@ -165,7 +165,7 @@ bar {
 exec_always --no-startup-id rm $HOME/.disp-day; rm $HOME/.xidleoff
 exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; 
 exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -m eDP-1 -b 1.0"
-exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -m DP-3 -b 0.5"
+exec_always --no-startup-id bash -c "if [ ! -z $($HOME/.bin/disp.sh -l | grep DP-3) ];then $HOME/.bin/disp.sh -m DP-3 -b 0.5;fi"
 exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
 exec_always --no-startup-id killall xbanish; xbanish -t 5
 exec_always --no-startup-id killall dunst; dunst

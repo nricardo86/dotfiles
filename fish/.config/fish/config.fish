@@ -2,8 +2,8 @@
 set -gx BROWSER brave-browser-stable
 set -gx TERM tmux-256color
 
-fish_add_path $HOME/.local/bin
-fish_add_path $HOME/.bin
+#fish_add_path $HOME/.local/bin
+#fish_add_path $HOME/.bin
 
 if type -q exa
   abbr ls "exa --icons"
@@ -50,6 +50,12 @@ if status is-login
   end
 end
 
+if status is-login
+  if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 2  ]
+   exec $HOME/.start-hypr
+  end
+end
+
 set -x GPG_TTY (tty)
 set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 
@@ -57,8 +63,7 @@ gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
 zoxide init fish | source
-eval (tmuxifier init - fish)
 fzf --fish | source
 fzf_configure_bindings
-pyenv init - | source
+eval (tmuxifier init - fish)
 source $HOME/.asdf/asdf.fish
