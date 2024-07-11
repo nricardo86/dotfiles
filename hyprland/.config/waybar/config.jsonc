@@ -1,22 +1,24 @@
 {
     "layer": "top",
     "position": "top",
-    "mod": "dock",
+    "mode": "dock",
     "exclusive": true,
     "passthrough": false,
     "gtk-layer-shell": true,
     "height": 50,
     "modules-left": [
-        "hyprland/workspaces",
-        "hyprland/window"
+        "hyprland/workspaces"
+        // "hyprland/window"
     ],
     "modules-right": [
         "cpu",
         "memory",
         "disk",
         "network",
+        "bluetooth",
         "temperature",
         "battery",
+        "idle_inhibitor",
         "backlight",
         "pulseaudio",
         "pulseaudio#microphone",
@@ -25,11 +27,6 @@
     ],
     "hyprland/window": {
         "format": "{}"
-    },
-    "custom/lock_screen": {
-        "format": "",
-        "on-click": "sh -c '(sleep 0.5s; swaylock)' & disown",
-        "tooltip": false
     },
     "cpu": {
         "interval": 10,
@@ -51,18 +48,25 @@
         "tooltip-format": "Memory - {used:0.1f}GB used"
     },
     "hyprland/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
+        // "active-only": true,
+        "all-outputs": false,
         "on-click": "activate",
-        "persistent_workspaces": {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": [],
-            "6": [],
-            "7": [],
-            "8": [],
+        // "persistent_workspaces": {
+        //     "1": [],
+        //     "2": [],
+        //     "3": [],
+        //     "4": [],
+        //     "5": [],
+        //     "6": [],
+        //     "7": [],
+        //     "8": [],
+        // }
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
         }
     },
     "tray": {
@@ -71,8 +75,8 @@
     },
     "clock": {
         "format": "{:%H:%M}",
-        "tooltip": true,
-        "tooltip-format": "{: %A, %e %B %Y}"
+        // "tooltip": true,
+        "tooltip-format": "{:%A, %e %B %Y}"
     },
     "backlight": {
         "device": "intel_backlight",
@@ -132,6 +136,15 @@
             ]
         }
     },
+    "bluetooth": {
+        "format": " {status}",
+        "format-disabled": "", // an empty format will hide the module
+        "format-connected": " {num_connections}",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "on-click": "blueman-manager"
+    },
     "network": {
         "format": "{ifname}",
         "format-wifi": "   {signalStrength}%",
@@ -139,7 +152,7 @@
         "format-disconnected": "Disconnected",
         "tooltip-format": "{ifname} via {gwaddri}",
         "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
-        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
+        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}\nup: {bandwidthUpBits} down: {bandwidthDownBits}",
         "tooltip-format-disconnected": "Disconnected",
         "max-length": 50,
         "on-click": "alacritty --class dotfiles-floating -e nmtui",
@@ -158,6 +171,6 @@
         "thermal-zone": 1,
         "format": " {temperatureC}°C",
         "critical-threshold": 75,
-        "format-critical": " {temperatureF}°F"
+        "format-critical": " {temperatureC}°C"
     }
 }
