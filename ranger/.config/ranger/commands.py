@@ -82,7 +82,7 @@ class IMVImageDisplayer(ImageDisplayer):
                 not self.process.stdin.closed):
             return
 
-        self.process = Popen(['imv'], cwd=self.working_dir,
+        self.process = Popen(['imv-wayland'], cwd=self.working_dir,
                              stdin=PIPE, universal_newlines=True)
         self.is_initialized = True
         time.sleep(1)
