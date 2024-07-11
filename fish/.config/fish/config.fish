@@ -52,7 +52,7 @@ end
 
 if status is-login
   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 2  ]
-   exec $HOME/.start-hypr
+   exec Hyprland
   end
 end
 

@@ -53,13 +53,15 @@ tooltip label {
   border-radius: 10px;
 }
 
+#workspaces,
+#window,
 #cpu,
 #disk,
 #memory,
 #clock,
 #battery,
-#pulseaudio,
 #network,
+#pulseaudio,
 #tray,
 #temperature,
 #backlight {
@@ -74,13 +76,15 @@ tooltip label {
 #tray,
 #temperature,
 #backlight,
+#network,
 #cpu {
   border-radius: 10px 0px 0px 10px;
 }
 
 #workspaces,
-#pulseaudio.microphone,
 #battery,
+#pulseaudio.microphone,
+#network,
 #disk {
   border-radius: 0px 10px 10px 0px;
   margin-right: 10px;

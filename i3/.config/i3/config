@@ -32,8 +32,9 @@ bindsym Mod4+t exec alacritty
 bindsym Mod4+m exec bash -c "$HOME/.bin/touchPad.sh"
 bindsym Mod4+y exec bash -c "$HOME/.bin/disp.sh -d"
 bindsym Mod4+u exec bash -c "$HOME/.bin/xlockidle.sh -l"
-bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-14' -nb '#000' -nf '#FFF' -sb '#10f'"
-bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-14' -sb '#040' -nf '#FFF' -nb '#000'
+# bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-14' -nb '#000' -nf '#FFF' -sb '#10f'"
+# bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-14' -sb '#040' -nf '#FFF' -nb '#000'
+bindsym Mod4+Return exec "rofi -show combi -combi-modes drun,run -font 'JetBrainsMono 18' -show-icons"
 bindsym Print exec flameshot gui
 bindsym XF86PowerOff exec bash -c "$HOME/.bin/lockscreen.sh"
 bindsym Mod4+Delete exec bash -c "$HOME/.bin/lockscreen.sh"
