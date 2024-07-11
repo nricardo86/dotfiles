@@ -29,15 +29,15 @@ bindsym Mod4+p exec gtk-launch ranger
 bindsym Mod4+b exec brave-browser --profile-directory="Default"
 bindsym Mod4+Shift+b exec brave-browser --profile-directory="Profile 1"
 bindsym Mod4+t exec alacritty
-bindsym Mod4+m exec bash -c "$HOME/.bin/touchPad.sh"
-bindsym Mod4+y exec bash -c "$HOME/.bin/disp.sh -d"
-bindsym Mod4+u exec bash -c "$HOME/.bin/xlockidle.sh -l"
+bindsym Mod4+m exec bash -c "$HOME/.config/i3/scripts/touchPad.sh"
+bindsym Mod4+y exec bash -c "$HOME/.config/i3/scripts/disp.sh -d"
+bindsym Mod4+u exec bash -c "$HOME/.config/i3/scripts/xlockidle.sh -l"
 # bindsym Mod4+Return exec i3-dmenu-desktop --dmenu="dmenu -i -fn 'JetBrainsMono-14' -nb '#000' -nf '#FFF' -sb '#10f'"
 # bindsym Mod4+shift+Return exec dmenu_run -i -fn 'JetBrainsMono-14' -sb '#040' -nf '#FFF' -nb '#000'
 bindsym Mod4+Return exec "rofi -show combi -combi-modes drun,run -font 'JetBrainsMono 18' -show-icons"
 bindsym Print exec flameshot gui
-bindsym XF86PowerOff exec bash -c "$HOME/.bin/lockscreen.sh"
-bindsym Mod4+Delete exec bash -c "$HOME/.bin/lockscreen.sh"
+bindsym XF86PowerOff exec bash -c "$HOME/.config/i3/scripts/lockscreen.sh"
+bindsym Mod4+Delete exec bash -c "$HOME/.config/i3/scripts/lockscreen.sh"
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym shift+XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +25%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% 
@@ -45,8 +45,8 @@ bindsym shift+XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @D
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle 
 bindsym XF86AudioMicMute exec --no-startup-id amixer -D pulse sset Capture toggle
 #bindsym XF86AudioPlay exec --no-startup-id 
-bindsym XF86MonBrightnessDown exec bash -c "$HOME/.bin/disp.sh -b -"
-bindsym XF86MonBrightnessUp exec bash -c "$HOME/.bin/disp.sh -b +"
+bindsym XF86MonBrightnessDown exec bash -c "$HOME/.config/i3/scripts/disp.sh -b -"
+bindsym XF86MonBrightnessUp exec bash -c "$HOME/.config/i3/scripts/disp.sh -b +"
 
 bindsym Mod4+h focus left
 bindsym Mod4+j focus down
@@ -116,7 +116,7 @@ bindsym Mod1+shift+k move container to workspace $ws8; workspace $ws8
 
 bindsym Mod4+shift+c reload
 bindsym Mod4+shift+r restart
-bindsym Mod4+shift+x exec bash -c "$HOME/.bin/logout.sh"
+bindsym Mod4+shift+x exec bash -c "$HOME/.config/i3/scripts/logout.sh"
 
 mode "resize" {
         bindsym h resize shrink width 2 px or 2 ppt
@@ -164,10 +164,10 @@ bar {
 }
 
 exec_always --no-startup-id rm $HOME/.disp-day; rm $HOME/.xidleoff
-exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -i"; 
-exec_always --no-startup-id bash -c "$HOME/.bin/disp.sh -m eDP-1 -b 1.0"
-exec_always --no-startup-id bash -c "if [ ! -z $($HOME/.bin/disp.sh -l | grep DP-3) ];then $HOME/.bin/disp.sh -m DP-3 -b 0.5;fi"
-exec_always --no-startup-id bash -c "$HOME/.bin/synaptics_config.sh"
+exec_always --no-startup-id bash -c "$HOME/.bin/config/i3/scripts.sh -i"; 
+exec_always --no-startup-id bash -c "$HOME/.bin/config/i3/scripts.sh -m eDP-1 -b 1.0"
+exec_always --no-startup-id bash -c "if [ ! -z $($HOME/.config/i3/scripts/disp.sh -l | grep DP-3) ];then $HOME/.config/i3/scripts/disp.sh -m DP-3 -b 0.5;fi"
+exec_always --no-startup-id bash -c "$HOME/.config/i3/scripts/synaptics_config.sh"
 exec_always --no-startup-id killall xbanish; xbanish -t 5
 exec_always --no-startup-id killall dunst; dunst
 exec_always --no-startup-id killall autotiling; autotiling
