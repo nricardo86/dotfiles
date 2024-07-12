@@ -1,9 +1,0 @@
-[[shaders]]
-name = "vibrance"
-default = true
-
-[[shaders]]
-name = "blue-light-filter"
-start_time = 19:00:00
-end_time = 06:00:00
-

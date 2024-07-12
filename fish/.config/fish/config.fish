@@ -42,14 +42,14 @@ if test -z (pgrep ssh-agent)
   set -Ux SSH_AGENT_PID $SSH_AGENT_PID
 end
 
-if status is-login
-  if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1  ]
-   exec startx /usr/bin/i3
-  end
-end
+# if status is-login
+#   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1  ]
+#    exec startx /usr/bin/i3
+#   end
+# end
 
 if status is-login
-  if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 2  ]
+  if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
    exec Hyprland
   end
 end
