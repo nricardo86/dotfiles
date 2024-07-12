@@ -118,3 +118,4 @@ if ! shopt -oq posix; then
 fi
 
 set -o vi
+export PATH=$PATH:$(xdg-user-dir USER)/.local/bin
