@@ -22,6 +22,7 @@
         "hyprland/window"
     ],
     "modules-right": [
+        "custom/wg",
         "network",
         "bluetooth",
         "tray",
@@ -59,7 +60,8 @@
         }
     },
     "tray": {
-        "icon-size": 18,
+        "icon-size": 20,
+        "show-passive-items": true,
         "spacing": 10
     },
     "clock": {
@@ -137,26 +139,25 @@
         "scroll-step": 5
     },
     "bluetooth": {
-        "format": "",
-        // "format-disabled": "󰂲", // an empty format will hide the module
-        "format-connected": "",
+        "format-on": "",
+        "format-off": "󰂲",
+        "format-connected": "󰂱",
         "tooltip-format": "{controller_alias}\t{controller_address}",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        // "on-click": "$HOME/.config/hypr/scripts/toogle_bluetooth.sh",
-        "on-click-right": "blueman-manager"
+        // "on-click": "blueman-manager"
+        "on-click": "alacritty --title bluetuith -e bluetuith"
     },
     "network": {
         "format": "",
+        "format-disconnected": "󰌙",
         "interval": 1,
         "format-ethernet": "󰈀",
         "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}\n {bandwidthDownBits}/{bandwidthUpBits}",
         "format-wifi": "  {signalStrength}%",
         "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthDownBits}{bandwidthUpBits} ",
-        // "format-disconnected": "󱛄",
         "max-length": 50,
-        // "on-click": "$HOME/.config/hypr/scripts/toogle_wifi.sh",
-        "on-click-right": "alacritty --class dotfiles-floating -e nmtui"
+        "on-click": "alacritty --title nmtui -e nmtui"
     },
     "temperature": {
         "thermal-zone": 1,
@@ -164,5 +165,9 @@
         "critical-threshold": 75,
         "tooltip": false,
         "format-critical": " {temperatureC}°C"
+    },
+    "custom/wg": {
+        "exec": "$HOME/.config/hypr/scripts/wg.sh",
+        "interval": 5
     }
 }
