@@ -34,7 +34,7 @@ abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
-abbr lpbln 'ssh bln | lp -o fit-to-page'
+abbr lpbln 'ssh bln lp -o fit-to-page'
 
 if test -z (pgrep ssh-agent)
   eval (ssh-agent -c)
