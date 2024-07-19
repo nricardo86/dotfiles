@@ -139,6 +139,7 @@
         "scroll-step": 5
     },
     "bluetooth": {
+        "format": "",
         "format-on": "",
         "format-off": "󰂲",
         "format-connected": "󰂱",

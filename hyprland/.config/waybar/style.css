@@ -69,7 +69,7 @@ tooltip label {
 #temperature,
 #backlight {
   background: #1e1e2e;
-  opacity: 0.8;
+  opacity: 1;
   padding: 0px 10px;
   margin-top: 2px;
   margin-bottom: 2px;
@@ -78,7 +78,6 @@ tooltip label {
 
 #temperature,
 #idle_inhibitor,
-#custom-wg,
 #network,
 #clock {
   border-radius: 10px 0px 0px 10px;
@@ -93,6 +92,8 @@ tooltip label {
 }
 
 #tray,
+#window,
+#custom-wg,
 #workspaces {
   border-radius: 10px 10px;
   margin-right: 10px;
@@ -100,23 +101,6 @@ tooltip label {
 
 #temperature.critical {
   color: #e92d4d;
-}
-
-#workspaces {
-  padding-right: 0px;
-  padding-left: 5px;
-}
-
-#window {
-  border-radius: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-#custom-launch_wofi {
-  color: #89b4fa;
-  margin-left: 10px;
-  border-right: 0px;
 }
 
 #pulseaudio {
