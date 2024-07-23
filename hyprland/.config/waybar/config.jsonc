@@ -91,7 +91,7 @@
         "format": "{icon} {capacity}%",
         "format-charging": " {capacity}%",
         "format-plugged": " {capacity}%",
-        "format-alt": "{time} {icon}",
+        // "format-alt": "{time} {icon}",
         "format-icons": [
             "󰂎",
             "󰁺",
@@ -154,9 +154,9 @@
         "format-disconnected": "󰌙",
         "interval": 1,
         "format-ethernet": "󰈀",
-        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}\n {bandwidthDownBits}/{bandwidthUpBits}",
+        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}\n {bandwidthDownBits} {bandwidthUpBits}",
         "format-wifi": "  {signalStrength}%",
-        "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthDownBits}{bandwidthUpBits} ",
+        "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthDownBits} {bandwidthUpBits}",
         "max-length": 50,
         "on-click": "alacritty --title nmtui -e nmtui"
     },
