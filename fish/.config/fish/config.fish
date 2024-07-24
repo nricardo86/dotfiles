@@ -2,9 +2,6 @@
 set -gx BROWSER brave-browser-stable
 set -gx TERM tmux-256color
 
-#fish_add_path $HOME/.local/bin
-#fish_add_path $HOME/.bin
-
 if type -q exa
   abbr ls "exa --icons"
   abbr l "exa --icons -lg"
@@ -21,7 +18,7 @@ abbr wtf "curl -fSs4 myip.wtf/json | jq"
 abbr dd "dd status=progress"
 abbr cal "ncal -C"
 abbr free "free -mh"
-abbr b "batcat"
+abbr bat "batcat"
 abbr df "df -hT"
 abbr s "du -hcs"
 abbr mkdir "mkdir -pv"
@@ -41,12 +38,6 @@ if test -z (pgrep ssh-agent)
   set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
   set -Ux SSH_AGENT_PID $SSH_AGENT_PID
 end
-
-# if status is-login
-#   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1  ]
-#    exec startx /usr/bin/i3
-#   end
-# end
 
 if status is-login
   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
