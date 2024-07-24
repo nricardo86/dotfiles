@@ -1,3 +1,4 @@
 **/tmux/plugins/**
 lazy-lock.json
 fish_variables
+*.bak
