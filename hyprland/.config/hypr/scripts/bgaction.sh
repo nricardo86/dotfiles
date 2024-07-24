@@ -2,8 +2,7 @@
 
 if [ -z $(pgrep hyprpaper) ]; then
     hyprpaper &
-    sleep 10
-    echo asdf
+    sleep 1
 fi
 
 hyprctl hyprpaper unload 'all'
