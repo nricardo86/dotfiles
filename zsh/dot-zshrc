@@ -62,8 +62,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
-eval "$(tmuxifier init - zsh)"
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
+# eval "$($HOME/.config/tmux/plugins/tmuxifier/bin/tmuxifier init - fish)"
 
 if [ -z $(pgrep ssh-agent) ];then
    eval "$(ssh-agent -c)"

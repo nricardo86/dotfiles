@@ -54,5 +54,5 @@ gpg-connect-agent updatestartuptty /bye > /dev/null
 zoxide init fish | source
 fzf --fish | source
 fzf_configure_bindings
-# eval (tmuxifier init - fish)
+# eval ($HOME/.config/tmux/plugins/tmuxifier/bin/tmuxifier init - fish)
 source $HOME/.asdf/asdf.fish
