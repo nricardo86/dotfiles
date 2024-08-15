@@ -9,6 +9,7 @@ if type -q exa
 end
 
 abbr za "zathura"
+abbr i "swayimg"
 abbr cd "z"
 abbr wttr "curl wttr.in/"
 abbr rsync "rsync -avhP"
