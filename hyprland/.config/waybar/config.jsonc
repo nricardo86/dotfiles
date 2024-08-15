@@ -168,7 +168,7 @@
         "format-critical": " {temperatureC}°C"
     },
     "custom/wg": {
-        "exec": "$HOME/.config/hypr/scripts/wg.sh",
+        "exec": "$HOME/.config/hypr/scripts/wgDsiplay.sh",
         "interval": 5
     }
 }
