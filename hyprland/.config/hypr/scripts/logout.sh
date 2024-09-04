@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
+$HOME/.config/hypr/scripts/wgDisconnect.sh
+
 wifi off
 bluetooth off
-
-$HOME/.config/hypr/scripts/wgDisconnect.sh
 
 loginctl terminate-user $USER
