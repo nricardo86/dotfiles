@@ -2,7 +2,7 @@
 
 $HOME/.config/hypr/scripts/wgDisconnect.sh
 
-wifi off
+nmcli radio wifi off
 bluetooth off
 
 loginctl terminate-user $USER
