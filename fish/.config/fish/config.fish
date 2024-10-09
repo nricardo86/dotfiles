@@ -7,9 +7,7 @@ if type -q exa
   abbr l "exa --icons -lg"
   abbr la "exa --icons -lag"
 end
-
 abbr za "zathura"
-abbr i "swayimg"
 abbr cd "z"
 abbr rsync "rsync -avhP"
 abbr nmc "nmcli --ask"
@@ -31,6 +29,13 @@ abbr fmu 'fusermount -u'
 abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
 abbr lpbln 'ssh bln lp -o fit-to-page'
+if [ -n "$KITTY_PID" ]
+  abbr i "kitty +kitten icat "
+  abbr icat "kitty +kitten icat"
+else
+  abbr -e icat
+  abbr i "swayimg"
+end
 
 if test -z (pgrep ssh-agent)
   eval (ssh-agent -c)

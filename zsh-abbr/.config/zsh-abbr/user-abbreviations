@@ -1,6 +1,8 @@
 abbr "bose"="bluetoothctl connect 4C:87:5D:A1:3A:D2"
 abbr "cb"="xsel -bc && xsel -pc && xsel -sc"
 abbr "fm"="ranger"
+abbr "i"="kitty +kitten icat"
+abbr "icat"="kitty +kitten icat"
 abbr "jbl"="bluetoothctl connect B8:F6:53:E6:78:C8"
 abbr "newKey"="gpg-connect-agent \"scd serialno\" \"learn --force\" /bye"
 abbr "reloadAgent"="gpg-connect-agent reloadagent /bye"

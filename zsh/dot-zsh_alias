@@ -18,3 +18,14 @@ alias tat="tmux at -t"
 alias za="zathura"
 alias nmc="nmcli --ask"
 alias s="du -hcs"
+
+if [ -n "$KITTY_PID" ]; then
+    abbr e icat 2&>/dev/null 1&>/dev/null
+    abbr e i 2&>/dev/null 1&>/dev/null
+    abbr a icat="kitty +kitten icat" 1&>/dev/null 2&>/dev/null
+    abbr a i="kitty +kitten icat" 1&>/dev/null 2&>/dev/null
+else
+    abbr e icat 2&>/dev/null
+    abbr e i 2&>/dev/null 1&>/dev/null 
+    abbr a i="swayimg" 1&>/dev/null 2&>/dev/null
+fi
