@@ -29,13 +29,9 @@ abbr fmu 'fusermount -u'
 abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
 abbr lpbln 'ssh bln lp -o fit-to-page'
-if [ -n "$KITTY_PID" ]
-  abbr i "kitty +kitten icat "
-  abbr icat "kitty +kitten icat"
-else
-  abbr -e icat
-  abbr i "swayimg"
-end
+abbr i "swayimg"
+#abbr i "kitty +kitten icat "
+#abbr icat "kitty +kitten icat"
 
 if test -z (pgrep ssh-agent)
   eval (ssh-agent -c)
