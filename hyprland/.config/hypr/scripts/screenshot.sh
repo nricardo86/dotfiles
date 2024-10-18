@@ -15,14 +15,14 @@ $option2)
     grim -g "$(slurp)" "$DIR$NAME"
     xclip -selection clipboard -t image/png -i "$DIR$NAME"
     notify-send "Screenshot created and copied to clipboard" "Mode: Selected area"
-    swappy -f "$DIR$NAME"
+    # swappy -f "$DIR$NAME"
     ;;
 $option3)
     sleep 2
     grim "$DIR$NAME"
     xclip -selection clipboard -t image/png -i "$DIR$NAME"
     notify-send "Screenshot created and copied to clipboard" "Mode: Fullscreen"
-    swappy -f "$DIR$NAME"
+    # swappy -f "$DIR$NAME"
     ;;
 $option4)
     monitor="$(hyprctl monitors | awk '/Monitor/{monitor=$2} /focused: yes/{print monitor; exit}')"
@@ -30,7 +30,7 @@ $option4)
     grim -o "$monitor" "$DIR$NAME"
     xclip -selection clipboard -t image/png -i "$DIR$NAME"
     notify-send "Screenshot created and copied to clipboard" "Mode: Fullscreen"
-    swappy -f "$DIR$NAME"
+    # swappy -f "$DIR$NAME"
     ;;
 $option5)
     activewindow=$(hyprctl -j activewindow)
@@ -42,6 +42,6 @@ $option5)
     grim -g "${pos_x},${pos_y} ${size_x}x${size_y}" "$DIR$NAME"
     xclip -selection clipboard -t image/png -i "$DIR$NAME"
     notify-send "Screenshot created and copied to clipboard" "Mode: Active Window"
-    swappy -f "$DIR$NAME"
+    # swappy -f "$DIR$NAME"
     ;;
 esac
