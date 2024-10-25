@@ -30,6 +30,9 @@ abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
 abbr lpbln 'ssh bln lp -o fit-to-page'
 abbr i "swayimg"
+abbr update "sudo apt update && sudo apt upgrade"
+abbr install "sudo apt install"
+abbr remove "sudo apt autoremove --purge (deborphan)"
 #abbr i "kitty +kitten icat "
 #abbr icat "kitty +kitten icat"
 
