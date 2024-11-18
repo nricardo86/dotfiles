@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mode="$1"
+BASEDIR="$2"
+prefix="$3"
+n=$(<$BASEDIR/$prefix.number)
+
+case $mode in
+  c) mv "$BASEDIR/$prefix.tar"    "$BASEDIR/$prefix-$n.tar" ;;
+  x) mv "$BASEDIR/$prefix-$n.tar" "$BASEDIR/$prefix.tar"    ;;
+esac
+
+echo $((n+1)) >$BASEDIR/$prefix.number
