@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
-REMOTE=(admin@pi -i ~/.ssh/id_ed25519)
-DS=$(zfs list -H -o name | grep 'z/backup')
+REMOTE="asdf@pbs.nasatto.com -i ~/.ssh/id_ed25519"
+
+ssh -q ${REMOTE} exit
+if [ $(echo $? | bc) != "0" ];then
+	echo "Remote is offline"
+	exit 1
+fi
+
+DS=(z/main z/alt)
+BKP_TANK='zbak'
 
 echo -e "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)\n"
 sum=()
 
 for i in ${DS[@]}; do
 	options=()
+
 	LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${i} | grep remoteBkp | tail -1)
 	zfs snapshot ${i}@remoteBkp-$(date --utc +%Y%m%d-%H%M)
 	NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${i} | grep remoteBkp | tail -1)
@@ -27,8 +36,10 @@ for i in ${DS[@]}; do
 	echo "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
 
 	echo -e "Sending Snapshot to ${REMOTE[0]} @ ${i}\n"
+	
+	newDS=$(echo $i|cut -d/ -f2)
 
-	zfs send -wc $options | ssh ${REMOTE[@]} sudo zfs receive -Fuv $i
+	zfs send -wc $options | ssh ${REMOTE} zfs receive -Fu ${BKP_TANK}/${newDS}
 done
 
 ((sum_gb = sum / 1024))

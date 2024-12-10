@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DS=z/data
+DS=z/main
 options=()
 
 LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name $DS | grep tapebkp | tail -1)

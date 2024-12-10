@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DS=$(zfs list -H -o name | grep 'z/')
+DS=(z/main z/alt)
 sum=0
 
 for i in ${DS[@]}; do
