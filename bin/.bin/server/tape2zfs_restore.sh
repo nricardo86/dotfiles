@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 TAPE=/dev/nst0
 BS=256k
-DS=fast/teste1
+DS="${1:-'tank/restore'}"
 
 echo "Tape2zfs init! - $(date --utc +%Y/%m/%d-%H%M)"
 
-echo "Rewinding Tape.."
-mt -f $TAPE rewind
-
-if [[ ! "$(mt -f $TAPE status | tail -1)" == *"BOT"* ]]; then
-	echo "Tape not Found!"
+TAPE_ATTR=$(sudo sg_read_attr ${TAPE})
+if [[ "$?" -ne "0" ]]; then
 	exit 1
 fi
+mt -f ${TAPE} rewind
 
-while (dd status=progress if=$TAPE bs=$BS | sudo zfs receive -Fuv $DS); do
+while (dd status=progress if=${TAPE} bs=${BS} | sudo zfs receive -Fuv ${DS}); do
 	:
 done
 
