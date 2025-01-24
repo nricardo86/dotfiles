@@ -3,7 +3,7 @@ TAPE=/dev/nst0
 BS=256k
  
 DS=z/main
-snapshot_name="tapebkp"
+snap_prefix="tapebkp"
 
 function send2tape {
 	SIZE_REMAIN=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)
@@ -24,9 +24,11 @@ function send2tape {
 	zfs send -wc ${options} | dd status=progress of=${TAPE} bs=${BS}
 }
 
+#timeout 60 mt -f ${TAPE} rewind
+
 TAPE_ATTR=$(sudo sg_read_attr ${TAPE})
 if [[ "$?" -ne "0" ]]; then
-	exit 1
+	exit "$?"
 fi
 
 TAPE_SERIAL=$(sudo sg_read_attr ${TAPE} -f 0x401 | awk '{print $4}')
@@ -34,17 +36,27 @@ TAPE_SERIAL=$(sudo sg_read_attr ${TAPE} -f 0x401 | awk '{print $4}')
 echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 echo "Tape Serial: ${TAPE_SERIAL}"
 
-mt -f ${TAPE} eom
-if [[ "$?" -ne "0" ]]; then
-	echo "EOM not Found"
-	exit 1
-fi
+echo "Finding EOM.."
+count=3
+while true
+do
+	mt -f ${TAPE} eom
+	if [[ "$?" -eq "0" ]]; then
+		break
+	fi
+	if [[ "${count}" -eq "0" ]]; then
+		echo "EOM not Found"
+		exit "$?"
+	fi
+	((count--))
+	mt -f ${TAPE} rewind
+done
 
 files_ontape=$(mt -f ${TAPE} status | grep 'file number' | awk '{print $4}')
 
 snapshots=()
 for i in $(zfs list -t snapshot ${DS} -H -o name); do
-	if [[ "$i" == *"${snapshot_name}"* ]]; then
+	if [[ "$i" == *"${snap_prefix}"* ]]; then
 		snapshots+=("$i")
 	fi
 done
@@ -60,9 +72,9 @@ do
 	((count--))
 done
 
-LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snapshot_name} | tail -1)
-zfs snapshot ${DS}@${snapshot_name}-$(date --utc +%Y%m%d-%H%M)
-NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snapshot_name} | tail -1)
+LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snap_prefix} | tail -1)
+zfs snapshot ${DS}@${snap_prefix}-$(date --utc +%Y%m%d-%H%M)
+NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snap_prefix} | tail -1)
 options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
 echo "Incremental Snapshot from ${LAST_SNAPSHOT} to ${NOW_SNAPSHOT}"
 send2tape
