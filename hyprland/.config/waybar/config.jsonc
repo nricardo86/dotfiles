@@ -1,0 +1,174 @@
+{
+    "layer": "top",
+    "position": "top",
+    "mode": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 30,
+    "modules-left": [
+        "cpu",
+        "memory",
+        "disk",
+        "temperature",
+        "battery",
+        "idle_inhibitor",
+        "backlight",
+        "pulseaudio",
+        "pulseaudio#microphone"
+    ],
+    "modules-center": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "custom/wg",
+        "network",
+        "bluetooth",
+        "tray",
+        "clock"
+    ],
+    "hyprland/window": {
+        "format": "{class}"
+    },
+    "cpu": {
+        "interval": 10,
+        "format": " {usage}%",
+        "tooltip": false,
+        "max-length": 10
+    },
+    "disk": {
+        "interval": 60,
+        "format": "󰋊 {percentage_used}%",
+        "tooltip": false,
+        "path": "/"
+    },
+    "memory": {
+        "interval": 30,
+        "tooltip": false,
+        "format": " {}%"
+    },
+    "hyprland/workspaces": {
+        "all-outputs": false,
+        "on-click": "activate"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "tray": {
+        "icon-size": 20,
+        "show-passive-items": true,
+        "spacing": 10
+    },
+    "clock": {
+        "format": "{:%d/%m/%y %H:%M}",
+        // "tooltip": true,
+        "tooltip-format": "{:%A, %e %B %Y}"
+    },
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon} {percent}%",
+        "tooltip": false,
+        "format-icons": [
+            "󰃞",
+            "󰃟",
+            "󰃠"
+        ],
+        "on-scroll-up": "brightnessctl set 1%+",
+        "on-scroll-down": "brightnessctl set 1%-",
+        "min-length": 6
+    },
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 20
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        // "format-alt": "{time} {icon}",
+        "format-icons": [
+            "󰂎",
+            "󰁺",
+            "󰁻",
+            "󰁼",
+            "󰁽",
+            "󰁾",
+            "󰁿",
+            "󰂀",
+            "󰂁",
+            "󰂂",
+            "󰁹"
+        ]
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+        "scroll-step": 5,
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": [
+                "",
+                "",
+                ""
+            ]
+        }
+    },
+    "pulseaudio#microphone": {
+        "format": "{format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": " ",
+        "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+        "on-click-right": "pavucontrol",
+        "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +5%",
+        "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%",
+        "scroll-step": 5
+    },
+    "bluetooth": {
+        "format": "",
+        "format-on": "",
+        "format-off": "󰂲",
+        "format-connected": "󰂱",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        // "on-click": "blueman-manager"
+        "on-click": "alacritty --title bluetuith -e bluetuith"
+    },
+    "network": {
+        "format": "",
+        "format-disconnected": "󰌙",
+        "interval": 1,
+        "format-ethernet": "󰈀",
+        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}\n {bandwidthDownBits} {bandwidthUpBits}",
+        "format-wifi": "  {signalStrength}%",
+        "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthDownBits} {bandwidthUpBits}",
+        "max-length": 50,
+        "on-click": "alacritty --title nmtui -e nmtui"
+    },
+    "temperature": {
+        "thermal-zone": 1,
+        "format": " {temperatureC}°C",
+        "critical-threshold": 75,
+        "tooltip": false,
+        "format-critical": " {temperatureC}°C"
+    },
+    "custom/wg": {
+        "exec": "$HOME/.config/hypr/scripts/wgDsiplay.sh",
+        "interval": 5
+    }
+}
