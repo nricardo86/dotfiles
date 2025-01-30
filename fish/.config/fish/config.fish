@@ -1,4 +1,5 @@
 ﻿set fish_greeting
+set -g fish_key_bindings fish_vi_key_bindings
 set -gx EDITOR nvim
 set -gx BROWSER brave-browser-stable
 set -gx TERM tmux-256color
@@ -33,7 +34,7 @@ abbr lpbln 'ssh bln lp -o fit-to-page'
 abbr i "swayimg"
 abbr update "sudo apt update && sudo apt upgrade"
 abbr install "sudo apt install"
-abbr remove "sudo apt autoremove --purge (deborphan)"
+abbr remove "sudo apt autoremove --purge"
 #abbr i "kitty +kitten icat "
 #abbr icat "kitty +kitten icat"
 
@@ -57,5 +58,5 @@ end
 zoxide init fish | source
 fzf --fish | source
 fzf_configure_bindings
-# eval ($HOME/.config/tmux/plugins/tmuxifier/bin/tmuxifier init - fish)
+eval ($HOME/.config/tmux/plugins/tmuxifier/bin/tmuxifier init - fish)
 # source $HOME/.asdf/asdf.fish

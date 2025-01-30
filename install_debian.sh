@@ -10,7 +10,7 @@ EOF
 
 sudo apt update
 sudo apt dist-upgrade -y
-sudo apt install -y bc eza deborphan rsync fontconfig restic pass npm nodejs \
+sudo apt install -y bc eza rsync fontconfig restic pass npm nodejs \
     python3 python3-pip python3-venv gcc zip luarocks curl jq wget git gnupg \
     scdaemon vnstat acpi acpid stow htop neovim tmux btop bat ripgrep fish zsh zoxide
 
