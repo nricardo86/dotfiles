@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 dir=/var/tmp/nhs
-auth="asdf:qwert@"
 url="https://ntfy.nasatto.com/ups"
 
 truncate -s 10240 ${dir}/nhs.log
@@ -10,17 +9,17 @@ status=($(cat ${dir}/nhs.json | jq .arraybits_status[]))
 vbat=$(echo "scale=1;$(cat ${dir}/nhs.json | jq .VDCMED) / 10" | bc)
 potRMS=$(echo "scale=1;$(cat ${dir}/nhs.json | jq .POTRMS) * 10" | bc)
 
-if [ -z $status ];then
+if [ -z $status ]; then
 	echo "fail"
 	exit 1
 fi
 
-desligaServer () {
+desligaServer() {
 	sendMsg "Desligando Servidor"
- 	#ssh -i ~/.ssh/id_ed25519 asdf@10.0.4.60
+	#ssh -i ~/.ssh/id_ed25519 asdf@10.0.4.60
 }
 
-sendMsg () {
+sendMsg() {
 	curl -fSsk ${url} -u ${auth} -d "$1"
 }
 
