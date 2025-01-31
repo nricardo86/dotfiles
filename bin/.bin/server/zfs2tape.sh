@@ -7,10 +7,10 @@ snap_prefix="tapebkp"
 
 function send2tape {
 	SIZE_REMAIN=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)
-	SIZE_REMAIN_GB=$(echo "${SIZE_REMAIN} / 1024" | bc)
+	SIZE_REMAIN_GB=$(echo "scale=2;${SIZE_REMAIN} / 1024" | bc)
 	SNAP_SIZE=$(zfs send -Pnwc ${options} | tail -1 | awk '{print $2}' | bc)
 	SNAP_SIZE_MB=$(echo "${SNAP_SIZE} / 1024^2" | bc)
-	SNAP_SIZE_GB=$(echo "${SNAP_SIZE_MB} / 1024" | bc)
+	SNAP_SIZE_GB=$(echo "scale=2;${SNAP_SIZE_MB} / 1024" | bc)
 
 	echo "Remain space on tape: ${SIZE_REMAIN}MiB / ${SIZE_REMAIN_GB}GiB"
 	echo "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
@@ -52,6 +52,8 @@ do
 	mt -f ${TAPE} rewind
 done
 
+echo "EOM Found!"
+
 files_ontape=$(mt -f ${TAPE} status | grep 'file number' | awk '{print $4}')
 
 snapshots=()
@@ -66,7 +68,7 @@ while [ "${count}" -gt "1" ]
 do
 	SNAP_FROM=${snapshots[((${#snapshots[@]} - ${count}))]} 
 	SNAP_TO=${snapshots[((${#snapshots[@]} - ((${count} - 1))))]}
-	echo "Incremental Snapshot from ${SNAP_FROM} to ${SNAP_TO}"
+	echo "Sending incremental snapshot from ${SNAP_FROM} to ${SNAP_TO}"
 	options="-I ${SNAP_FROM} ${SNAP_TO}"
 	send2tape
 	((count--))
