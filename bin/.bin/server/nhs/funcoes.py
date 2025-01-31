@@ -130,9 +130,9 @@ def invertearray(arr):
 def slog(s,endchr="\r\n",debug=False,lf = None):
     if (lf == None):
         lf = config.arquivolog
-    #arq = open(lf,"a+")
-    #arq.write(time.strftime("%d/%m/%Y %H:%M:%S") + " -- " + str(s).strip().encode('utf-8','replace').decode('utf-8','replace') + endchr)
-    #arq.close()
+    arq = open(lf,"a+")
+    arq.write(time.strftime("%d/%m/%Y %H:%M:%S") + " -- " + str(s).strip().encode('utf-8','replace').decode('utf-8','replace') + endchr)
+    arq.close()
     if (debug):
         print(s)
 

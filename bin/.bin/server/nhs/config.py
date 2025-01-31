@@ -20,17 +20,17 @@ fator_conversao = 0.9
 # Se caso o valor for None entao ele ira manter os dados da bateria
 numero_baterias = 4
 # Capacidade da bateria em Ah. Voce precisa saber a capacidade da bateria para calcular a autonomia
-ah = 115
+ah = 100
 # Tensao da Bateria em Volts
 tensao_bateria = 12
 # Caminho do dispositivo
 device = "/dev/ttyACM0"
 # Caminho do arquivo de log
-arquivolog = "/home/admin/nhs/nhs.log"
+arquivolog = "/var/tmp/nhs/nhs.log"
 # Arquivo que sera monitorado pelo NUT
-arquivonut = "/home/admin/nhs/nut.seq"
+arquivonut = "/var/tmp/nhs/nut.seq"
 # Arquivo de saida JSON
-arquivojson = "/run/user/1000/nhs.json"
+arquivojson = "/var/tmp/nhs/nhs.json"
 # Host MQTT
 mqtt_host = "mqtt.hole"
 # Porta MQTT
