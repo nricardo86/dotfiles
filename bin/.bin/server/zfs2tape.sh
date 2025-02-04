@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 TAPE=/dev/nst0
 BS=256k
- 
+
 DS=z/main
-snap_prefix="tapebkp"
+prefix="tapebkp"
 
 function send2tape {
 	SIZE_REMAIN=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)
@@ -24,22 +24,17 @@ function send2tape {
 	zfs send -wc ${options} | dd status=progress of=${TAPE} bs=${BS}
 }
 
-#timeout 60 mt -f ${TAPE} rewind
-
-TAPE_ATTR=$(sudo sg_read_attr ${TAPE})
-if [[ "$?" -ne "0" ]]; then
-	exit "$?"
-fi
-
 TAPE_SERIAL=$(sudo sg_read_attr ${TAPE} -f 0x401 | awk '{print $4}')
+if [[ -z $TAPE_SERIAL ]]; then
+	exit 1
+fi
 
 echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 echo "Tape Serial: ${TAPE_SERIAL}"
 
 echo "Finding EOM.."
 count=3
-while true
-do
+while true; do
 	mt -f ${TAPE} eom
 	if [[ "$?" -eq "0" ]]; then
 		break
@@ -58,15 +53,14 @@ files_ontape=$(mt -f ${TAPE} status | grep 'file number' | awk '{print $4}')
 
 snapshots=()
 for i in $(zfs list -t snapshot ${DS} -H -o name); do
-	if [[ "$i" == *"${snap_prefix}"* ]]; then
+	if [[ "$i" == *"${prefix}"* ]]; then
 		snapshots+=("$i")
 	fi
 done
 
-count=$(( "${#snapshots[@]}" - "${files_ontape}" + 1 ))
-while [ "${count}" -gt "1" ]
-do
-	SNAP_FROM=${snapshots[((${#snapshots[@]} - ${count}))]} 
+count=$(("${#snapshots[@]}" - "${files_ontape}" + 1))
+while [ "${count}" -gt "1" ]; do
+	SNAP_FROM=${snapshots[((${#snapshots[@]} - ${count}))]}
 	SNAP_TO=${snapshots[((${#snapshots[@]} - ((${count} - 1))))]}
 	echo "Sending incremental snapshot from ${SNAP_FROM} to ${SNAP_TO}"
 	options="-I ${SNAP_FROM} ${SNAP_TO}"
@@ -74,9 +68,9 @@ do
 	((count--))
 done
 
-LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snap_prefix} | tail -1)
-zfs snapshot ${DS}@${snap_prefix}-$(date --utc +%Y%m%d-%H%M)
-NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snap_prefix} | tail -1)
+LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${prefix} | tail -1)
+zfs snapshot ${DS}@${prefix}-$(date --utc +%Y%m%d-%H%M)
+NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${prefix} | tail -1)
 options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
 echo "Incremental Snapshot from ${LAST_SNAPSHOT} to ${NOW_SNAPSHOT}"
 send2tape

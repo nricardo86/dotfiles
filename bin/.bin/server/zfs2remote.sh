@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 REMOTE="asdf@backup.nasatto.com -i ~/.ssh/id_ed25519"
-
-ssh -q ${REMOTE} exit
-if [ "$?" -ne "0" ]; then
-	echo "Remote is offline"
-	exit 1
-fi
-
 DS=(z/main z/alt)
 RT='zbak'
 prefix="remoteBkp"
@@ -17,22 +10,23 @@ for ds in ${DS[@]}; do
 	newDS=${ds#*/}
 	rds=${RT}/${newDS}
 
+	rsnap=$(ssh ${REMOTE} zfs list -H -o name -t snapshot "${rds}" | tail -1)
+	if [[ -z $rsnap ]]; then
+		echo "Remote not responding!"
+		exit 1
+	fi
+
+	rsnap="${ds}@${rsnap#*@}"
+
+	if ! zfs list -H "${rsnap}" &>/dev/null; then
+		echo "${rsnap} not found locally!"
+		exit 1
+	fi
+
 	zfs snapshot ${ds}@${prefix}-$(date --utc +%Y%m%d-%H%M)
 	snap=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
 
-	rsnap=$(ssh ${REMOTE} zfs list -H -o name -t snapshot "${rds}" | tail -1)
-	rsnap="${ds}@${rsnap#*@}"
-
-	if [[ -n $rsnap ]]; then
-		echo "latest remote snapshot: $rsnap"
-		if ! zfs list -t snapshot "${rsnap}" &>/dev/null; then
-			echo "${rsnap} not found locally!"
-			zfs destroy $snap
-			return 1
-		fi
-		options="-I ${rsnap} ${snap}"
-	fi
-
+	options="-I ${rsnap} ${snap}"
 	echo "sending inc snapshot from ${rsnap} to ${snap}"
 
 	SNAP_SIZE=$(zfs send -Pnwc ${options} | tail -1 | awk '{print $2}' | bc)
