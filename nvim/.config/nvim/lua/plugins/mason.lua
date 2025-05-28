@@ -13,9 +13,6 @@ return {
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
-		opts = {
-			automatic_installation = true,
-		},
 	},
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",

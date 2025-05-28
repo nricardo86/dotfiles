@@ -9,6 +9,8 @@ if type -q exa
   abbr l "exa --icons -lg"
   abbr la "exa --icons -lag"
 end
+abbr cp "/usr/local/bin/cpg -g"
+abbr mv "/usr/local/bin/mvg -g"
 abbr za "zathura"
 abbr cd "z"
 abbr rsync "rsync -avhP"

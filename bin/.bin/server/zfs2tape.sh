@@ -22,6 +22,7 @@ function send2tape {
 	fi
 
 	zfs send -wc ${options} | dd status=progress of=${TAPE} bs=${BS}
+	echo -e "\n"
 }
 
 TAPE_SERIAL=$(sudo sg_read_attr ${TAPE} -f 0x401 | awk '{print $4}')
@@ -29,7 +30,7 @@ if [[ -z $TAPE_SERIAL ]]; then
 	exit 1
 fi
 
-echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
+echo -e "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)\n"
 echo "Tape Serial: ${TAPE_SERIAL}"
 
 echo "Finding EOM.."
@@ -47,7 +48,7 @@ while true; do
 	mt -f ${TAPE} rewind
 done
 
-echo "EOM Found!"
+echo -e "EOM Found!\n"
 
 files_ontape=$(mt -f ${TAPE} status | grep 'file number' | awk '{print $4}')
 
@@ -75,7 +76,12 @@ options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
 echo "Incremental Snapshot from ${LAST_SNAPSHOT} to ${NOW_SNAPSHOT}"
 send2tape
 
-echo "Rewinding and Unloading Tape!"
+
+SIZE_REMAIN=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)
+SIZE_REMAIN_GB=$(echo "scale=2;${SIZE_REMAIN} / 1024" | bc)
+echo "Remain space on tape: ${SIZE_REMAIN}MiB / ${SIZE_REMAIN_GB}GiB"
+
+echo -e "Rewinding and Unloading Tape!\n"
 mt -f $TAPE offline
 
 echo "End of backup - $(date --utc +%Y/%m/%d-%H:%M)"
