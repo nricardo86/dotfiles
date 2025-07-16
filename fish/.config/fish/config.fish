@@ -9,6 +9,8 @@ if type -q exa
   abbr l "exa --icons -lg"
   abbr la "exa --icons -lag"
 end
+abbr sudo "doas"
+abbr hl "grep -z"
 abbr cp "/usr/local/bin/cpg -g"
 abbr mv "/usr/local/bin/mvg -g"
 abbr za "zathura"
@@ -26,7 +28,8 @@ abbr s "du -hcs"
 abbr mkdir "mkdir -pv"
 abbr newKey 'gpg-connect-agent "scd serialno" "learn --force" /bye'
 abbr reloadAgent 'gpg-connect-agent reloadagent /bye'
-abbr wq 'sudo wg-quick'
+abbr wq 'doas wg-quick'
+abbr wg 'doas wg'
 abbr um 'udisksctl mount -b'
 abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
@@ -34,9 +37,9 @@ abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
 abbr lpbln 'ssh bln lp -o fit-to-page'
 abbr i "swayimg"
-abbr update "sudo apt update && sudo apt upgrade"
-abbr install "sudo apt install"
-abbr remove "sudo apt autoremove --purge"
+abbr update "doas apt update && doas apt upgrade"
+abbr install "doas apt install"
+abbr remove "doas apt autoremove --purge"
 abbr mullsplit "mullvad split-tunnel add $fish_pid"
 abbr dns_google_https "q @https://dns.google.com"
 abbr dns_quad9_https "q @https://dns.quad9.net"
@@ -57,7 +60,7 @@ gpg-connect-agent updatestartuptty /bye > /dev/null
 
 if status is-login
   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
-   exec Hyprland
+   exec /bin/Hyprland
   end
 end
 
