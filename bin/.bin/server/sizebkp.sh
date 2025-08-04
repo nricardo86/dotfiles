@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-DS=(z/main z/alt)
+DS=(z/main z/pbs z/alt)
 snapshot_name="remoteBkp"
 
 echo "ZFS snapshot size -> Remote"
 for ds in ${DS[@]}; do
-	LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | grep ${snapshot_name} | tail -1)
+	LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
 	zfs snapshot ${ds}@${snapshot_name}-$(date --utc +%Y%m%d-%H%M)
 	NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | grep ${snapshot_name} | tail -1)
 

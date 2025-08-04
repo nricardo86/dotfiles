@@ -76,7 +76,6 @@ options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
 echo "Incremental Snapshot from ${LAST_SNAPSHOT} to ${NOW_SNAPSHOT}"
 send2tape
 
-
 SIZE_REMAIN=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)
 SIZE_REMAIN_GB=$(echo "scale=2;${SIZE_REMAIN} / 1024" | bc)
 echo "Remain space on tape: ${SIZE_REMAIN}MiB / ${SIZE_REMAIN_GB}GiB"

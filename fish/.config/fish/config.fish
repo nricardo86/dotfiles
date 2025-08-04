@@ -35,7 +35,6 @@ abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
-abbr lpbln 'ssh bln lp -o fit-to-page'
 abbr i "swayimg"
 abbr update "doas apt update && doas apt upgrade"
 abbr install "doas apt install"
