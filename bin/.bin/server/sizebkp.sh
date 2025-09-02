@@ -2,6 +2,8 @@
 DS=(z/main z/pbs z/alt)
 snapshot_name="remoteBkp"
 
+date --utc
+
 echo "ZFS snapshot size -> Remote"
 for ds in ${DS[@]}; do
 	LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
