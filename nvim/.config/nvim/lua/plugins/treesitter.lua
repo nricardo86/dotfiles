@@ -11,9 +11,6 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
-		build = function()
-			vim.cmd("TSUpdateSync")
-		end,
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {

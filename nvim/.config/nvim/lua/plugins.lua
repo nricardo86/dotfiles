@@ -36,9 +36,6 @@ return {
 	},
 	{
 		"junegunn/fzf",
-		build = function()
-			vim.fn["fzf#install"]()
-		end,
 	},
 	{
 		"stevearc/oil.nvim",
@@ -58,14 +55,14 @@ return {
 			vim.keymap.set({ "n", "v" }, "<leader>/", ":CommentToggle<CR>", { desc = "Toggle Comment" })
 		end,
 	},
-	{
-		"iamcco/markdown-preview.nvim",
-		cmd = { "MarkdownPreviewToggle" },
-		ft = { "markdown" },
-		build = function()
-			vim.fn["mkdp#util#install"]()
-		end,
-	},
+	-- {
+	-- 	"iamcco/markdown-preview.nvim",
+	-- 	cmd = { "MarkdownPreviewToggle" },
+	-- 	ft = { "markdown" },
+	-- 	build = function()
+	-- 		vim.fn["mkdp#util#install"]()
+	-- 	end,
+	-- },
 	{
 		"norcalli/nvim-colorizer.lua",
 		config = function()
