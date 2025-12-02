@@ -25,6 +25,22 @@ tooltip label {
   color: #cdd6f4;
 }
 
+.connecting {
+  animation: pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 #workspaces button {
   padding: 5px;
   color: #313244;

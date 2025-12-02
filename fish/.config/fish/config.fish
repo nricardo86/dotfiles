@@ -35,7 +35,6 @@ abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
-abbr i "swayimg"
 abbr update "doas apt update && doas apt upgrade"
 abbr install "doas apt install"
 abbr remove "doas apt autoremove --purge"
@@ -43,8 +42,9 @@ abbr mullsplit "mullvad split-tunnel add $fish_pid"
 abbr dns_google_https "q @https://dns.google.com"
 abbr dns_quad9_https "q @https://dns.quad9.net"
 abbr dns_nasatto_https "q @https://dns.nasatto.com"
-#abbr i "kitty +kitten icat "
-#abbr icat "kitty +kitten icat"
+abbr i "swayimg"
+# abbr i "kitty +kitten icat "
+abbr icat "kitty +kitten icat"
 
 if test -z (pgrep ssh-agent)
   eval (ssh-agent -c)
