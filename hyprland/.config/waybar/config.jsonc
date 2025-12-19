@@ -147,7 +147,7 @@
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
         // "on-click": "blueman-manager"
-        "on-click": "alacritty --title bluetuith -e bluetuith"
+        "on-click": "ghostty --title=bluetuith -e bluetuith"
     },
     "network": {
         "format": "",
@@ -158,7 +158,7 @@
         "format-wifi": "  {signalStrength}%",
         "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthDownBits} {bandwidthUpBits}",
         "max-length": 50,
-        "on-click": "alacritty --title nmtui -e nmtui"
+        "on-click": "ghostty --title=nmtui -e nmtui"
     },
     "temperature": {
         "thermal-zone": 1,
