@@ -5,7 +5,7 @@ position = "Top"
 clipboard_cmd = "cliphist | wl-copy"
 
 [modules]
-left = [ "SystemInfo" ]
+left = [ "SystemInfo", "Temperature" ]
 center = [ "Workspaces", "WindowTitle" ]
 right = [ "clipboard", "Tray", "Clock", "Privacy", "Settings" ]
 
@@ -49,3 +49,8 @@ strong = "#414868"
 
 [appearance.secondary_color]
 base = "#0c0d14"
+
+[system_info.temperature]
+warn_threshold = 60
+alert_threshold = 80
+sensor = "acpitz temp1"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-ADDR="srv2.nasatto.com"
+ADDR="bdf5a13a.duckdns.org"
 SSH_USER="asdf"
 SSH_PORT="22"
 
