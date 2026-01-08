@@ -1,7 +1,7 @@
 ﻿set fish_greeting
 set -g fish_key_bindings fish_vi_key_bindings
 set -gx EDITOR nvim
-set -gx BROWSER brave-browser-stable
+set -gx BROWSER librewolf
 set -gx TERM tmux-256color
 
 if type -q exa
