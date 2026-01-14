@@ -43,8 +43,8 @@ abbr dnsgoogle "q @https://dns.google.com"
 abbr dnscloud "q @https://dns.cloudflare.com"
 abbr dnsnasatto "q @https://dns.nasatto.com"
 abbr i "swayimg"
-# abbr i "kitty +kitten icat "
-abbr icat "kitty +kitten icat"
+abbr img "chafa"
+abbr b "batcat"
 
 if test -z (pgrep ssh-agent)
   eval (ssh-agent -c)
