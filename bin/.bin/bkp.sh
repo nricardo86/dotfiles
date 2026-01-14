@@ -8,6 +8,7 @@ function usage() {
 }
 
 function backup() {
+    unlock
     /usr/bin/bash $DIR/.bin/restic-vault.sh backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
 
@@ -16,11 +17,12 @@ function backup() {
 }
 
 function clean() {
+    unlock
     /usr/bin/bash ~/.bin/restic-vault.sh forget \
         --keep-daily=30 --keep-monthly=12 --prune $@   
-    }
+}
 
-function main() {
+function unlock() {
     /usr/bin/bash $DIR/.bin/restic-vault.sh -q unlock
 }
 
@@ -37,6 +39,3 @@ do
             ;;
     esac
 done
-
-shift $((OPTIND-1))
-main $@
