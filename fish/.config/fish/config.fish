@@ -46,6 +46,15 @@ abbr i "swayimg"
 abbr img "chafa"
 abbr b "batcat"
 
+function y
+	set tmp (mktemp -t "yazi-cwd.XXXXXX")
+	command yazi $argv --cwd-file="$tmp"
+	if read -z cwd < "$tmp"; and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+		builtin cd -- "$cwd"
+	end
+	rm -f -- "$tmp"
+end
+
 if test -z (pgrep ssh-agent)
   eval (ssh-agent -c)
   set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
