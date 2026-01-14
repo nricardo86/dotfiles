@@ -47,6 +47,7 @@ abbr i "swayimg"
 abbr img "chafa"
 abbr b "batcat"
 abbr 2fa "wl-copy -o (oathtool -b --totp=sha1 (pass 2fa ))"
+abbr pff "pass ff"
 
 function y
 	set tmp (mktemp -t "yazi-cwd.XXXXXX")
