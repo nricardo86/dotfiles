@@ -1,6 +1,12 @@
 return {
 	{ "tpope/vim-sleuth" },
 	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {},
+		keys = {},
+	},
+	{
 		"tpope/vim-fugitive",
 		config = function()
 			vim.keymap.set("n", "<leader>gf", vim.cmd.Git, { desc = "Vim[F]ugitive Git" })
