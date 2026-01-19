@@ -91,6 +91,9 @@ tooltip label {
   margin-bottom: 2px;
   border: 0px;
 }
+#idle_inhibitor {
+  padding: 0px 14px;
+}
 
 #temperature,
 #idle_inhibitor,
