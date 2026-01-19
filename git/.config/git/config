@@ -10,10 +10,10 @@
 	defaultBranch = master
 
 [core]
-    pager = delta
+	pager = diff-so-fancy | less --tabs=4 -RF
 
 [interactive]
-    diffFilter = delta --color-only
+	diffFilter = diff-so-fancy --patch
 
 [delta]
     navigate = true    # use n and N to move between diff sections
