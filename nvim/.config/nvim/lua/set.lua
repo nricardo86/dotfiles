@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+
 vim.g.editorconfig = true
 vim.scriptencoding = "utf-8"
 vim.encoding = "utf-8"
