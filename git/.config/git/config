@@ -8,22 +8,32 @@
 	program = /usr/bin/gpg
 [init]
 	defaultBranch = master
-
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RF
-
 [interactive]
 	diffFilter = diff-so-fancy --patch
-
 [delta]
-    navigate = true    # use n and N to move between diff sections
-
-    # delta detects terminal colors automatically; set one of these to disable auto-detection
-    # dark = true
-    # light = true
-
+	navigate = true    # use n and N to move between diff sections
+	dark = true
+	# light = true
 [merge]
-    conflictstyle = diff3
-
+	conflictstyle = diff3
 [diff]
-    colorMoved = default
+	colorMoved = default
+	compactionHeuristic = true
+[color "diff"]
+	# meta = "#328cad" "" italic
+	# frag = "#b060ff" "" italic
+	# func = "#6b41a7" "" italic
+	# old = "#c05040"
+	# new = "#20ff70"
+	commit = "#30b0c0"
+	whitespace = "" "#c05040"
+	oldMoved = "#c03060"
+	newMoved = "#50b060"
+	oldMovedDimmed = "#802030"
+	oldMovedAlternative = "#d05030"
+	oldMovedAlternativeDimmed = "#a03020"
+	newMovedDimmed = "#307040"
+	newMovedAlternative = "#70e0a0"
+	newMovedAlternativeDimmed = "#407050"
