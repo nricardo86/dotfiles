@@ -24,7 +24,7 @@ zinit snippet OMZP::command-not-found
 
 # export defaults
 export EDITOR=nvim
-export BROWSER=brave-browser-stable
+export BROWSER=librewolf
 export TERM=tmux-256color
 export PATH=$HOME/.local/bin:$HOME/.bin:$PATH
 
@@ -63,8 +63,6 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
-# source $HOME/.asdf/asdf.sh
-# eval "$($HOME/.config/tmux/plugins/tmuxifier/bin/tmuxifier init - fish)"
 
 if [ -z $(pgrep ssh-agent) ];then
    eval "$(ssh-agent -c)"
@@ -80,3 +78,11 @@ gpg-connect-agent updatestartuptty /bye > /dev/null
 if [[ -z "$DISPLAY" ]] && [[ $(tty) = /dev/tty1 ]]; then
    exec Hyprland
 fi
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}

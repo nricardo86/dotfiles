@@ -23,7 +23,6 @@ abbr wtf6 "curl --connect-timeout 5 -fSsk https://ipv6.json.myip.wtf 2>/dev/null
 abbr dd "dd status=progress"
 abbr cal "ncal -C"
 abbr free "free -mh"
-abbr bat "batcat"
 abbr df "df -hT"
 abbr s "du -hcs"
 abbr mkdir "mkdir -pv"
@@ -34,8 +33,8 @@ abbr wg 'doas wg'
 abbr um 'udisksctl mount -b'
 abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
-abbr tat 'tmux at -t'
 abbr lp 'lp -o fit-to-page'
+abbr lpbln 'lp -o fit-to-page -d bln'
 abbr update "doas apt update && doas apt upgrade"
 abbr install "doas apt install"
 abbr remove "doas apt autoremove --purge"
