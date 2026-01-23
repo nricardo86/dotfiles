@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-#changing debian repo to testing
+#changing debian repo to stable
 cat <<EOF | sudo tee /etc/apt/sources.list
-deb http://debian.c3sl.ufpr.br/debian testing main contrib non-free non-free-firmware
-deb http://debian.c3sl.ufpr.br/debian-security/ testing-security main contrib non-free non-free-firmware
-deb http://debian.c3sl.ufpr.br/debian testing-updates main contrib non-free non-free-firmware
+deb http://debian.c3sl.ufpr.br/debian stable main contrib non-free non-free-firmware
+deb http://debian.c3sl.ufpr.br/debian-security/ stable-security main contrib non-free non-free-firmware
+deb http://debian.c3sl.ufpr.br/debian stable-updates main contrib non-free non-free-firmware
 EOF
 
 sudo apt update
@@ -59,7 +59,9 @@ sudo apt install -fy build-essential cmake cmake-extras curl findutils \
     meson ninja-build openssl psmisc python3-mako python3-markdown \
     python3-markupsafe python3-pyquery python3-yaml qt6-base-dev scdoc seatd \
     spirv-tools unzip vulkan-utility-libraries-dev vulkan-validationlayers \
-    wayland-protocols xdg-desktop-portal xwayland
+    wayland-protocols xdg-desktop-portal xwayland liblua5.2-0 libmujs3 \
+    libsixel1 libva-wayland2 libxpresent1 yt-dlp gir1.2-gtklayershell-0.1 \
+    python3-i3ipc xcur2png
 sudo apt install -fy bc binutils libc6 libcairo2-dev libdisplay-info3 libdrm2 \
     libjpeg-dev libjxl-dev libmagic-dev libmuparser-dev libpixman-1-dev \
     libpugixml-dev libre2-dev librsvg2-dev libspng-dev libtomlplusplus-dev \
