@@ -36,18 +36,22 @@ Signed-By: /etc/apt/keyrings/home_bgstack15_aftermozilla.gpg
 EOF
 
 sudo apt update
+sudo apt upgrade -y
+# install dependencies
 sudo apt install -fy libdw1t64 usb.ids i2c-tools libarchive13t64 libmalcontent-0-0 \
     libostree-1-1 libinotifytools0 libbluetooth3 libmm-glib0 libndp0 libnm0 \
     libteamdctl0 python3-pyqt5 python3-dbus.mainloop.pyqt5 python3-dbus \
-    libbluetooth3 liblirc-client0t64 avahi-daemon hdparm iw rfkill tlp-pd \
+    libbluetooth3 liblirc-client0t64 avahi-daemon hdparm iw \
     ethtool libsmartcols1 libavahi-core7 libdaemon0 python3-pyqt5.sip \
-    libqt5core5t64 libqt5dbus5t64 libqt5designer5 libqt5gui5t64 libqt5gui5-gles \
-    libqt5network5t64 libqt5printsupoort5t64 libqt5test5t64 libqt5widgets5t64 \
-    libmm-glib0 libteam 
-sudo apt install -fy hypr* xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez zig wlsunset inotify-tools ghostty \
+    libqt5core5t64 libqt5dbus5t64 libqt5designer5 libqt5gui5-gles \
+    libqt5network5t64 libqt5printsupport5t64 libqt5test5t64 libqt5widgets5t64 \
+    libmm-glib0 libqt5xml5t64 libxcb-xinerama0 libqt5help5 
+# install apps
+sudo apt install -fy hypr* xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
+    zig wlsunset inotify-tools ghostty \
     lazygit network-manager playerctl yazi uv waybar wofi pavucontrol-qt \
-    librewolf libreoffice pulseaudio* brightnessctl ddcutil flatpak \
-    wireguard wireguard-tools tlp tlp-rdw upower grim swappy
+    librewolf libreoffice pulseaudio* brightnessctl ddcutil flatpak rfkill \
+    wireguard wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy
 
 sudo apt modernize-sources
 
