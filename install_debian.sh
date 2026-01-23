@@ -1,10 +1,31 @@
 #!/usr/bin/env bash
 
 #changing debian repo to stable
-cat <<EOF | sudo tee /etc/apt/sources.list
-deb http://debian.c3sl.ufpr.br/debian stable main contrib non-free non-free-firmware
-deb http://debian.c3sl.ufpr.br/debian-security/ stable-security main contrib non-free non-free-firmware
-deb http://debian.c3sl.ufpr.br/debian stable-updates main contrib non-free non-free-firmware
+sudo rm /etc/apt/sources.list
+cat <<EOF | sudo tee /etc/apt/sources.list.d/debian.sources
+Types: deb
+URIs: https://debian.c3sl.ufpr.br/debian/
+Suites: testing
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb-src
+URIs: https://debian.c3sl.ufpr.br/debian/
+Suites: testing
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: https://debian.c3sl.ufpr.br/debian/
+Suites: testing-updates
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: https://security.debian.org/debian-security/
+Suites: testing-security
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
 
 sudo apt update
@@ -21,22 +42,26 @@ EOF
 
 #adding Ghostty repo
 curl -sS https://debian.griffo.io/EA0F721D231FDD3A0A17B9AC7808B4DD62C41256.asc | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/debian.griffo.io.gpg
-echo "deb https://debian.griffo.io/apt $(lsb_release -sc 2>/dev/null) main" | sudo tee /etc/apt/sources.list.d/debian.griffo.io.list
+cat <<EOF | sudo tee /etc/apt/sources.list.d/debian.griffo.io.sources
+Types: deb
+URIs: https://debian.griffo.io/apt/
+Suites: forky
+Components: main
+Signed-By: /etc/apt/trusted.gpg.d/debian.griffo.io.gpg
+EOF
 
 #adding librewolf repo
-! [ -d /etc/apt/keyrings ] && sudo mkdir -p /etc/apt/keyrings && sudo chmod 755 /etc/apt/keyrings
-
-wget -O- https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/home_bgstack15_aftermozilla.gpg
-
-sudo tee /etc/apt/sources.list.d/home_bgstack15_aftermozilla.sources << EOF > /dev/null
+curl -sS https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.key | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/home_bgstack15_aftermozilla.gpg
+cat <<EOF | sudo tee /etc/apt/sources.list.d/home_bgstack15_aftermozilla.sources
 Types: deb
 URIs: https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/
 Suites: /
-Signed-By: /etc/apt/keyrings/home_bgstack15_aftermozilla.gpg
+Signed-By: /etc/apt/trusted.gpg.d/home_bgstack15_aftermozilla.gpg
 EOF
 
 sudo apt update
 sudo apt upgrade -y
+
 # install dependencies
 sudo apt install -fy build-essential cmake cmake-extras curl findutils \
     gawk gettext gir1.2-graphene-1.0 git glslang-tools gobject-introspection \
@@ -48,20 +73,20 @@ sudo apt install -fy build-essential cmake cmake-extras curl findutils \
     libinih-dev libiniparser-dev libinput-dev libjbig-dev libjpeg-dev \
     libjpeg62-turbo-dev liblerc-dev libliftoff-dev liblzma-dev libnotify-bin \
     libpam0g-dev libpango1.0-dev libpipewire-0.3-dev libqt6svg6 \
-    libsdbus-c++-dev libseat-dev libstartup-notification0-dev \
-    libswresample-dev libsystemd-dev libtiff-dev libtiffxx6 \
+    libsdbus-c++-dev libseat-dev libstartup-notification0-dev 
+sudo apt install -fy libswresample-dev libsystemd-dev libtiff-dev libtiffxx6 \
     libtomlplusplus-dev libudev-dev libvkfft-dev libvulkan-dev \
     libvulkan-volk-dev libwayland-dev libwebp-dev libxcb-composite0-dev \
     libxcb-cursor-dev libxcb-dri3-dev libxcb-ewmh-dev libxcb-icccm4-dev \
     libxcb-present-dev libxcb-render-util0-dev libxcb-res0-dev libxcb-util-dev \
     libxcb-xinerama0-dev libxcb-xinput-dev libxcb-xkb-dev libxkbcommon-dev \
-    libxkbcommon-x11-dev libxkbregistry-dev libxml2-dev libxxhash-dev \
-    meson ninja-build openssl psmisc python3-mako python3-markdown \
-    python3-markupsafe python3-pyquery python3-yaml qt6-base-dev scdoc seatd \
-    spirv-tools unzip vulkan-utility-libraries-dev vulkan-validationlayers \
-    wayland-protocols xdg-desktop-portal xwayland liblua5.2-0 libmujs3 \
-    libsixel1 libva-wayland2 libxpresent1 yt-dlp gir1.2-gtklayershell-0.1 \
-    python3-i3ipc xcur2png
+    libxkbcommon-x11-dev libxkbregistry-dev libxml2-dev libxxhash-dev
+sudo apt install -fy meson ninja-build openssl psmisc python3-mako \
+    python3-markdown python3-markupsafe python3-pyquery python3-yaml \
+    qt6-base-dev scdoc seatd spirv-tools unzip vulkan-utility-libraries-dev \
+    vulkan-validationlayers wayland-protocols xdg-desktop-portal xwayland \
+    liblua5.2-0 libmujs3 libsixel1 libva-wayland2 libxpresent1 yt-dlp \
+    gir1.2-gtklayershell-0.1 python3-i3ipc xcur2png
 sudo apt install -fy bc binutils libc6 libcairo2-dev libdisplay-info3 libdrm2 \
     libjpeg-dev libjxl-dev libmagic-dev libmuparser-dev libpixman-1-dev \
     libpugixml-dev libre2-dev librsvg2-dev libspng-dev libtomlplusplus-dev \
@@ -77,16 +102,16 @@ sudo apt install -fy libdw1t64 usb.ids i2c-tools libarchive13t64 libmalcontent-0
     libmm-glib0 libqt5xml5t64 libxcb-xinerama0 libqt5help5 
 # install apps
 sudo apt install -fy hypr* xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
-    zig wlsunset inotify-tools ghostty \
-    lazygit network-manager playerctl yazi uv waybar wofi pavucontrol-qt \
-    librewolf libreoffice pulseaudio* brightnessctl ddcutil flatpak rfkill \
-    wireguard wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy qt5ct \
-    qt6ct yad xdg-utils mpv pamixer nvtop nwg-look nwg-displays
+    zig wlsunset inotify-tools ghostty lazygit network-manager playerctl yazi \
+    uv waybar wofi pavucontrol-qt librewolf libreoffice pulseaudio* \
+    brightnessctl ddcutil flatpak rfkill wireguard wireguard-tools tlp \
+    tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad xdg-utils mpv pamixer \
+    nvtop nwg-look nwg-displays
 
-sudo apt modernize-sources
-
+#set fish shell default for current user
 sudo chsh -s $(which fish) $USER
 
+#add flathub remotes to flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 #tmux plugin manager install
@@ -101,9 +126,10 @@ fc-cache -f
 sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --set x-terminal-emulator /usr/bin/ghostty
 
+#backup current files 
 mkdir ~/.bkp
 mv ~/.{bash*,profile,huslogin,vimrc,ssh,gnupg,zsh*,bin} ~/.bkp/
-
 mkdir -p ~/.{ssh,gnupg,config,zsh,bin,local/bin}
 
+#stage files 
 stow --target=$HOME --dotfiles */
