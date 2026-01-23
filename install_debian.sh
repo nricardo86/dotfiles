@@ -36,10 +36,18 @@ Signed-By: /etc/apt/keyrings/home_bgstack15_aftermozilla.gpg
 EOF
 
 sudo apt update
-sudo apt install -y hypr* xdg* fzf bluez zig wlsunset inotify-tools ghostty \
+sudo apt install libdw1t64 usb.ids i2c-tools libarchive13t64 libmalcontent-0-0 \
+    libostree-1-1 libinotifytools0 libbluetooth3 libmm-glib0 libndp0 libnm0 \
+    libteamdctl0 python3-pyqt5 python3-dbus.mainloop.pyqt5 python3-dbus \
+    libbluetooth3 liblirc-client0t64 avahi-daemon hdparm iw rfkill tlp-pd \
+    ethtool libsmartcols1
+sudo apt install -y hypr* xdg-desktop-portal-hyprland fzf bluez zig wlsunset inotify-tools ghostty \
     lazygit network-manager playerctl yazi uv waybar wofi pavucontrol-qt \
     librewolf libreoffice pulseaudio* brightnessctl ddcutil flatpak \
     wireguard wireguard-tools tlp tlp-rdw upower grim swappy
+
+sudo apt modernize-sources
+
 sudo chsh -s $(which fish) $USER
 
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
