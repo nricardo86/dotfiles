@@ -11,37 +11,87 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = {
-					"json",
-					"c",
-					"lua",
-					"luadoc",
-					"fish",
-					"bash",
-					-- "dockerfile",
-					"javascript",
-					"typescript",
-					"markdown",
-					"markdown_inline",
-					"gitignore",
-					"css",
-					"html",
-					"vim",
-					"vimdoc",
-				},
-				sync_install = false,
-				ignore_install = {
-					"dockerfile",
-				},
-				modules = {},
-				auto_install = true,
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = false,
-				},
-			})
+		version = false, -- Last release is way too old
+		build = ":TSUpdate",
+		-- event = { "BufReadPost", "BufNewFile" },
+		lazy = false, -- Keep false to ensure loading for Neo-tree
+		main = "nvim-treesitter.configs", -- Lazy handles the require logic here
+		branch = "master", -- Explicitly force the stable branch
+		opts = {
+			ensure_installed = {
+				"json",
+				"c",
+				"lua",
+				"luadoc",
+				"fish",
+				"bash",
+				-- "dockerfile",
+				"javascript",
+				"typescript",
+				"markdown",
+				"markdown_inline",
+				"gitignore",
+				"css",
+				"html",
+				"vim",
+				"vimdoc",
+			},
+			ignore_install = {
+				"dockerfile",
+			},
+
+			sync_install = false,
+			auto_install = true,
+			highlight = {
+				enable = true,
+				additional_vim_regex_highlighting = false,
+			},
+
+			indent = { enable = true },
+		},
+		-- Fallback config to handle edge cases
+		config = function(_, opts)
+			-- Protective call: If treesitter fails to load, don't crash neovim
+			local status_ok, configs = pcall(require, "nvim-treesitter.configs")
+			if not status_ok then
+				return
+			end
+			configs.setup(opts)
 		end,
 	},
+	-- {
+	-- 	"nvim-treesitter/nvim-treesitter",
+	-- 	config = function()
+	-- 		require("nvim-treesitter.configs").setup({
+	-- 			ensure_installed = {
+	-- 				"json",
+	-- 				"c",
+	-- 				"lua",
+	-- 				"luadoc",
+	-- 				"fish",
+	-- 				"bash",
+	-- 				-- "dockerfile",
+	-- 				"javascript",
+	-- 				"typescript",
+	-- 				"markdown",
+	-- 				"markdown_inline",
+	-- 				"gitignore",
+	-- 				"css",
+	-- 				"html",
+	-- 				"vim",
+	-- 				"vimdoc",
+	-- 			},
+	-- 			sync_install = false,
+	-- 			ignore_install = {
+	-- 				"dockerfile",
+	-- 			},
+	-- 			modules = {},
+	-- 			auto_install = true,
+	-- 			highlight = {
+	-- 				enable = true,
+	-- 				additional_vim_regex_highlighting = false,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 }
