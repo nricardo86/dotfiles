@@ -5,10 +5,10 @@ set -gx BROWSER librewolf
 set -gx TERM tmux-256color
 set -gx PASSWORD_STORE_ENABLE_EXTENSIONS true
 
-if type -q exa
-  abbr ls "exa --icons"
-  abbr l "exa --icons -lg"
-  abbr la "exa --icons -lag"
+if type -q eza
+  abbr ls "eza --icons"
+  abbr l "eza --icons -lg"
+  abbr la "eza --icons -lag"
 end
 abbr sudo "doas"
 abbr hl "grep -z"

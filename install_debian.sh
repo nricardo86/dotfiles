@@ -33,7 +33,7 @@ sudo apt dist-upgrade -y
 sudo apt install -y bc eza rsync fontconfig restic pass npm nodejs \
     python3 python3-pip python3-venv gcc zip luarocks curl jq wget git gnupg \
     scdaemon vnstat acpi acpid stow doas htop neovim tmux btop bat ripgrep \
-    fish zsh zoxide bash-completion
+    fish zsh zoxide bash-completion smartmontools
 
 #config doas
 cat <<EOF | sudo tee /etc/doas.conf
@@ -48,15 +48,6 @@ URIs: https://debian.griffo.io/apt/
 Suites: forky
 Components: main
 Signed-By: /etc/apt/trusted.gpg.d/debian.griffo.io.gpg
-EOF
-
-#adding librewolf repo
-curl -sS https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/Release.key | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/home_bgstack15_aftermozilla.gpg
-cat <<EOF | sudo tee /etc/apt/sources.list.d/home_bgstack15_aftermozilla.sources
-Types: deb
-URIs: https://download.opensuse.org/repositories/home:/bgstack15:/aftermozilla/Debian_Unstable/
-Suites: /
-Signed-By: /etc/apt/trusted.gpg.d/home_bgstack15_aftermozilla.gpg
 EOF
 
 sudo apt update
@@ -97,19 +88,30 @@ sudo apt install -fy libdw1t64 usb.ids i2c-tools libarchive13t64 libmalcontent-0
     libteamdctl0 python3-pyqt5 python3-dbus.mainloop.pyqt5 python3-dbus \
     libbluetooth3 liblirc-client0t64 avahi-daemon hdparm iw \
     ethtool libsmartcols1 libavahi-core7 libdaemon0 python3-pyqt5.sip \
-    libqt5core5t64 libqt5dbus5t64 libqt5designer5 libqt5gui5-gles \
+    libqt5core5t64 libqt5dbus5t64 libqt5designer5 \
     libqt5network5t64 libqt5printsupport5t64 libqt5test5t64 libqt5widgets5t64 \
     libmm-glib0 libqt5xml5t64 libxcb-xinerama0 libqt5help5 
 # install apps
-sudo apt install -fy hypr* xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
+sudo apt install -fy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
+    hyprland hyprcursor-util hypridle hyprland-protocols hyprland-qtutils \
+    hyprlock hyprpaper hyperpicker hyprwayland-scanner hyprland-backgrounds \
     zig wlsunset inotify-tools ghostty lazygit network-manager playerctl yazi \
-    uv waybar wofi pavucontrol-qt librewolf libreoffice pulseaudio* \
-    brightnessctl ddcutil flatpak rfkill wireguard wireguard-tools tlp \
-    tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad xdg-utils mpv pamixer \
-    nvtop nwg-look nwg-displays
+    uv waybar wofi pavucontrol-qt libreoffice pulseaudio \
+    pulseaudio-module-bluetooth pulseaudio-utils firefox-esr chromium \
+    font-stix fonts-lmodern libcamberra0 libreoffice-gtk3 \
+    libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \
+    wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad \
+    xdg-utils mpv pamixer nvtop nwg-look nwg-displays adwaita-icon-theme \
+    adwaita-qt adwaita-qt6 cups
 
 #set fish shell default for current user
 sudo chsh -s $(which fish) $USER
+
+#install nodejs neovim plugin
+sudo npm -g install neovim
+
+#config python pip manager
+python3 -m pip config set global.break-system-packages true
 
 #add flathub remotes to flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
