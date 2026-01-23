@@ -52,7 +52,7 @@ write_pass() {
     limit=$((${#array[@]} - 1))
     count=$((${#array[@]} - 2))
     folder=()
-    folder+="$HOME/pwd/"
+    folder+="./pwd/"
     while [ $count -lt $limit ]; do
       folder+="${array[$count]}/"
       ((count++))
