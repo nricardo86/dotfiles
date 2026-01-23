@@ -11,7 +11,13 @@ sudo apt update
 sudo apt dist-upgrade -y
 sudo apt install -y bc eza rsync fontconfig restic pass npm nodejs \
     python3 python3-pip python3-venv gcc zip luarocks curl jq wget git gnupg \
-    scdaemon vnstat acpi acpid stow doas htop neovim tmux btop bat ripgrep fish zsh zoxide
+    scdaemon vnstat acpi acpid stow doas htop neovim tmux btop bat ripgrep \
+    fish zsh zoxide bash-completion
+
+#config doas
+cat <<EOF | sudo tee /etc/doas.conf
+permit persist $USER as root
+EOF
 
 #adding Ghostty repo
 curl -sS https://debian.griffo.io/EA0F721D231FDD3A0A17B9AC7808B4DD62C41256.asc | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/debian.griffo.io.gpg
@@ -30,8 +36,13 @@ Signed-By: /etc/apt/keyrings/home_bgstack15_aftermozilla.gpg
 EOF
 
 sudo apt update
-sudo apt install -y hypr* fzf zig ghostty lazgit yazi uv bun tigerbettle wofi pavucontrol-qt librewolf libreoffice
+sudo apt install -y hypr* xdg* fzf bluez zig wlsunset inotify-tools ghostty \
+    lazygit network-manager playerctl yazi uv waybar wofi pavucontrol-qt \
+    librewolf libreoffice pulseaudio* brightnessctl ddcutil flatpak \
+    wireguard wireguard-tools tlp tlp-rdw upower grim swappy
 sudo chsh -s $(which fish) $USER
+
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 #tmux plugin manager install
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
