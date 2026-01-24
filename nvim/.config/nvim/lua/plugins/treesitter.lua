@@ -13,7 +13,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		version = false, -- Last release is way too old
 		build = ":TSUpdate",
-		-- event = { "BufReadPost", "BufNewFile" },
+		event = { "BufReadPost", "BufNewFile" },
 		lazy = false, -- Keep false to ensure loading for Neo-tree
 		main = "nvim-treesitter.configs", -- Lazy handles the require logic here
 		branch = "master", -- Explicitly force the stable branch
@@ -59,39 +59,4 @@ return {
 			configs.setup(opts)
 		end,
 	},
-	-- {
-	-- 	"nvim-treesitter/nvim-treesitter",
-	-- 	config = function()
-	-- 		require("nvim-treesitter.configs").setup({
-	-- 			ensure_installed = {
-	-- 				"json",
-	-- 				"c",
-	-- 				"lua",
-	-- 				"luadoc",
-	-- 				"fish",
-	-- 				"bash",
-	-- 				-- "dockerfile",
-	-- 				"javascript",
-	-- 				"typescript",
-	-- 				"markdown",
-	-- 				"markdown_inline",
-	-- 				"gitignore",
-	-- 				"css",
-	-- 				"html",
-	-- 				"vim",
-	-- 				"vimdoc",
-	-- 			},
-	-- 			sync_install = false,
-	-- 			ignore_install = {
-	-- 				"dockerfile",
-	-- 			},
-	-- 			modules = {},
-	-- 			auto_install = true,
-	-- 			highlight = {
-	-- 				enable = true,
-	-- 				additional_vim_regex_highlighting = false,
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
 }
