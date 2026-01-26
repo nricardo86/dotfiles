@@ -94,11 +94,11 @@ sudo apt install -fy libdw1t64 usb.ids i2c-tools libarchive13t64 libmalcontent-0
 # install apps
 sudo apt install -fy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
     hyprland hyprcursor-util hypridle hyprland-protocols hyprland-qtutils \
-    hyprlock hyprpaper hyperpicker hyprwayland-scanner hyprland-backgrounds \
+    hyprlock hyprpaper hyprpicker hyprwayland-scanner hyprland-backgrounds \
     zig wlsunset inotify-tools ghostty lazygit network-manager playerctl yazi \
     uv waybar wofi pavucontrol-qt libreoffice pulseaudio \
     pulseaudio-module-bluetooth pulseaudio-utils firefox-esr chromium \
-    font-stix fonts-lmodern libcamberra0 libreoffice-gtk3 \
+    fonts-stix fonts-lmodern libreoffice-gtk3 \
     libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \
     wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad \
     xdg-utils mpv pamixer nvtop nwg-look nwg-displays adwaita-icon-theme \
