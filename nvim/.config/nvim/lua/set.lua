@@ -41,6 +41,8 @@ vim.opt.undofile = true
 
 vim.opt.termguicolors = true
 
+vim.opt.winborder = "rounded"
+
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.colorcolumn = "80"

@@ -1,5 +1,6 @@
 return {
 	{ "tpope/vim-sleuth" },
+	{ "neovim/nvim-lspconfig" },
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
