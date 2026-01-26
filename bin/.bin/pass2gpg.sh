@@ -47,7 +47,7 @@ encrypt() {
 write_pass() {
   get_pass "Password for Symmetric Encrypt: "
   IFS=$'\n'
-  for i in $(find $HOME/.password-store/ -type f -name "*.gpg"); do
+  for i in $(find "$HOME/.password-store/ -type f -name *.gpg"); do
     IFS='/' read -r -a array <<<"$i"
     limit=$((${#array[@]} - 1))
     count=$((${#array[@]} - 2))

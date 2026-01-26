@@ -38,6 +38,8 @@ sudo apt install -y bc eza rsync fontconfig restic pass npm nodejs \
 #config doas
 cat <<EOF | sudo tee /etc/doas.conf
 permit persist $USER as root
+permit nopass $USER as root cmd "wg"
+permit nopass $USER as root cmd "wg-quick"
 EOF
 
 #adding Ghostty repo
@@ -64,7 +66,7 @@ sudo apt install -fy build-essential cmake cmake-extras curl findutils \
     libinih-dev libiniparser-dev libinput-dev libjbig-dev libjpeg-dev \
     libjpeg62-turbo-dev liblerc-dev libliftoff-dev liblzma-dev libnotify-bin \
     libpam0g-dev libpango1.0-dev libpipewire-0.3-dev libqt6svg6 \
-    libsdbus-c++-dev libseat-dev libstartup-notification0-dev 
+    libsdbus-c++-dev libseat-dev libstartup-notification0-dev
 sudo apt install -fy libswresample-dev libsystemd-dev libtiff-dev libtiffxx6 \
     libtomlplusplus-dev libudev-dev libvkfft-dev libvulkan-dev \
     libvulkan-volk-dev libwayland-dev libwebp-dev libxcb-composite0-dev \
@@ -90,7 +92,7 @@ sudo apt install -fy libdw1t64 usb.ids i2c-tools libarchive13t64 libmalcontent-0
     ethtool libsmartcols1 libavahi-core7 libdaemon0 python3-pyqt5.sip \
     libqt5core5t64 libqt5dbus5t64 libqt5designer5 \
     libqt5network5t64 libqt5printsupport5t64 libqt5test5t64 libqt5widgets5t64 \
-    libmm-glib0 libqt5xml5t64 libxcb-xinerama0 libqt5help5 
+    libmm-glib0 libqt5xml5t64 libxcb-xinerama0 libqt5help5
 # install apps
 sudo apt install -fy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
     hyprland hyprcursor-util hypridle hyprland-protocols hyprland-qtutils \
@@ -129,10 +131,10 @@ sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/ghostty 0
 sudo update-alternatives --set x-terminal-emulator /usr/bin/ghostty
 
-#backup current files 
+#backup current files
 mkdir ~/.bkp
 mv ~/.{bash*,profile,huslogin,vimrc,ssh,gnupg,zsh*,bin} ~/.bkp/
 mkdir -p ~/.{ssh,gnupg,config,zsh,bin,local/bin}
 
-#stage files 
+#stage files
 stow --target=$HOME --dotfiles */

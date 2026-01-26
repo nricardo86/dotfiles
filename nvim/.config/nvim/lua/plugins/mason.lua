@@ -18,7 +18,7 @@ return {
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		opts = {
 			ensure_installed = {
-				"ts_ls",
+				-- "ts_ls",
 				"prettier",
 				"clangd",
 				"eslint-lsp",
@@ -31,7 +31,6 @@ return {
 				"jsonls",
 				"bashls",
 				"shfmt",
-				"markdown_oxide",
 			},
 		},
 	},

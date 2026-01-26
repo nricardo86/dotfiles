@@ -26,4 +26,4 @@ vim.diagnostic.config({
 	},
 })
 
-vim.lsp.enable({ "clangd", "lua_ls", "bashls" })
+vim.lsp.enable({ "clangd", "bashls", "lua_ls", "stylua", "html", "eslint", "jsonls", "cssls" })
