@@ -126,6 +126,7 @@ fc-cache -f
 
 #update default apps
 sudo update-alternatives --set editor /usr/bin/nvim
+sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/ghostty 0
 sudo update-alternatives --set x-terminal-emulator /usr/bin/ghostty
 
 #backup current files 
