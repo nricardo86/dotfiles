@@ -12,8 +12,6 @@ if type -q eza
 end
 abbr sudo "doas"
 abbr hl "grep -z"
-abbr cp "/usr/local/bin/cpg -g"
-abbr mv "/usr/local/bin/mvg -g"
 abbr za "zathura"
 abbr cd "z"
 abbr rsync "rsync -avhP"
