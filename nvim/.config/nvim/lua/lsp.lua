@@ -26,32 +26,4 @@ vim.diagnostic.config({
 	},
 })
 
-vim.lsp.config("lua_ls", {
-	cmd = { "lua-language-server" },
-	-- Filetypes to automatically attach to.
-	filetypes = { "lua" },
-	-- Sets the "workspace" to the directory where any of these files is found.
-	-- Files that share a root directory will reuse the LSP server connection.
-	-- Nested lists indicate equal priority, see |vim.lsp.Config|.
-	root_markers = { { ".luarc.json", ".luarc.jsonc" }, ".git" },
-	-- Specific settings to send to the server. The schema is server-defined.
-	-- Example: https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
-	settings = {
-		Lua = {
-			diagnostics = {
-				globals = { "vim " },
-			},
-			runtime = {
-				version = "LuaJIT",
-			},
-		},
-	},
-})
-
-vim.lsp.config("clangd", {
-	cmd = { "clangd", "--background-index" },
-	root_markers = { "compile_commands.json", "compile_flags.txt" },
-	filetypes = { "c", "cpp" },
-})
-
 vim.lsp.enable({ "clangd", "lua_ls", "bashls" })
