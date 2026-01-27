@@ -15,7 +15,7 @@ vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "[p]aste over selection" })
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[y]ank selection" })
 vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "[Y]ank line" })
 
-vim.keymap.set({ "n", "v" }, "<leader>_", [["_d]], { desc = "[d]elete to blackhole" })
+vim.keymap.set({ "n", "v" }, "<leader>D", [["_d]], { desc = "[d]elete to blackhole" })
 
 vim.keymap.set("n", "Q", "<nop>")
 
