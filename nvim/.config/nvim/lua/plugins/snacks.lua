@@ -61,14 +61,14 @@ return {
 	},
 	keys = {
 		{
-			"<leader>lg",
+			"<leader>g",
 			function()
 				Snacks.lazygit()
 			end,
-			desc = "[L]azy[G]it",
+			desc = "Lazy[G]it",
 		},
 		{
-			"<leader>un",
+			"<leader>n",
 			function()
 				Snacks.notifier.hide()
 			end,
