@@ -20,8 +20,8 @@ return {
 			async = false,
 			timeout_ms = 500,
 		},
-		-- vim.keymap.set("n", "<leader>f", function()
-		-- 	require("conform").format({ async = true, lsp_fallback = true })
-		-- end, { desc = "Trigger [F]ormat" }),
+		vim.keymap.set("n", "<leader>f", function()
+			require("conform").format({ async = true, lsp_fallback = true })
+		end, { desc = "Trigger [F]ormat" }),
 	},
 }

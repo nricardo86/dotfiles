@@ -45,6 +45,34 @@ vim.keymap.set("n", "<leader>bs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left>
 
 vim.keymap.set("n", "<leader>bx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file e[x]ecutable" })
 
+-- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
+-- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+-- is not what someone will guess without a bit more experience.
+--
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+-- or just use <C-\><C-n> to exit terminal mode
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
 vim.keymap.set("n", "<leader>,", function()
 	vim.cmd("so")
 end, { desc = "Source current buffer" })
+
+-- Disable arrow keys in all modes
+-- local modes = { 'n', 'i', 'v', 'c', 't', 'o', 's', 'x' } -- All possible modes
+local modes = { "n", "i", "v", "o", "t", "s", "x" } -- All possible modes
+local arrows = { "<Up>", "<Down>", "<Left>", "<Right>" }
+
+for _, mode in ipairs(modes) do
+	for _, key in ipairs(arrows) do
+		vim.keymap.set(mode, key, "<Nop>", { noremap = true, silent = true })
+	end
+end
+
+local enabledModes = { "i", "c", "o", "t", "s", "x" }
+-- Map Alt + hjkl in Insert mode
+for _, mode in ipairs(enabledModes) do
+	vim.keymap.set(mode, "<A-h>", "<Left>", { noremap = true, silent = true })
+	vim.keymap.set(mode, "<A-j>", "<Down>", { noremap = true, silent = true })
+	vim.keymap.set(mode, "<A-k>", "<Up>", { noremap = true, silent = true })
+	vim.keymap.set(mode, "<A-l>", "<Right>", { noremap = true, silent = true })
+end

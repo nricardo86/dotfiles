@@ -1,6 +1,5 @@
 return {
 	{ "tpope/vim-sleuth" },
-	{ "neovim/nvim-lspconfig" },
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
@@ -8,24 +7,20 @@ return {
 		keys = {},
 	},
 	{
+		"nmac427/guess-indent.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {},
+	},
+	{ "nvim-mini/mini.icons", lazy = true, version = false, opts = {} },
+	{ "nvim-mini/mini.pairs", event = "VeryLazy", version = false, opts = {} },
+	{
 		"tpope/vim-fugitive",
 		config = function()
 			vim.keymap.set("n", "<leader>gf", vim.cmd.Git, { desc = "Vim[F]ugitive Git" })
 		end,
 	},
 	{
-		"lewis6991/gitsigns.nvim",
-		opts = {
-			vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>", { desc = "Gitsigns [P]review" }),
-			vim.keymap.set(
-				"n",
-				"<leader>gb",
-				":Gitsigns toggle_current_line_blame<CR>",
-				{ desc = "Gitsigns Toogle [B]lame" }
-			),
-		},
-	},
-	{
+
 		"akinsho/bufferline.nvim",
 		version = "*",
 		dependencies = "nvim-tree/nvim-web-devicons",
@@ -54,7 +49,7 @@ return {
 			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open Parent Directory" }),
 		},
 	},
-	{ "raimondi/delimitmate" },
+	-- { "raimondi/delimitmate" },
 	{
 		"terrortylor/nvim-comment",
 		config = function()
@@ -72,8 +67,9 @@ return {
 		"folke/tokyonight.nvim",
 		lazy = false,
 		priority = 1000,
-		config = function()
-			vim.cmd([[colorscheme tokyonight-night]])
+		opts = {},
+		init = function()
+			vim.cmd.colorscheme("tokyonight-night")
 		end,
 	},
 	{ "christoomey/vim-tmux-navigator" },
