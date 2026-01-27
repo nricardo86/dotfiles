@@ -19,8 +19,12 @@ vim.keymap.set({ "n", "v" }, "<leader>D", [["_d]], { desc = "[d]elete to blackho
 
 vim.keymap.set("n", "Q", "<nop>")
 
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [d]iagnostic message" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [d]iagnostic message" })
+vim.keymap.set("n", "[d", function()
+	vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Go to previous [d]iagnostic message" })
+vim.keymap.set("n", "]d", function()
+	vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Go to next [d]iagnostic message" })
 vim.keymap.set("n", "<leader>de", vim.diagnostic.open_float, { desc = "Show Diagnostic [e]rror messages" })
 vim.keymap.set("n", "<leader>dq", vim.diagnostic.setloclist, { desc = "Open Diagnostic [q]uickfix list" })
 

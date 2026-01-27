@@ -10,7 +10,7 @@ return {
 		dependencies = "nvim-tree/nvim-web-devicons",
 		opts = {
 			vim.keymap.set("n", "<leader>n", ":bn<CR>", { desc = "Bufferline [n]ext" }),
-			vim.keymap.set("n", "<leader>p", ":bp<CR>", { desc = "Bufferline [p]previous" }),
+			vim.keymap.set("n", "<leader>p", ":bp<CR>", { desc = "Bufferline [p]revious" }),
 			vim.keymap.set("n", "<leader>x", ":bd<CR>", { desc = "Bufferline e[x]it" }),
 		},
 	},

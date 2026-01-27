@@ -1,6 +1,8 @@
 return {
 	"folke/snacks.nvim",
 	event = "VimEnter",
+	lazy = false,
+	priority = 1000,
 	opts = {
 		bigfile = { enabled = true },
 		dashboard = {
@@ -61,7 +63,7 @@ return {
 	},
 	keys = {
 		{
-			"<leader>g",
+			"<leader>lg",
 			function()
 				Snacks.lazygit()
 			end,
