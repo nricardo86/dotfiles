@@ -1,5 +1,4 @@
 return {
-	{ "tpope/vim-sleuth" },
 	{ "folke/which-key.nvim", event = "VeryLazy", opts = {}, keys = {} },
 	{ "nmac427/guess-indent.nvim", event = { "BufReadPost", "BufNewFile" }, opts = {} },
 	{ "nvim-mini/mini.icons", lazy = true, version = false, opts = {} },
@@ -55,11 +54,4 @@ return {
 		end,
 	},
 	{ "christoomey/vim-tmux-navigator" },
-	{
-		"goolord/alpha-nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("alpha").setup(require("alpha.themes.startify").config)
-		end,
-	},
 }
