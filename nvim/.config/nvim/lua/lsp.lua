@@ -25,5 +25,3 @@ vim.diagnostic.config({
 		current_line = true,
 	},
 })
-
-vim.lsp.enable({ "clangd", "bashls", "lua_ls", "html", "eslint", "jsonls", "cssls", "pyright" })
