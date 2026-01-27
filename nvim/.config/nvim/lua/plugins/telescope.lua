@@ -21,37 +21,5 @@ return {
 		pcall(require("telescope").load_extension, "smart_history")
 		pcall(require("telescope").load_extension, "ui-select")
 		pcall(require("telescope").load_extension, "noice")
-
-		local builtin = require("telescope.builtin")
-
-		vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search [H]elp" })
-		vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search [K]eymaps" })
-		vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "Search [F]iles" })
-		vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "Search Select Telescope" })
-		vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "Search current [W]ord" })
-		vim.keymap.set("n", "<leader>sa", builtin.live_grep, { desc = "Search by Grep [A]ll Files" })
-		vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "Search [D]iagnostics" })
-		vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "Search [R]esume" })
-		vim.keymap.set("n", "<leader>st", builtin.git_files, { desc = "Gi[t] Files" })
-		vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = 'Search Recent Files ("." for repeat)' })
-		vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
-
-		vim.keymap.set("n", "<leader>s/", function()
-			builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-				winblend = 10,
-				previewer = false,
-			}))
-		end, { desc = "[/] Fuzzily search in current buffer" })
-
-		vim.keymap.set("n", "<leader>sg", function()
-			builtin.live_grep({
-				grep_open_files = true,
-				prompt_title = "Live Grep in Open Files",
-			})
-		end, { desc = "Search [/] in Open Files" })
-
-		vim.keymap.set("n", "<leader>sn", function()
-			builtin.find_files({ cwd = vim.fn.stdpath("config") })
-		end, { desc = "Search [N]eovim files" })
 	end,
 }
