@@ -1,6 +1,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.g.have_nerd_font = true
+
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
@@ -10,6 +12,10 @@ vim.encoding = "utf-8"
 vim.fileencoding = "utf-8"
 
 vim.opt.guicursor = ""
+
+vim.opt.mouse = "a"
+
+vim.opt.breakindent = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -42,6 +48,8 @@ vim.opt.undofile = true
 vim.opt.termguicolors = true
 
 vim.opt.winborder = "rounded"
+
+vim.opt.confirm = true
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"

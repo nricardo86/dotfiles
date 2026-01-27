@@ -83,13 +83,6 @@ return {
 			mode = { "n", "t" },
 		},
 		{
-			"<c-_>",
-			function()
-				Snacks.terminal()
-			end,
-			desc = "which_key_ignore",
-		},
-		{
 			"]]",
 			function()
 				Snacks.words.jump(vim.v.count1)
@@ -207,7 +200,7 @@ return {
 			desc = "[S]earch [/] in Open Files",
 		},
 		{
-			"<leader>.",
+			"<leader>;",
 			function()
 				Snacks.picker.lines({
 					-- use the Select layout

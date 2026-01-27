@@ -1,24 +1,9 @@
 return {
 	{ "tpope/vim-sleuth" },
-	{
-		"folke/which-key.nvim",
-		event = "VeryLazy",
-		opts = {},
-		keys = {},
-	},
-	{
-		"nmac427/guess-indent.nvim",
-		event = { "BufReadPost", "BufNewFile" },
-		opts = {},
-	},
+	{ "folke/which-key.nvim", event = "VeryLazy", opts = {}, keys = {} },
+	{ "nmac427/guess-indent.nvim", event = { "BufReadPost", "BufNewFile" }, opts = {} },
 	{ "nvim-mini/mini.icons", lazy = true, version = false, opts = {} },
 	{ "nvim-mini/mini.pairs", event = "VeryLazy", version = false, opts = {} },
-	{
-		"tpope/vim-fugitive",
-		config = function()
-			vim.keymap.set("n", "<leader>gf", vim.cmd.Git, { desc = "Vim[F]ugitive Git" })
-		end,
-	},
 	{
 
 		"akinsho/bufferline.nvim",
@@ -36,9 +21,7 @@ return {
 			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "UndotreeToggle" })
 		end,
 	},
-	{
-		"junegunn/fzf",
-	},
+	{ "junegunn/fzf" },
 	{
 		"stevearc/oil.nvim",
 		opts = {
@@ -49,7 +32,6 @@ return {
 			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open Parent Directory" }),
 		},
 	},
-	-- { "raimondi/delimitmate" },
 	{
 		"terrortylor/nvim-comment",
 		config = function()
