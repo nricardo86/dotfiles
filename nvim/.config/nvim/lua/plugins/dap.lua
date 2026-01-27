@@ -52,11 +52,11 @@ return {
 			dapui.close()
 		end
 
-		vim.keymap.set("n", "<F3>", dap.toggle_breakpoint, { desc = "Dap Toogle Breakpoint" })
-		vim.keymap.set("n", "<F6>", dap.continue, { desc = "Dap Run/Continue" })
-		vim.keymap.set("n", "<F7>", dap.step_into, { desc = "Dap StepInto" })
-		vim.keymap.set("n", "<F8>", dap.step_over, { desc = "Dap StepOver" })
-		vim.keymap.set("n", "<F9>", dap.step_out, { desc = "Dap StepOut" })
-		vim.keymap.set("n", "<F5>", dap.terminate, { desc = "Dap Terminate" })
+		vim.keymap.set("n", "<F1>", dap.toggle_breakpoint, { desc = "Dap Toogle Breakpoint" })
+		vim.keymap.set("n", "<F2>", dap.continue, { desc = "Dap Run/Continue" })
+		vim.keymap.set("n", "<F3>", dap.step_into, { desc = "Dap StepInto" })
+		vim.keymap.set("n", "<F4>", dap.step_over, { desc = "Dap StepOver" })
+		vim.keymap.set("n", "<F5>", dap.step_out, { desc = "Dap StepOut" })
+		vim.keymap.set("n", "<F10>", dap.terminate, { desc = "Dap Terminate" })
 	end,
 }
