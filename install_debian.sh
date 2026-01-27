@@ -126,6 +126,9 @@ mkdir -p ~/.local/share/fonts/
 wget -qO- https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip | busybox unzip - -d ~/.local/share/fonts
 fc-cache -f
 
+#install luacheck
+sudo luarocks install luacheck
+
 #update default apps
 sudo update-alternatives --set editor /usr/bin/nvim
 sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/bin/ghostty 0
