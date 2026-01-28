@@ -25,7 +25,6 @@ return {
 				"luadoc",
 				"fish",
 				"bash",
-				-- "dockerfile",
 				"javascript",
 				"typescript",
 				"markdown",
@@ -38,6 +37,7 @@ return {
 			},
 			ignore_install = {
 				"dockerfile",
+				"jsonc",
 			},
 
 			sync_install = false,

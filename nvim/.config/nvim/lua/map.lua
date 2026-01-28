@@ -42,6 +42,7 @@ vim.keymap.set("n", "<leader>vx", "<cmd>close<CR>", { desc = "Close current spli
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "[q]uit" })
 vim.keymap.set("n", "<leader>Q", "<cmd>q!<CR>", { desc = "[Q]uit without saving" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "[w]rite current buffer" })
+vim.keymap.set("n", "<leader>W", "<cmd>wall<CR>", { desc = "[w]rite current buffer" })
 
 vim.keymap.set("n", "<leader>bs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {
 	desc = "[s]ubstitute hover word",

@@ -70,7 +70,7 @@ return {
 			desc = "Lazy[G]it",
 		},
 		{
-			"<leader>n",
+			"<leader>un",
 			function()
 				Snacks.notifier.hide()
 			end,
