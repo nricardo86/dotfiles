@@ -104,8 +104,8 @@ sudo apt install -fy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
     libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \
     wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad \
     xdg-utils mpv pamixer nvtop nwg-look nwg-displays adwaita-icon-theme \
-    adwaita-qt adwaita-qt6 cups breeze-icon-theme breeze-cursor-theme \
-    breeze-gtk-theme
+    adwaita-qt adwaita-qt6 gnome-themes-extra cups breeze-icon-theme \
+    breeze-cursor-theme breeze-gtk-theme
 
 #set fish shell default for current user
 sudo chsh -s $(which fish) $USER
