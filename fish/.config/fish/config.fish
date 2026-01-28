@@ -47,6 +47,7 @@ abbr 2fa "wl-copy -o (oathtool -b --totp=sha1 (pass 2fa ))"
 abbr pff "pass ff"
 abbr gp "git add . && git commit && git push"
 abbr dsf "diff-so-fancy"
+abbr lg "lazygit"
 
 function gbr --description "Git browse commits"
     set -l log_line_to_hash "echo {} | grep -o '[a-f0-9]\{7\}' | head -1"

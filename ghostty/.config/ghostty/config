@@ -44,7 +44,7 @@
 
 
 font-size = 14
-font-family = JetBrainsMono Nerd Font
+font-family = JetBrainsMonoNL Nerd Font
 background-opacity = 0.9
 # background-blur = 20
 shell-integration = fish
