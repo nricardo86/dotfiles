@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 TAPE=/dev/nst0
 BS=256k
-
-DS=z/main
+DS=$1
 prefix="tapebkp"
+
+if [[ -n "$DS" ]];
+	echo need dataset to backup
+	exit 1
+fi
+
 
 function send2tape {
 	SIZE_REMAIN=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)

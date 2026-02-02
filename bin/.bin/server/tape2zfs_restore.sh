@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 TAPE=/dev/nst0
 BS=256k
-DS="${1:-'tank/restore'}"
+DS=$1
+
+if [[ -z "$DS" ]]; then
+	echo need dataset destination
+	exit 1
+fi
 
 echo "Tape2zfs init! - $(date --utc +%Y/%m/%d-%H%M)"
 
