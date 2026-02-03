@@ -4,11 +4,10 @@ BS=256k
 DS=$1
 prefix="tapebkp"
 
-if [[ -n "$DS" ]];
+if [[ -z "$DS" ]]; then
 	echo need dataset to backup
 	exit 1
 fi
-
 
 function send2tape {
 	SIZE_REMAIN=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)
@@ -26,7 +25,7 @@ function send2tape {
 		exit 1
 	fi
 
-	zfs send -wc ${options} | dd status=progress of=${TAPE} bs=${BS}
+	zfs send -wc ${options} $@ | dd status=progress of=${TAPE} bs=${BS}
 	echo -e "\n"
 }
 
@@ -56,6 +55,15 @@ done
 echo -e "EOM Found!\n"
 
 files_ontape=$(mt -f ${TAPE} status | grep 'file number' | awk '{print $4}')
+
+if [ "$files_ontape" -eq 0 ]; then
+	echo "First Snapshot"
+	SNAP_INIT=$(zfs list -t snapshot ${DS} -H | grep $prefix | head -n1 | awk '{print $1}')
+	echo "Sending from ${SNAP_INIT}"
+	options="-R ${SNAP_INIT}"
+	send2tape
+	files_ontape=1
+fi
 
 snapshots=()
 for i in $(zfs list -t snapshot ${DS} -H -o name); do

@@ -14,7 +14,7 @@ TAPE_ATTR=$(sudo sg_read_attr ${TAPE})
 if [[ "$?" -ne "0" ]]; then
 	exit 1
 fi
-mt -f ${TAPE} rewind
+# mt -f ${TAPE} rewind
 
 while (dd status=progress if=${TAPE} bs=${BS} | sudo zfs receive -Fuv ${DS}); do
 	:
