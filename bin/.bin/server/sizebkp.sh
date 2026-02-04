@@ -7,7 +7,7 @@ date --utc
 echo "ZFS snapshot size -> Remote"
 for ds in ${DS[@]}; do
 	LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
-	zfs snapshot ${ds}@${snapshot_name}-$(date --utc +%Y%m%d-%H%M)
+	zfs snapshot -r ${ds}@${snapshot_name}-$(date --utc +%Y%m%d-%H%M)
 	NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | grep ${snapshot_name} | tail -1)
 
 	options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
@@ -33,7 +33,7 @@ snapshot_name="tapebkp"
 
 echo "ZFS snapshot size -> Tape"
 LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snapshot_name} | tail -1)
-zfs snapshot $DS@${snapshot_name}-$(date --utc +%Y%m%d-%H%M)
+zfs snapshot -r $DS@${snapshot_name}-$(date --utc +%Y%m%d-%H%M)
 NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${DS} | grep ${snapshot_name} | tail -1)
 
 options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"

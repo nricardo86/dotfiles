@@ -53,7 +53,7 @@ function firstSnapshot {
 	SNAP_INIT=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}')
 
 	sizeRemain
-	sizeSnap "-I ${SNAP_INIT}"
+	sizeSnap "${SNAP_INIT}"
 
 	if [[ ! "${SIZE_REMAIN_MB}" -ge "${SNAP_SIZE_MB}" ]]; then
 		echo "Insuficient remain space on tape"
