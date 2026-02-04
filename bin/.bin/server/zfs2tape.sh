@@ -67,22 +67,22 @@ function firstSnapshot {
 
 function snapshot {
 	LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
-	zfs snapshot "${1}@${2}-$(date --utc +%Y%m%d-%H%M)"
+	zfs snapshot -r "${1}@${2}-$(date --utc +%Y%m%d-%H%M)"
 	NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
 
 	sizeRemain
-	sizeSnap "-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
+	sizeSnap "-RI ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
 
 	if [[ ! "${SIZE_REMAIN_MB}" -ge "${SNAP_SIZE_MB}" ]]; then
 		echo "Insuficient remain space on tape"
 		zfs destroy ${NOW_SNAPTSHOT} &>/dev/null
 	else
 		echo "Incremental Snapshot from ${LAST_SNAPSHOT} to ${NOW_SNAPSHOT}"
-		send2tape "-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
+		send2tape "-RI ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
 	fi
 }
 
-function recursiveSnapshots {
+function recursiveSend {
 	local count=0
 	local snapshots=()
 	for i in $(zfs list -t snapshot $1 -H -o name); do
@@ -104,7 +104,7 @@ function recursiveSnapshots {
 			exit 1
 		else
 			echo "Sending incremental snapshot from ${SNAP_FROM} to ${SNAP_TO}"
-			send2tape "-I ${SNAP_FROM} ${SNAP_TO}"
+			send2tape "-RI ${SNAP_FROM} ${SNAP_TO}"
 		fi
 		((count--))
 	done
@@ -138,10 +138,10 @@ function main {
 		firstSnapshot "${DS}" "${prefix}"
 	fi
 
-	recursiveSnapshots "${DS}" "${prefix}"
+	recursiveSend "${DS}" "${prefix}"
 	snapshot "${DS}" "${prefix}"
 
-	#tapeEject
+	tapeEject
 
 	echo "--------------------------------"
 	echo "End of backup - $(date --utc +%Y/%m/%d-%H:%M)"

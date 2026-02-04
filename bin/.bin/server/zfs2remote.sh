@@ -40,11 +40,11 @@ for ds in ${DS[@]}; do
 		exit 1
 	fi
 
-	zfs snapshot ${ds}@${prefix}-$(date --utc +%Y%m%d-%H%M)
+	zfs snapshot -r ${ds}@${prefix}-$(date --utc +%Y%m%d-%H%M)
 	snap=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
-	options="-I ${rsnap} ${snap}"
+	options="-RI ${rsnap} ${snap}"
 
-	zfs send -wcv ${options} | ${REMOTE} zfs receive -Fuv ${rds}
+	zfs send -wc ${options} | ${REMOTE} zfs receive -Fuv ${rds}
 	if [ $? -ne 0 ]; then
 		echo "Send Snapshot fail"
 		zfs destroy ${snap}
