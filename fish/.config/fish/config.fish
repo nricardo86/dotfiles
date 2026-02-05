@@ -47,7 +47,7 @@ abbr 2fa "wl-copy -o (oathtool -b --totp=sha1 (pass 2fa ))"
 abbr pff "pass ff"
 abbr gp "git add . && git commit && git push"
 abbr gs "git status"
-abbr dsf "diff-so-fancy"
+abbr gd "git diff"
 abbr lg "lazygit"
 
 function gbr --description "Git browse commits"

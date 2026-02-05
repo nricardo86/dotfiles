@@ -10,6 +10,11 @@ function set_tape {
 	TAPE="${OPTARG}"
 }
 
+function usage {
+	echo "usage: $(basename $0) [-b '$BS'] [-t '$TAPE'] dataset"
+	exit 1
+}
+
 while getopts "b:t:" o; do
 	case "${o}" in
 	b) set_bs ;;
@@ -17,11 +22,6 @@ while getopts "b:t:" o; do
 	*) usage ;;
 	esac
 done
-
-function usage {
-	echo "usage: $(basename $0) [-b '256k'] [-t '/dev/nst0'] dataset"
-	exit 1
-}
 
 function tapeRewind {
 	echo "Rewinding Tape!"
@@ -37,7 +37,7 @@ function findEOM {
 	echo "Finding EOM..."
 	local count=3
 	while true; do
-		mt -f ${TAPE} eom 2>/dev/null && return $?
+		mt -f ${TAPE} eom 2>/dev/null && break
 		if [[ "${count}" -eq "0" ]]; then
 			echo "EOM not Found!"
 			return 9
@@ -75,9 +75,8 @@ function send2tape {
 
 function firstSnapshot {
 	tapeRewind || exit $?
-	echo "First Snapshot"
-	local snap_init=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}')
-	[[ $? -eq 0 ]] || return $?
+	echo "Sending First Snapshot"
+	local snap_init=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}') || return $?
 
 	checkSize "${snap_init}" || exit $?
 
@@ -108,10 +107,11 @@ function recursiveSend {
 		[[ "$i" == *"$2"* ]] && snapshots+=("$i")
 	done
 
+	snaps=${#snapshots[@]}
 	count=$(("${#snapshots[@]}" - "${FILES_ONTAPE}" + 1))
 	while [ "${count}" -gt "1" ]; do
-		local snap_from=${snapshots[((${#snapshots[@]} - ${count}))]}
-		local snap_to=${snapshots[((${#snapshots[@]} - ((${count} - 1))))]}
+		local snap_from=${snapshots[((snaps - count))]}
+		local snap_to=${snapshots[((snaps - ((count - 1))))]}
 
 		checkSize "-I ${snap_from} ${snap_to}" || return $?
 
@@ -124,6 +124,7 @@ function recursiveSend {
 function main {
 	echo "Block Size set: ${BS}"
 	echo "Tape Drive set: ${TAPE}"
+
 	local ds=${1}
 	local prefix="${2:-tapebkp}"
 
