@@ -8,38 +8,38 @@ if [[ -z $1 ]]; then
 	exit 1
 fi
 
-count=5
+COUNT=5
 while true; do
 	timeout 5 bash -c "</dev/tcp/${ADDR}/${SSH_PORT}" && break
 	echo "Remote server not responding!"
 	sleep 5
-	[[ ((count--)) ]] || exit 1
+	[[ ((COUNT--)) ]] || exit 1
 done
 
 REMOTE="ssh ${SSH_USER}@${ADDR} -p ${SSH_PORT} -i ~/.ssh/id_ed25519"
 DS=$1
 RT=${2:-zbak}
-prefix=${3:-remoteBkp}
+PREFIX=${3:-remoteBkp}
 
 for ds in ${DS[@]}; do
-	newDS=${ds#*/}
-	rds=${RT}/${newDS}
+	NEWDS=${ds#*/}
+	RDS=${RT}/${NEWDS}
 
-	rsnap=$(${REMOTE} zfs list -H -o name -t snapshot "${rds}" | tail -1)
-	rsnap="${ds}@${rsnap#*@}"
+	RSNAP=$(${REMOTE} zfs list -H -o name -t snapshot "${RDS}" | tail -1)
+	RSNAP="${ds}@${RSNAP#*@}"
 
-	if ! zfs list -H "${rsnap}" &>/dev/null; then
-		echo "${rsnap} not found locally!"
+	if ! zfs list -H "${RSNAP}" &>/dev/null; then
+		echo "${RSNAP} not found locally!"
 		exit 1
 	fi
 
-	zfs snapshot -r ${ds}@${prefix}-$(date --utc +%Y%m%d-%H%M)
-	snap=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
-	options="-RI ${rsnap} ${snap}"
+	zfs snapshot -r ${ds}@${PREFIX}-$(date --utc +%Y%m%d-%H%M)
+	SNAP=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
+	OPTIONS="-RI ${RSNAP} ${SNAP}"
 
-	zfs send -wc ${options} | ${REMOTE} zfs receive -Fuv ${rds}
+	zfs send -wc ${OPTIONS} | ${REMOTE} zfs receive -Fuv ${rds}
 	if [ $? -ne 0 ]; then
 		echo "Send Snapshot fail"
-		zfs destroy ${snap}
+		zfs destroy ${SNAP}
 	fi
 done

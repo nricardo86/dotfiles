@@ -2,6 +2,29 @@
 TAPE=/dev/nst0
 BS=256k
 
+function set_bs {
+	echo "${OPTARG}"
+	BS="${OPTARG}"
+}
+
+function set_tape {
+	echo "${OPTARG}"
+	TAPE="${OPTARG}"
+}
+
+while getopts "b:t:" o; do
+	case "${o}" in
+	b) set_bs ;;
+	t) set_tape ;;
+	*) usage ;;
+	esac
+done
+
+function usage {
+	echo "$(basename $0) [-b '256k'] [-t '/dev/nst0'] dataset"
+	exit 1
+}
+
 function tapeRewind {
 	echo "Rewinding Tape!"
 	mt -f $TAPE rewind
@@ -104,10 +127,7 @@ function main {
 	local ds=${1}
 	local prefix="${2:-tapebkp}"
 
-	if [[ -z "${ds}" ]]; then
-		echo "need dataset to backup"
-		exit 7
-	fi
+	[[ -z "${ds}" ]] && usage
 
 	echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 	echo "----------------------------------"
