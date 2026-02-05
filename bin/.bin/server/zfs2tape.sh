@@ -3,12 +3,10 @@ TAPE=/dev/nst0
 BS=256k
 
 function set_bs {
-	echo "${OPTARG}"
 	BS="${OPTARG}"
 }
 
 function set_tape {
-	echo "${OPTARG}"
 	TAPE="${OPTARG}"
 }
 
@@ -21,7 +19,7 @@ while getopts "b:t:" o; do
 done
 
 function usage {
-	echo "$(basename $0) [-b '256k'] [-t '/dev/nst0'] dataset"
+	echo "usage: $(basename $0) [-b '256k'] [-t '/dev/nst0'] dataset"
 	exit 1
 }
 
@@ -124,6 +122,8 @@ function recursiveSend {
 }
 
 function main {
+	echo "Block Size set: ${BS}"
+	echo "Tape Drive set: ${TAPE}"
 	local ds=${1}
 	local prefix="${2:-tapebkp}"
 

@@ -8,19 +8,19 @@ if [[ -z "$DS" ]]; then
 	exit 1
 fi
 
+
+TAPE_ATTR=$(sudo sg_read_attr ${TAPE}) || exit 1
+
 echo "Tape2zfs init! - $(date --utc +%Y/%m/%d-%H%M)"
 
-TAPE_ATTR=$(sudo sg_read_attr ${TAPE})
-if [[ "$?" -ne "0" ]]; then
-	exit 1
-fi
-# mt -f ${TAPE} rewind
+echo "Rewinding Tape!"
+mt -f ${TAPE} rewind
 
-while (dd status=progress if=${TAPE} bs=${BS} | sudo zfs receive -Fuv ${DS}); do
+while (dd status=progress if=${TAPE} bs=${BS} | zfs receive -Fuv ${DS}); do
 	:
 done
 
-echo "Rewinding and Unloading Tape.."
+echo "Rewinding and Unloading Tape!"
 mt -f $TAPE offline
 
 echo "Tape2zfs done! - $(date --utc +%Y/%m/%d-%H%M)"

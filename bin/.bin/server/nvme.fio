@@ -1,0 +1,14 @@
+[global]
+name=nvme
+time_based
+ramp_time=5
+runtime=30
+readwrite=write
+bs=4k
+ioengine=libaio
+direct=1
+numjobs=1
+iodepth=8
+group_reporting=1
+[nvme0]
+filename=/dev/nvme0n1
