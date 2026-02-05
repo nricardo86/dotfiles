@@ -2,33 +2,21 @@
 TAPE=/dev/nst0
 BS=256k
 
-function sizeSnap {
-	SNAP_SIZE=$(zfs send -Pnwc $@ | tail -1 | awk '{print $2}' | bc)
-	[[ $? -eq 0 ]] || return $?
-	SNAP_SIZE_MB=$(echo "${SNAP_SIZE} / 1024^2" | bc)
-	SNAP_SIZE_GB=$(echo "scale=2;${SNAP_SIZE_MB} / 1024" | bc)
-	echo "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
-	return $?
+function tapeRewind {
+	echo "Rewinding Tape!"
+	mt -f $TAPE rewind
 }
 
-function sizeRemain {
-	SIZE_REMAIN_MB=$(sudo sg_read_attr ${TAPE} -f 0x0 | awk '{print $6}' | bc)
-	[[ $? -eq 0 ]] || return $?
-	SIZE_REMAIN_GB=$(echo "scale=2;${SIZE_REMAIN_MB} / 1024" | bc)
-	echo "Remain space on tape: ${SIZE_REMAIN_MB}MiB / ${SIZE_REMAIN_GB}GiB"
-	return $?
-}
-
-function send2tape {
-	zfs send -wc ${@} | dd status=progress of=${TAPE} bs=${BS}
-	return $?
+function tapeEject {
+	echo "Rewinding and Ejecting Tape!"
+	mt -f $TAPE eject
 }
 
 function findEOM {
 	echo "Finding EOM..."
-	count=3
+	local count=3
 	while true; do
-		mt -f ${TAPE} eom && return 0
+		mt -f ${TAPE} eom 2>/dev/null && return $?
 		if [[ "${count}" -eq "0" ]]; then
 			echo "EOM not Found!"
 			return 9
@@ -37,62 +25,59 @@ function findEOM {
 		tapeRewind || return $?
 	done
 	echo "EOM Found!"
-	files_ontape=$(mt -f ${TAPE} status | grep 'file number' | awk '{print $4}')
-	return $?
-}
-
-function tapeRewind {
-	echo "Rewinding Tape!"
-	mt -f $TAPE rewind
-	return $?
-}
-
-function tapeEject {
-	echo "Rewinding and Ejecting Tape!"
-	mt -f $TAPE eject
-	return $?
+	FILES_ONTAPE=$(mt -f ${TAPE} status | grep 'file number' | awk '{print $4}')
 }
 
 function checkSize {
-	[[ ! "${SIZE_REMAIN_MB}" -ge "${SNAP_SIZE_MB}" ]] && echo "Insuficient remain space on tape"
-	return $?
+	local snap_size=$(zfs send -Pnwc $@ | tail -1 | awk '{print $2}' | bc)
+	[[ $? -eq 0 ]] || return $?
+	local snap_size_mb=$(echo "${snap_size} / 1024^2" | bc)
+	local snap_size_gb=$(echo "scale=2;${snap_size_mb} / 1024" | bc)
+	echo "Snapshot Size: ${snap_size_mb}MiB / ${snap_size_gb}GiB"
+
+	local size_remain_mb=$(sudo sg_read_attr ${TAPE} -f 0x0 2>/dev/null | awk '{print $6}' | bc)
+	[[ $? -eq 0 ]] || return $?
+	local size_remain_gb=$(echo "scale=2;${size_remain_mb} / 1024" | bc)
+	echo "Remain space on tape: ${size_remain_mb}MiB / ${size_remain_gb}GiB"
+
+	[[ "${size_remain_mb}" -ge "((snap_size_mb+5000))" ]] && return $? || echo "Insuficient remain space on tape"
+	return 1
+}
+
+function destroySnap {
+	zfs destroy ${1} &>/dev/null
+}
+
+function send2tape {
+	zfs send -wc $@ | dd status=progess of=${TAPE} bs=${BS}
 }
 
 function firstSnapshot {
 	tapeRewind || exit $?
 	echo "First Snapshot"
-	SNAP_INIT=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}')
+	local snap_init=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}')
 	[[ $? -eq 0 ]] || return $?
 
-	sizeRemain || return $?
-	sizeSnap "${SNAP_INIT}" || return $?
-	checkSize || exit $?
+	checkSize "${snap_init}" || exit $?
 
-	echo "Sending from ${SNAP_INIT}"
-	send2tape "-R ${SNAP_INIT}" || return $?
+	echo "Sending from ${snap_init}"
+	send2tape "-R ${snap_init}" || return $?
 
-	files_ontape=1
-	return $?
-}
-
-function destroySnap {
-	zfs destroy ${1} &>/dev/null
-	return $?
+	FILES_ONTAPE=1
 }
 
 function snapshot {
-	LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
+	local last_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
 	zfs snapshot -r "${1}@${2}-$(date --utc +%Y%m%d-%H%M)" || return $?
-	NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
+	local now_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
 
-	sizeRemain || return $?
-	sizeSnap "-RI ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}" || return $?
+	if ! checkSize "-RI ${last_snapshot} ${now_snapshot}"; then
+		destroySnap "${now_snapshot}"
+		exit 6
+	fi
 
-	checkSize || destroySnap "${NOW_SNAPSHOT}" && return 6
-
-	echo "Incremental Snapshot from ${LAST_SNAPSHOT} to ${NOW_SNAPSHOT}"
-	send2tape "-RI ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
-	return $?
+	echo "Incremental Snapshot from ${last_snapshot} to ${now_snapshot}"
+	send2tape "-RI ${last_snapshot} ${now_snapshot}"
 }
 
 function recursiveSend {
@@ -102,26 +87,24 @@ function recursiveSend {
 		[[ "$i" == *"$2"* ]] && snapshots+=("$i")
 	done
 
-	count=$(("${#snapshots[@]}" - "${files_ontape}" + 1))
+	count=$(("${#snapshots[@]}" - "${FILES_ONTAPE}" + 1))
 	while [ "${count}" -gt "1" ]; do
-		SNAP_FROM=${snapshots[((${#snapshots[@]} - ${count}))]}
-		SNAP_TO=${snapshots[((${#snapshots[@]} - ((${count} - 1))))]}
+		local snap_from=${snapshots[((${#snapshots[@]} - ${count}))]}
+		local snap_to=${snapshots[((${#snapshots[@]} - ((${count} - 1))))]}
 
-		sizeRemain || return $?
-		sizeSnap "-I ${SNAP_FROM} ${SNAP_TO}" || return $?
+		checkSize "-I ${snap_from} ${snap_to}" || return $?
 
-		checkSize || exit $?
-		echo "Sending incremental snapshot from ${SNAP_FROM} to ${SNAP_TO}"
-		send2tape "-RI ${SNAP_FROM} ${SNAP_TO}" || return $?
+		echo "Sending incremental snapshot from ${snap_from} to ${snap_to}"
+		send2tape "-RI ${snap_from} ${snap_to}" || return $?
 		((count--))
 	done
 }
 
 function main {
-	local DS=${1}
+	local ds=${1}
 	local prefix="${2:-tapebkp}"
 
-	if [[ -z "${DS}" ]]; then
+	if [[ -z "${ds}" ]]; then
 		echo "need dataset to backup"
 		exit 7
 	fi
@@ -129,20 +112,20 @@ function main {
 	echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 	echo "----------------------------------"
 
-	TAPE_SERIAL=$(sudo sg_read_attr ${TAPE} -f 0x401 | awk '{print $4}')
-	if [[ -z ${TAPE_SERIAL} ]]; then
+	local tape_serial=$(sudo sg_read_attr ${TAPE} -f 0x401 2>/dev/null | awk '{print $4}')
+	if [[ -z ${tape_serial} ]]; then
 		echo "fail to identify tape"
 		exit 8
 	fi
-	echo "Tape Serial: ${TAPE_SERIAL}"
+	echo "Tape Serial: ${tape_serial}"
 
 	tapeRewind || exit $?
 	findEOM || exit $?
 
-	[[ "${files_ontape}" -eq 0 ]] && firstSnapshot "${DS}" "${prefix}"
+	[[ "${FILES_ONTAPE}" -eq 0 ]] && firstSnapshot "${ds}" "${prefix}" || exit $?
 
-	recursiveSend "${DS}" "${prefix}" || exit $?
-	snapshot "${DS}" "${prefix}" || exit $?
+	recursiveSend "${ds}" "${prefix}" || exit $?
+	snapshot "${ds}" "${prefix}" || exit $?
 
 	tapeEject || exit $?
 

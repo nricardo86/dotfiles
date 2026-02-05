@@ -202,7 +202,7 @@ return {
 			desc = "[S]earch [/] in Open Files",
 		},
 		{
-			"<leader>;",
+			"<leader>s;",
 			function()
 				Snacks.picker.lines({
 					-- use the Select layout
