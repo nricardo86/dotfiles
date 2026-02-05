@@ -33,7 +33,7 @@ abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr lp 'lp -o fit-to-page'
 abbr lpbln 'lp -o fit-to-page -d bln'
-abbr update "doas apt update && doas apt upgrade"
+abbr update "doas apt update && doas apt upgrade && flatpak upgrade -y"
 abbr install "doas apt install"
 abbr remove "doas apt autoremove --purge"
 abbr mullsplit "mullvad split-tunnel add $fish_pid"

@@ -3,30 +3,23 @@ ADDR="bdf5a13a.duckdns.org"
 SSH_USER="asdf"
 SSH_PORT="22"
 
-if [[ -z $1 ]];then
+if [[ -z $1 ]]; then
 	echo "Need dataset list!"
 	exit 1
 fi
 
 count=5
 while true; do
-  timeout 5 bash -c "</dev/tcp/${ADDR}/${SSH_PORT}"
-  if [ $? -ne 0 ]; then
-  	echo "Remote server not responding!"
-	else
-		break
-  fi
+	timeout 5 bash -c "</dev/tcp/${ADDR}/${SSH_PORT}" && break
+	echo "Remote server not responding!"
 	sleep 5
-	if ! ((count = count -1));then
-		echo end
-		exit 1;
-	fi
+	[[ ((count--)) ]] || exit 1
 done
 
 REMOTE="ssh ${SSH_USER}@${ADDR} -p ${SSH_PORT} -i ~/.ssh/id_ed25519"
 DS=$1
-RT='zbak'
-prefix="remoteBkp"
+RT=${2:-zbak}
+prefix=${3:-remoteBkp}
 
 for ds in ${DS[@]}; do
 	newDS=${ds#*/}
@@ -48,5 +41,5 @@ for ds in ${DS[@]}; do
 	if [ $? -ne 0 ]; then
 		echo "Send Snapshot fail"
 		zfs destroy ${snap}
-  fi
+	fi
 done
