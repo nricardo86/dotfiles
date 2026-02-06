@@ -298,30 +298,36 @@ return {
 			-- for you, so that they are available from within Neovim.
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
-				"stylua", -- Used to format Lua code
-				"ts_ls",
 				"pyright",
 				"pylint",
 				"pyink",
-				"prettier",
 				"clangd",
-				"eslint-lsp",
+				"clang-format",
+				"cpplint",
+				"eslint",
 				"clang-format",
 				"lua_ls",
 				"stylua",
 				"luacheck",
 				"html",
+				"htmlhint",
 				"cssls",
+				"stylelint",
 				"jsonls",
+				"jsonlint",
 				"bashls",
 				"shfmt",
+				"mmdc",
+				"biome",
 				"angularls",
+				"ts_ls",
+				"prettier",
 			})
-			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+			require("mason-tool-installer").setup({ ensure_installed = ensure_installed, auto_update = true })
 
 			require("mason-lspconfig").setup({
 				ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-				automatic_installation = false,
+				automatic_installation = true,
 			})
 		end,
 	},
