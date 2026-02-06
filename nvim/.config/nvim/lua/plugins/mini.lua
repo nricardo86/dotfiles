@@ -1,4 +1,7 @@
 return {
+
+	{ "nvim-mini/mini.icons", lazy = true, version = false, opts = {} },
+	{ "nvim-mini/mini.pairs", event = "VeryLazy", version = false, opts = {} },
 	"echasnovski/mini.nvim",
 	config = function()
 		require("mini.ai").setup({ n_lines = 500 })

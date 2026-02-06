@@ -3,9 +3,14 @@ return {
 	config = function()
 		local lint = require("lint")
 		lint.linters_by_ft = {
-			javascript = { "eslint" },
-			typescript = { "eslint" },
+			javascript = { "biome" },
+			typescript = { "biome" },
+			html = { "htmlhint" },
+			css = { "stylelint" },
 			lua = { "luacheck" },
+			json = { "jsonlint" },
+			python = { "pylint" },
+			c = { "cpplint" },
 		}
 
 		vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
