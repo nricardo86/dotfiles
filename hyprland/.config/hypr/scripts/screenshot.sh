@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 DIR="$HOME/Downloads/"
 NAME="screenshot_$(date +%d%m%Y_%H%M%S).png"
 

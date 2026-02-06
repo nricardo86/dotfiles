@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 DIR=/home/ricardo
 
-function usage() {
+function usage {
     echo "Usage $(basename $0): [-b] [-c] [-h]"
     echo "backup: $(basename $0) -b"
     echo "clean: $(basename $0) [-c]"
     echo "help: $(basename $0) [-h]"
 }
 
-function backup() {
+function backup {
     unlock
     /usr/bin/bash $DIR/.bin/restic-vault.sh backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
@@ -17,13 +17,13 @@ function backup() {
     /usr/bin/pass git push
 }
 
-function clean() {
+function clean {
     unlock
     /usr/bin/bash ~/.bin/restic-vault.sh forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
-function unlock() {
+function unlock {
     /usr/bin/bash $DIR/.bin/restic-vault.sh -q unlock
 }
 

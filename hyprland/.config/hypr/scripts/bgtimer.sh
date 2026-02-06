@@ -1,8 +1,7 @@
+#!/usr/bin/env bash
 CONFIG_FILES="$HOME/.bg_timer"
 
-if [ ! -e $CONFIG_FILES ]; then
-    touch $CONFIG_FILES
-fi
+[[ -e $CONFIG_FILES ]] && touch $CONFIG_FILES
 
 while true; do
     inotifywait -q -e attrib $CONFIG_FILES

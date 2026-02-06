@@ -1,6 +1,6 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-if [ -z $(pgrep hyprpaper) ]; then
+if [[ -z $(pgrep hyprpaper) ]]; then
     hyprpaper &
     sleep 1
 fi

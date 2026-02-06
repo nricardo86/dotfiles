@@ -13,7 +13,8 @@ while true; do
 	timeout 5 bash -c "</dev/tcp/${ADDR}/${SSH_PORT}" && break
 	echo "Remote server not responding!"
 	sleep 5
-	[[ ((COUNT--)) ]] || exit 1
+	[[ "$COUNT" -eq 0 ]] && exit 1
+	((COUNT--))
 done
 
 REMOTE="ssh ${SSH_USER}@${ADDR} -p ${SSH_PORT} -i ~/.ssh/id_ed25519"
@@ -33,11 +34,11 @@ for ds in ${DS[@]}; do
 		exit 1
 	fi
 
-	zfs snapshot -r ${ds}@${PREFIX}-$(date --utc +%Y%m%d-%H%M)
-	SNAP=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
+	zfs snapshot -r "${ds}@${PREFIX}-$(date --utc +%Y%m%d-%H%M)"
+	SNAP=$(zfs list -t snapshot -H -o name "${ds}" | tail -1)
 	OPTIONS="-RI ${RSNAP} ${SNAP}"
 
-	zfs send -wc ${OPTIONS} | ${REMOTE} zfs receive -Fuv ${rds}
+	zfs send -wc ${OPTIONS} | ${REMOTE} zfs receive -Fuv ${RDS}
 	if [ $? -ne 0 ]; then
 		echo "Send Snapshot fail"
 		zfs destroy ${SNAP}
