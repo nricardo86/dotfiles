@@ -34,10 +34,11 @@ return {
 				"html",
 				"vim",
 				"vimdoc",
+				"yaml",
 			},
 			ignore_install = {
-				"dockerfile",
-				"jsonc",
+				-- "dockerfile",
+				-- "jsonc",
 			},
 
 			sync_install = false,
