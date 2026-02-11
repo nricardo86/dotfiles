@@ -3,8 +3,8 @@ return {
 	config = function()
 		local lint = require("lint")
 		lint.linters_by_ft = {
-			javascript = { "biome" },
-			typescript = { "biome" },
+			javascript = { "eslint" },
+			typescript = { "eslint" },
 			html = { "htmlhint" },
 			css = { "stylelint" },
 			lua = { "luacheck" },
