@@ -18,36 +18,14 @@ return {
 		main = "nvim-treesitter.configs", -- Lazy handles the require logic here
 		branch = "master", -- Explicitly force the stable branch
 		opts = {
-			ensure_installed = {
-				"json",
-				"c",
-				"lua",
-				"luadoc",
-				"fish",
-				"bash",
-				"javascript",
-				"typescript",
-				"markdown",
-				"markdown_inline",
-				"gitignore",
-				"css",
-				"html",
-				"vim",
-				"vimdoc",
-				"yaml",
-			},
-			ignore_install = {
-				-- "dockerfile",
-				-- "jsonc",
-			},
-
+			ensure_installed = {},
+			ignore_install = {},
 			sync_install = false,
 			auto_install = true,
 			highlight = {
 				enable = true,
 				additional_vim_regex_highlighting = false,
 			},
-
 			indent = { enable = true },
 		},
 		-- Fallback config to handle edge cases

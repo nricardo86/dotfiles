@@ -10,19 +10,30 @@ function usage {
 }
 
 function backup {
-    unlock
-    /usr/bin/bash $DIR/.bin/restic-vault.sh backup --one-file-system \
+    unlock_vault
+    /usr/bin/bash $DIR/.bin/vault.sh backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
+    unlock_idrive
+    /usr/bin/bash $DIR/.bin/idrive.sh backup --one-file-system \
+        --exclude="*/node_modules/*" --exclude-caches=true \
+        /home/ricardo/Documents/ricardo/config/dotfiles/ --tag "dotfiles"
 }
 
 function clean {
-    unlock
-    /usr/bin/bash ~/.bin/restic-vault.sh forget \
+    unlock_vault
+    /usr/bin/bash ~/.bin/vault.sh forget \
+        --keep-daily=30 --keep-monthly=12 --prune $@
+    unlock_idrive
+    /usr/bin/bash ~/.bin/idrive.sh forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
-function unlock {
-    /usr/bin/bash $DIR/.bin/restic-vault.sh -q unlock
+function unlock_vault {
+    /usr/bin/bash $DIR/.bin/vault.sh -q unlock
+}
+
+function unlock_idrive {
+    /usr/bin/bash $DIR/.bin/vault.sh -q unlock
 }
 
 function git {
@@ -30,19 +41,23 @@ function git {
     /usr/bin/pass git push
 }
 
-while getopts "hbcg" o; do
+no_args="true"
+while getopts "bcg" o; do
     case "${o}" in
     b)
-        backup
+        backup && exit 0
         ;;
     c)
-        clean
+        clean && exit 0
         ;;
     g)
-        git
+        git && exit 0
         ;;
     *)
-        usage
+        usage && exit 1
         ;;
     esac
+    no_args="false"
 done
+
+[[ "$no_args" == "true" ]] && usage
