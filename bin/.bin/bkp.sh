@@ -20,10 +20,10 @@ function backup {
 }
 
 function clean {
-    unlock_vault
+    unlock_vault || return 1
     /usr/bin/bash ~/.bin/vault.sh forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
-    unlock_idrive
+    unlock_idrive || return 1
     /usr/bin/bash ~/.bin/idrive.sh forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
@@ -41,23 +41,23 @@ function git {
     /usr/bin/pass git push
 }
 
-no_args="true"
+no_args=1
 while getopts "bcg" o; do
     case "${o}" in
     b)
-        backup && exit 0
+        backup
         ;;
     c)
-        clean && exit 0
+        clean
         ;;
     g)
-        git && exit 0
+        git
         ;;
     *)
         usage && exit 1
         ;;
     esac
-    no_args="false"
+    unset no_args
 done
 
-[[ "$no_args" == "true" ]] && usage
+[[ -z "$no_args" ]] || usage
