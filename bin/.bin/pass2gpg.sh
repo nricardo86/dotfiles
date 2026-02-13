@@ -9,6 +9,8 @@ export LC_ALL="C"
 
 pass_echo="${PWDSH_ECHO:=*}"
 
+dest=${1:-pwd}
+
 get_pass() {
   # Prompt for a password.
 
@@ -47,17 +49,19 @@ encrypt() {
 write_pass() {
   get_pass "Password for Symmetric Encrypt: "
   IFS=$'\n'
-  for i in $(find "$HOME/.password-store/ -type f -name *.gpg"); do
+  index=3
+  for i in $(find $HOME/.password-store/ -type f -name '*.gpg'); do
     IFS='/' read -r -a array <<<"$i"
     limit=$((${#array[@]} - 1))
-    count=$((${#array[@]} - 2))
+    count=$((${#array[@]} - ((${#array[@]} - 4))))
     folder=()
-    folder+="./pwd/"
+    folder+="./$dest/"
     while [ $count -lt $limit ]; do
       folder+="${array[$count]}/"
       ((count++))
     done
     mkdir -p $folder
+    echo "encrpyting: $folder${array[$limit]}"
     userpass=$(gpg -d --quiet --batch $i)
     printf '%s\n' "${userpass}" | encrypt "${password}" "${folder}${array[$limit]}" -
   done
