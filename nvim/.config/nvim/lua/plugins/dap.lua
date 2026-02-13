@@ -1,4 +1,5 @@
 return {
+	{ "mxsdev/nvim-dap-vscode-js", requires = { "mfussenegger/nvim-dap" } },
 	"mfussenegger/nvim-dap",
 	dependencies = {
 		"rcarriga/nvim-dap-ui",
@@ -10,34 +11,42 @@ return {
 		require("nvim-dap-virtual-text").setup({})
 		local dap = require("dap")
 
-		--dap.adapters["pwa-node"] = {
-		--type = "server",
-		--host = "localhost",
-		--port = 8123,
-		--executable = {
-		--command = "js-debug-adapter",
-		--},
-		--}
-
-		--for _, language in ipairs({ "typescript", "javascript" }) do
-		--dap.configurations[language] = {
-		--{
-		--type = "pwa-node",
-		--request = "launch",
-		--name = "Launch file",
-		--program = "${file}",
-		--cwd = "${workspaceFolder}",
-		--runtimeExecutable = "node",
-		--},
-		--{
-		--type = "pwa-node",
-		--request = "attach",
-		--name = "Attach",
-		--processId = require("dap.utils").pick_process,
-		--cwd = "${workspaceFolder}",
-		--},
-		--}
-		--end
+		dap.configurations.c = {
+			{
+				name = "Launch",
+				type = "gdb",
+				request = "launch",
+				program = function()
+					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+				end,
+				args = {}, -- provide arguments if needed
+				cwd = "${workspaceFolder}",
+				stopAtBeginningOfMainSubprogram = false,
+			},
+			{
+				name = "Select and attach to process",
+				type = "gdb",
+				request = "attach",
+				program = function()
+					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+				end,
+				pid = function()
+					local name = vim.fn.input("Executable name (filter): ")
+					return require("dap.utils").pick_process({ filter = name })
+				end,
+				cwd = "${workspaceFolder}",
+			},
+			{
+				name = "Attach to gdbserver :1234",
+				type = "gdb",
+				request = "attach",
+				target = "localhost:1234",
+				program = function()
+					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+				end,
+				cwd = "${workspaceFolder}",
+			},
+		}
 
 		-- dap-ui
 		local dapui = require("dapui")
