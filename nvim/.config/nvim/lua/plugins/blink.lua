@@ -58,6 +58,12 @@ return { -- Autocompletion
 			--
 			-- See :h blink-cmp-config-keymap for defining your own keymap
 			preset = "default",
+			["<C-e>"] = false, -- or {}
+			["<C-space>"] = {
+				function(cmp)
+					cmp.show({ providers = { "snippets" } })
+				end,
+			},
 			["<Enter>"] = { "accept", "fallback" },
 
 			-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:

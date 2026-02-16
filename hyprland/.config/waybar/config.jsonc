@@ -109,7 +109,7 @@
         "format": "{icon} {volume}%",
         "format-muted": "",
         "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-        "on-click-right": "pavucontrol",
+        "on-click-right": "ghostty --title=wiremix -e wiremix",
         "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
         "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
         "scroll-step": 5,
@@ -132,7 +132,7 @@
         "format-source": " {volume}%",
         "format-source-muted": " ",
         "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
-        "on-click-right": "pavucontrol",
+        "on-click-right": "ghostty --title=wiremix -e wiremix",
         "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +5%",
         "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%",
         "scroll-step": 5
@@ -166,7 +166,7 @@
         "tooltip": false,
         "format-critical": " {temperatureC}°C"
     },
-   "custom/wg": {
+    "custom/wg": {
         "exec": "$HOME/.config/hypr/scripts/wgDsiplay.sh",
         "interval": 5
     }
