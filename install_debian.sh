@@ -140,10 +140,10 @@ sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emula
 sudo update-alternatives --set x-terminal-emulator /usr/bin/ghostty
 
 #backup current files
-mkdir ~/.bkp
-mv ~/.{bash*,profile,vimrc,ssh,gnupg,bin} ~/.bkp/
+BKPDIR=$(mktemp -d -p ~/)
+mv ~/.{bash*,profile,vimrc,ssh,gnupg,bin} $BKPDIR
 mkdir -p ~/.{ssh,gnupg,config,bin,local/bin}
-touch .hushlogin
+touch ~/.hushlogin
 
 #stage files
 stow --target=$HOME --dotfiles */
