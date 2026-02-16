@@ -1,0 +1,11 @@
+[Unit]
+Description=Waybar Service
+After=graphical.target
+
+[Service]
+Type=simple
+ExecStart=waybar
+restart=always
+
+[Install]
+WantedBy=default.target

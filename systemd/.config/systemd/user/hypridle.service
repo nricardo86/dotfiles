@@ -1,0 +1,11 @@
+[Unit]
+Description=Hypridle Service
+After=graphical.target
+
+[Service]
+Type=simple
+ExecStart=hypridle
+restart=always
+
+[Install]
+WantedBy=default.target

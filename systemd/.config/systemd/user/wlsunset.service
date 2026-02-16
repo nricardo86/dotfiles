@@ -1,0 +1,11 @@
+[Unit]
+Description=WLSunset Service
+After=graphical.target
+
+[Service]
+Type=simple
+ExecStart=wlsunset -t 3500k -l -25 -L -49
+restart=always
+
+[Install]
+WantedBy=default.target
