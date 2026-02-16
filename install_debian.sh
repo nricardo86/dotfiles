@@ -33,7 +33,7 @@ sudo apt dist-upgrade -y
 sudo apt install -y bc eza rsync fontconfig restic pass npm nodejs \
     python3 python3-pip python3-venv gcc zip luarocks curl jq wget git gnupg \
     scdaemon vnstat acpi acpid stow doas htop neovim tmux btop bat ripgrep \
-    fish zsh zoxide bash-completion smartmontools
+    fish zsh zoxide bash-completion smartmontools extrepo
 
 #config doas
 cat <<EOF | sudo tee /etc/doas.conf
@@ -52,6 +52,7 @@ Components: main
 Signed-By: /etc/apt/trusted.gpg.d/debian.griffo.io.gpg
 EOF
 
+sudo extrepo enable librewolf && sudo extrepo update librewolf
 sudo apt update
 sudo apt upgrade -y
 
@@ -100,8 +101,8 @@ sudo apt install -fy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
     zig wlsunset inotify-tools ghostty lazygit network-manager playerctl yazi \
     uv waybar wofi pavucontrol-qt libreoffice pulseaudio \
     pulseaudio-module-bluetooth pulseaudio-utils firefox-esr chromium \
-    fonts-stix fonts-lmodern libreoffice-gtk3 \
-    libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \
+    fonts-stix fonts-lmodern libreoffice-gtk3 librewolf \ 
+libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \
     wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad \
     xdg-utils mpv pamixer nvtop nwg-look nwg-displays adwaita-icon-theme \
     adwaita-qt adwaita-qt6 gnome-themes-extra cups breeze-icon-theme \
@@ -118,7 +119,6 @@ python3 -m pip config set global.break-system-packages true
 
 #add flathub remotes to flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub io.gitlab.librewolf-community -y
 
 #tmux plugin manager install
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
