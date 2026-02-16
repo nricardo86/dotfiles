@@ -118,6 +118,7 @@ python3 -m pip config set global.break-system-packages true
 
 #add flathub remotes to flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub io.gitlab.librewolf-community -y
 
 #tmux plugin manager install
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
