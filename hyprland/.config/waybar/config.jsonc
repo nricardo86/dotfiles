@@ -79,6 +79,7 @@
         ],
         "on-scroll-up": "brightnessctl set 1%+",
         "on-scroll-down": "brightnessctl set 1%-",
+        "on-click-right": "ghostty --title=display -e display-settings-tui",
         "min-length": 6
     },
     "battery": {
@@ -132,7 +133,7 @@
         "format-source": " {volume}%",
         "format-source-muted": " ",
         "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
-        "on-click-right": "ghostty --title=wiremix -e wiremix",
+        "on-click-right": "ghostty --title=wiremix -e wiremix -v input",
         "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +5%",
         "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%",
         "scroll-step": 5

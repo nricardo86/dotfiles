@@ -147,3 +147,6 @@ touch .hushlogin
 
 #stage files
 stow --target=$HOME --dotfiles */
+
+systemctl --user daemon-reload
+systemctl enable --now {waybar,wlsunset,swaync,pypr,hypridle}
