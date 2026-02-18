@@ -49,6 +49,7 @@ abbr gp "git add . && git commit && git push"
 abbr gs "git status"
 abbr gd "git diff"
 abbr lg "lazygit"
+abbr fzfp "fzf --preview='batcat --color=always {}'"
 
 function gbr --description "Git browse commits"
     set -l log_line_to_hash "echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
