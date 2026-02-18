@@ -8,10 +8,10 @@ option4="Current display"
 option5="Current Active Window"
 
 options="$option2\n$option3\n$option4\n$option5"
-choice=$(echo -e "$options" | tofi)
+choice=$(echo -e "$options" | tofi --placeholder-text "Take Screenshot > ")
 [[ -z $choice ]] && exit $?
 if [[ "$choice" != "$option2" ]]; then
-    delay=$(echo -e "Instant\n2s\n10s" | tofi || exit $?)
+    delay=$(echo -e "Instant\n2s\n10s" | tofi --placeholder-text "Select Delay! > ")
     case $delay in
     2s) delay_set=2 ;;
     10s) delay_set=10 ;;
