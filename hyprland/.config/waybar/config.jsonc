@@ -158,7 +158,8 @@
         "format-wifi": "  {signalStrength}%",
         "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthDownBits} {bandwidthUpBits}",
         "max-length": 50,
-        "on-click": "ghostty --title=nmtui -e nmtui"
+        "on-click": "ghostty --title=nmtui -e nmtui",
+        "on-click-right": "ghostty --title=nmtui -e $HOME/.config/hypr/scripts/impala.sh"
     },
     "temperature": {
         "thermal-zone": 1,
@@ -168,7 +169,7 @@
         "format-critical": " {temperatureC}°C"
     },
     "custom/wg": {
-        "exec": "$HOME/.config/hypr/scripts/wgDsiplay.sh",
+        "exec": "$HOME/.config/hypr/scripts/wgDisplay.sh",
         "interval": 5
     }
 }

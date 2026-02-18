@@ -312,7 +312,7 @@ return {
 				"shfmt",
 				"mmdc",
 				"ts_ls",
-				"prettier",
+				"prettierd",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed, auto_update = true })
 

@@ -19,7 +19,7 @@ return {
 		branch = "master", -- Explicitly force the stable branch
 		opts = {
 			ensure_installed = {},
-			ignore_install = {},
+			ignore_install = { "jsonc" },
 			sync_install = false,
 			auto_install = true,
 			highlight = {
