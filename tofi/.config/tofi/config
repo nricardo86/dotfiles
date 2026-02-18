@@ -1,3 +1,25 @@
 font = "JetBrainsMono Nerd Font"
 font-size = 30 
-hint-font = true
+hint-font = false
+
+outline-width = 0
+border-width = 4
+corner-radius = 0
+padding-left = 2%
+padding-top = 2%
+padding-right = 2%
+padding-bottom = 2%
+
+background-color = #000005F
+border-color = #FFA500
+text-color = #FFFFFF
+selection-color = #FFA500
+selection-match-color = #00FF00
+prompt-text = ""
+placeholder-text = "Select app"
+matching-algorithm = fuzzy
+
+width = 50%
+height = 50%
+
+hide-cursor = true
