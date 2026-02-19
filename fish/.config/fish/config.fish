@@ -83,7 +83,7 @@ function y
 	rm -f -- "$tmp"
 end
 
-if test -z (pgrep ssh-agent)
+if ! pgrep ssh-agent > /dev/null
   eval (ssh-agent -c)
   set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
   set -Ux SSH_AGENT_PID $SSH_AGENT_PID
@@ -93,6 +93,10 @@ set -x GPG_TTY (tty)
 set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
+
+# if uwsm check may-start > /dev/null
+#     exec uwsm start hyprland.desktop 
+# end
 
 if status is-login
   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]

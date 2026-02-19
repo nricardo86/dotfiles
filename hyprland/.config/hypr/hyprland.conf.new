@@ -89,17 +89,17 @@ master {
     new_status=master
 }
 
-windowrulev2 = opacity 1.0 0.8 1.0, onworkspace:r[1-8] 
-windowrulev2 = opacity 1.0 0.8 1.0, floating:1
-windowrulev2 = opacity 0.9 0.8 1.0, class:(com.mitchellh.ghostty)$
-windowrulev2 = opacity 1.0, class:^(SheetCamTNG-dev|librewolf|[kK]i[cC]ad|pcb_calculator|eeschema|gerbview|pcbnew|bitmap2component|FreeCAD)$
-windowrulev2 = float, class:^(Tor Browser|virt-manager|qt.ct|nwg-look|xdg-desktop-portal*|org.remmina.Remmina)$
-windowrulev2 = float, class:([kK]i[cC]ad|bitmap2component|pcb_calculator)
-windowrulev2 = float, title:(Moonlight|chiaki-ng|Open File|OnionShare)
-windowrulev2 = float, size 1200 1000, class:(org.pulseaudio.pavucontrol)
-windowrulev2 = float, size 1200 1000, title:(yazi|ghostty)
-windowrulev2 = float, size 800 400, opacity 1.0, class:([eE]lectrum|feather)
-windowrulev2 = float, size 800 600, opacity 1.0, title:(nmtui|bluetuith|pass|wiremix|display)
+windowrule = match:workspace r[1-8],opacity 1.0 0.8 1.0 
+windowrule = match:float true, opacity 1.0 0.8 1.0
+windowrule = match:class com.mitchellh.ghostty$, opacity 0.9 0.8 1.0,
+windowrule = match:class ^(SheetCamTNG-dev|librewolf|[kK]i[cC]ad|pcb_calculator|eeschema|gerbview|pcbnew|bitmap2component|FreeCAD)$, opacity 1.0
+windowrule = match:class ^(Tor Browser|virt-manager|qt.ct|nwg-look|xdg-desktop-portal*|org.remmina.Remmina)$, float true
+windowrule = match:class ([kK]i[cC]ad|bitmap2component|pcb_calculator), float true
+windowrule = match:title (Moonlight|chiaki-ng|Open File|OnionShare), float true
+windowrule = match:class (org.pulseaudio.pavucontrol), float true, size 1200 1000 
+windowrule = match:title (yazi|ghostty), float true, size 1200 1000 
+windowrule = opacity 1.0, match:class ([eE]lectrum|feather), float true, size 800 400
+windowrule = opacity 1.0, match:title (nmtui|bluetuith|pass|wiremix|display), float true, size 800 600
 
 workspace=1,monitor:DP-3
 workspace=2,monitor:DP-3
