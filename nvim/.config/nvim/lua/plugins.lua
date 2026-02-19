@@ -1,34 +1,32 @@
 return {
-	{ "folke/which-key.nvim", event = "VeryLazy", opts = {}, keys = {} },
-	{ "nmac427/guess-indent.nvim", event = { "BufReadPost", "BufNewFile" }, opts = {} },
 	{
-		"windwp/nvim-ts-autotag",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-		config = function()
-			require("nvim-ts-autotag").setup({
-				opts = {
-					enable_close = true, -- Auto close tags
-					enable_rename = true, -- Auto rename pairs of tags
-					enable_close_on_slash = true, -- Auto close on trailing </
+		"folke/which-key.nvim",
+		opts = {
+			preset = "helix",
+			defaults = {},
+			spec = {
+				{
+					mode = { "n", "x" },
+					{ "<leader>b", group = "misc" },
+					-- { "<leader>d", group = "debug" },
+					{ "<leader>g", group = "Goto" },
+					{ "<leader>h", group = "git" },
+					{ "<leader>s", group = "search" },
+					{ "<leader>t", group = "tabs" },
+					-- { "<leader>v", group = "splits" },
 				},
-			})
-		end,
+			},
+		},
 	},
 	{
 		"akinsho/bufferline.nvim",
 		version = "*",
 		dependencies = "nvim-tree/nvim-web-devicons",
 		opts = {
-			vim.keymap.set("n", "<leader>n", ":bn<CR>", { desc = "Bufferline [n]ext" }),
-			vim.keymap.set("n", "<leader>p", ":bp<CR>", { desc = "Bufferline [p]revious" }),
-			vim.keymap.set("n", "<leader>x", ":bd<CR>", { desc = "Bufferline e[x]it" }),
+			vim.keymap.set("n", "<A-n>", ":bn<CR>"),
+			vim.keymap.set("n", "<A-p>", ":bp<CR>"),
+			vim.keymap.set("n", "<A-i>", ":bd<CR>"),
 		},
-	},
-	{
-		"mbbill/undotree",
-		config = function()
-			vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "UndotreeToggle" })
-		end,
 	},
 	{ "junegunn/fzf" },
 	{

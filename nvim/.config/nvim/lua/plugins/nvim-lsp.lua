@@ -73,56 +73,54 @@ return {
 
 					-- Rename the variable under your cursor.
 					--  Most Language Servers support renaming across files, etc.
-					map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+					map("<leader>gR", vim.lsp.buf.rename, "[R]ename")
 
 					-- Execute a code action, usually your cursor needs to be on top of an error
 					-- or a suggestion from your LSP for this to activate.
-					map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
-
-					map("<leader>cd", vim.lsp.buf.hover, "[C]ode [D]ocumentation", { "n", "x" })
+					map("<leader>ga", vim.lsp.buf.code_action, "Code [A]ction", { "n", "x" })
 
 					-- Find references for the word under your cursor.
-					map("gr", function()
+					map("<leader>gr", function()
 						Snacks.picker.lsp_references()
-					end, "[G]oto [R]eferences")
+					end, "[r]eferences")
 
 					-- Jump to the implementation of the word under your cursor.
 					--  Useful when your language has ways of declaring types without an actual implementation.
-					map("gI", function()
+					map("<leader>gi", function()
 						Snacks.picker.lsp_implementations()
-					end, "[G]oto [I]mplementation")
+					end, "[i]mplementation")
 
 					-- Jump to the definition of the word under your cursor.
 					--  This is where a variable was first declared, or where a function is defined, etc.
 					--  To jump back, press <C-t>.
-					map("gd", function()
+					map("<leader>gd", function()
 						Snacks.picker.lsp_definitions()
-					end, "[G]oto [D]efinition")
+					end, "[d]efinition")
 
 					-- WARN: This is not Goto Definition, this is Goto Declaration.
 					--  For example, in C this would take you to the header.
-					map("gD", function()
+					map("<leader>gc", function()
 						Snacks.picker.lsp_declarations()
-					end, "[G]oto [D]eclaration")
+					end, "De[c]laration")
 
 					-- Fuzzy find all the symbols in your current document.
 					--  Symbols are things like variables, functions, types, etc.
-					map("<leader>ds", function()
+					map("<leader>go", function()
 						Snacks.picker.lsp_symbols()
-					end, "Open [D]ocument [S]ymbols")
+					end, "D[o]cument Symbols")
 
 					-- Fuzzy find all the symbols in your current workspace.
 					--  Similar to document symbols, except searches over your entire project.
-					map("<leader>ws", function()
+					map("<leader>gw", function()
 						Snacks.picker.lsp_workspace_symbols()
-					end, "Open [W]orkspace [S]ymbols")
+					end, "[w]orkspace Symbols")
 
 					-- Jump to the type of the word under your cursor.
 					--  Useful when you're not sure what type a variable is and you want to see
 					--  the definition of its *type*, not where it was *defined*.
-					map("gt", function()
+					map("<leader>gt", function()
 						Snacks.picker.lsp_type_definitions()
-					end, "[G]oto [T]ype Definition")
+					end, "[t]ype Definition")
 
 					-- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
 					---@param client vim.lsp.Client
@@ -182,9 +180,9 @@ return {
 						client
 						and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf)
 					then
-						map("<leader>th", function()
+						map("<leader>gh", function()
 							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
-						end, "[T]oggle Inlay [H]ints")
+						end, "Toggle Inlay [h]ints")
 					end
 				end,
 			})

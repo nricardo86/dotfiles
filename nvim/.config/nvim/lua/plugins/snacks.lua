@@ -63,21 +63,21 @@ return {
 	},
 	keys = {
 		{
-			"<leader>lg",
+			"<leader>hl",
 			function()
 				Snacks.lazygit()
 			end,
-			desc = "Lazy[G]it",
+			desc = "[L]azyGit",
 		},
 		{
-			"<leader>un",
+			"<leader>ba",
 			function()
 				Snacks.notifier.hide()
 			end,
-			desc = "Dismiss All Notifications",
+			desc = "Dismiss [a]ll Notifications",
 		},
 		{
-			"<c-/>",
+			"<C-/>",
 			function()
 				Snacks.terminal()
 			end,

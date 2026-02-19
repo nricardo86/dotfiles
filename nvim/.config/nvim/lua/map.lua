@@ -19,24 +19,18 @@ vim.keymap.set({ "n", "v" }, "<leader>D", [["_d]], { desc = "[d]elete to blackho
 
 vim.keymap.set("n", "Q", "<nop>")
 
-vim.keymap.set("n", "<leader>de", vim.diagnostic.open_float, { desc = "Show Diagnostic [e]rror messages" })
-vim.keymap.set("n", "<leader>dq", vim.diagnostic.setloclist, { desc = "Open Diagnostic [q]uickfix list" })
-
 vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "[o]pen new tab" })
-vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
-vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to [n]ext tab" })
-vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to [p]revious tab" })
 vim.keymap.set("n", "<leader>tt", "<cmd>tabnew %<CR>", { desc = "Open curren[t] buffer in new tab" })
 
-vim.keymap.set("n", "<leader>vv", "<C-w>v", { desc = "Split window [v]ertically" })
-vim.keymap.set("n", "<leader>vh", "<C-w>s", { desc = "Split window [h]orizontally" })
-vim.keymap.set("n", "<leader>ve", "<C-w>=", { desc = "Make splits [e]qual size" })
-vim.keymap.set("n", "<leader>vx", "<cmd>close<CR>", { desc = "Close current split" })
+-- vim.keymap.set("n", "<leader>te", "<C-w>=", { desc = "Make splits [e]qual size" })
+vim.keymap.set("n", "<leader>tv", "<C-w>v", { desc = "Split window [v]ertically" })
+vim.keymap.set("n", "<leader>th", "<C-w>s", { desc = "Split window [h]orizontally" })
+-- vim.keymap.set("n", "<leader>tx", "<cmd>close<CR>", { desc = "Close current split" })
 
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "[q]uit" })
 vim.keymap.set("n", "<leader>Q", "<cmd>q!<CR>", { desc = "[Q]uit without saving" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "[w]rite current buffer" })
-vim.keymap.set("n", "<leader>W", "<cmd>wall<CR>", { desc = "[w]rite current buffer" })
+-- vim.keymap.set("n", "<leader>W", "<cmd>wall<CR>", { desc = "[W]rite All buffers" })
 
 vim.keymap.set("n", "<leader>bs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], {
 	desc = "[s]ubstitute hover word",
@@ -52,9 +46,9 @@ vim.keymap.set("n", "<leader>bx", "<cmd>!chmod +x %<CR>", { silent = true, desc 
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
-vim.keymap.set("n", "<leader>,", function()
+vim.keymap.set("n", "<leader>bo", function()
 	vim.cmd("so")
-end, { desc = "Source current buffer" })
+end, { desc = "S[o]urce current buffer" })
 
 -- Disable arrow keys in all modes
 -- local modes = { 'n', 'i', 'v', 'c', 't', 'o', 's', 'x' } -- All possible modes

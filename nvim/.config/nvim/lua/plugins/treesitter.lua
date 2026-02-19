@@ -6,7 +6,7 @@ return {
 			require("treesj").setup({
 				use_default_keymaps = false,
 			})
-			vim.keymap.set("n", "<leader>m", vim.cmd.TSJToggle, { desc = "Toogle TSJ" })
+			-- vim.keymap.set("n", "<leader>m", vim.cmd.TSJToggle, { desc = "Toogle TSJ" })
 		end,
 	},
 	{

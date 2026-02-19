@@ -20,8 +20,8 @@ return {
 			end,
 		})
 
-		vim.keymap.set("n", "<leader>i", function()
-			lint.try_lint()
-		end, { desc = "Tr[i]gger linting for current file" })
+		-- vim.keymap.set("n", "<leader>i", function()
+		-- 	lint.try_lint()
+		-- end, { desc = "Tr[i]gger linting for current file" })
 	end,
 }
