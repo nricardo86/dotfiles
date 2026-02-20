@@ -112,7 +112,7 @@ sudo apt install -qfy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
 sudo apt autoremove --purge -qy
 
 #set fish shell default for current user
-sudo chsh -s $(which fish) $USER
+# sudo chsh -s $(which fish) $USER
 
 #install nodejs neovim plugin
 sudo npm -g install neovim

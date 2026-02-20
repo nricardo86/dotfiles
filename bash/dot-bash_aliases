@@ -3,6 +3,9 @@ if type eza >/dev/null; then
     alias l="eza --icons -lg"
     alias la="eza --icons -lag"
 fi
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 alias sudo="doas"
 alias hl="grep -z"
 alias za="zathura"
