@@ -15,10 +15,13 @@ vim.keymap.set({ "n", "v" }, "<leader>D", [["_d]], { desc = "[d]elete to blackho
 
 vim.keymap.set("n", "Q", "<nop>")
 
-vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "[o]pen new tab" })
-vim.keymap.set("n", "<leader>tt", "<cmd>tabnew %<CR>", { desc = "Open curren[t] buffer in new tab" })
-vim.keymap.set("n", "<leader>tv", "<C-w>v", { desc = "Split window [v]ertically" })
-vim.keymap.set("n", "<leader>th", "<C-w>s", { desc = "Split window [h]orizontally" })
+vim.keymap.set("n", "<leader>vv", "<C-w>v", { desc = "Split window [v]ertically" })
+vim.keymap.set("n", "<leader>vh", "<C-w>s", { desc = "Split window [h]orizontally" })
+vim.keymap.set("n", "<leader>vc", "<cmd>close<CR>", { desc = "[c]lose Split window" })
+vim.keymap.set("n", "<C-S-h>", "<cmd>vert resize +5<CR>")
+vim.keymap.set("n", "<C-S-l>", "<cmd>vert resize -5<CR>")
+vim.keymap.set("n", "<C-S-j>", "<cmd>resize +5<CR>")
+vim.keymap.set("n", "<C-S-k>", "<cmd>resize -5<CR>")
 
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "[q]uit" })
 vim.keymap.set("n", "<leader>Q", "<cmd>q!<CR>", { desc = "[Q]uit without saving" })
@@ -29,7 +32,7 @@ vim.keymap.set("n", "<leader>bs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left>
 	desc = "[s]ubstitute hover word",
 })
 
-vim.keymap.set("n", "<leader>bx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file e[x]ecutable" })
+vim.keymap.set("n", "<leader>bx", "<cmd>!chmod +x %<CR>)", { silent = true, desc = "Make file e[x]ecutable" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
