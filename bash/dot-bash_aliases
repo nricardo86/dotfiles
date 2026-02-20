@@ -6,7 +6,7 @@ fi
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias sudo="doas"
+# alias sudo="doas"
 alias hl="grep -z"
 alias za="zathura"
 alias cd="z"
@@ -23,16 +23,16 @@ alias s="du -hcs"
 alias mkdir="mkdir -pv"
 alias newKey='gpg-connect-agent "scd serialno" "learn --force" /bye'
 alias reloadAgent='gpg-connect-agent reloadagent /bye'
-alias wq='doas wg-quick'
-alias wg='doas wg'
+alias wq='sudo wg-quick'
+alias wg='sudo wg'
 alias um='udisksctl mount -b'
 alias uu='udisksctl unmount -b'
 alias fmu='fusermount -u'
 alias lp='lp -o fit-to-page'
 alias lpbln='lp -o fit-to-page -d bln'
-alias update="doas apt update && doas apt upgrade && flatpak upgrade -y"
-alias install="doas apt install"
-alias remove="doas apt autoremove --purge"
+alias update="sudo apt update && sudo apt upgrade && flatpak upgrade -y"
+alias install="sudo apt install"
+alias remove="sudo apt autoremove --purge"
 alias mullsplit="mullvad split-tunnel add $fish_pid"
 alias dnsgoogle="q @https://dns.google.com"
 alias dnscloud="q @https://dns.cloudflare.com"
