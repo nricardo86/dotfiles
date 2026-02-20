@@ -1,0 +1,47 @@
+if type eza >/dev/null; then
+    alias ls="eza --icons"
+    alias l="eza --icons -lg"
+    alias la="eza --icons -lag"
+fi
+alias sudo="doas"
+alias hl="grep -z"
+alias za="zathura"
+alias cd="z"
+alias ..="cd .."
+alias rsync="rsync -avhP"
+alias nmc="nmcli --ask"
+alias wtf="curl --connect-timeout 5 -fSsk https://ipv4.json.myip.wtf 2>/dev/null | jq"
+alias wtf6="curl --connect-timeout 5 -fSsk https://ipv6.json.myip.wtf 2>/dev/null | jq"
+alias dd="dd status=progress"
+alias cal="ncal -C"
+alias free="free -mh"
+alias df="df -hT"
+alias s="du -hcs"
+alias mkdir="mkdir -pv"
+alias newKey='gpg-connect-agent "scd serialno" "learn --force" /bye'
+alias reloadAgent='gpg-connect-agent reloadagent /bye'
+alias wq='doas wg-quick'
+alias wg='doas wg'
+alias um='udisksctl mount -b'
+alias uu='udisksctl unmount -b'
+alias fmu='fusermount -u'
+alias lp='lp -o fit-to-page'
+alias lpbln='lp -o fit-to-page -d bln'
+alias update="doas apt update && doas apt upgrade && flatpak upgrade -y"
+alias install="doas apt install"
+alias remove="doas apt autoremove --purge"
+alias mullsplit="mullvad split-tunnel add $fish_pid"
+alias dnsgoogle="q @https://dns.google.com"
+alias dnscloud="q @https://dns.cloudflare.com"
+alias dnsnasatto="q @https://dns.nasatto.com"
+alias i="swayimg"
+alias img="chafa"
+alias b="batcat"
+alias bat="batcat"
+alias 2fa="wl-copy -o (oathtool -b --totp=sha1 (pass 2fa))"
+alias pff="pass ff"
+alias gp="git add . && git commit && git push"
+alias gs="git status"
+alias gd="git diff"
+alias lg="lazygit"
+alias fzfp="fzf --preview='batcat --color=always {}'"

@@ -61,8 +61,9 @@ parse_git_branch() {
 }
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)\[\033[00m\] $ '
+    # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='\e[1;33m[$([[ ! $? == 0  ]] && echo "\e[0;31m[$?] ")\e[0;32m\u\e[m@\e[1;34m\h \e[0;35m\w\e[1;33m]\e[m\033[01;31m\]$(__git_ps1 " (%s)")\[\033[00m\]\n $ '
+    # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)\[\033[00m\] $ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)\[\033[00m\] $ '
 fi
@@ -79,7 +80,7 @@ esac
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
+    # alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
 
@@ -92,10 +93,7 @@ fi
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
-alias ll='ls -lFh'
-alias la='ll -A'
-alias l='ll'
-
+#
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
@@ -116,4 +114,77 @@ if ! shopt -oq posix; then
     fi
 fi
 
+# functions
+function mkcd() {
+    mkdir -p -- "$1" && cd -P -- "$1"
+}
+
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    command yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd <"$tmp"
+    [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
+}
+
+function gbr() {
+    log_line_to_hash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
+    view_commit="$log_line_to_hash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy | less -R'"
+    copy_commit_hash="$log_line_to_hash | wl-copy"
+    git_checkout="$log_line_to_hash | xargs -I % sh -c 'git checkout %'"
+
+    if test $(uname) = Linux; then
+        open_cmd="xdg-open"
+    fi
+
+    github_open="$log_line_to_hash | xargs -I % sh -c '$open_cmd https://github.\$(git config remote.origin.url | cut -f2 -d. | tr \':\' /)/commit/%'"
+
+    git log --color=always --format='%C(auto)%h%d %s %C(green)%C(bold)%cr% C(blue)%an' |
+        fzf --no-sort --reverse --tiebreak=index --no-multi --ansi \
+            --preview="$view_commit" \
+            --header="ENTER to view, CTRL-Y to copy hash, CTRL-O to open on GitHub, CTRL-X to checkout, CTRL-C to exit" \
+            --bind "enter:execute:$view_commit" \
+            --bind "ctrl-y:execute:$copy_commit_hash" \
+            --bind "ctrl-x:execute:$git_checkout" \
+            --bind "ctrl-o:execute:$github_open"
+}
+
+# Variables
+export EDITOR="nvim"
+export BROWSER="firefox"
+export TERM=tmux-256color
+export PASSWORD_STORE_ENABLE_EXTENTIONS=true
+
+# Support
+if [ -e ~/.bin ]; then
+    export PATH="~/.bin:$PATH"
+fi
+
+if [ -e ~/.local/bin ]; then
+    export PATH="~/.local/bin:$PATH"
+fi
+
+if ! pgrep ssh-agent >/dev/null; then
+    eval $(ssh-agent -c)
+    export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
+    export SSH_AGENT_PID=$SSH_AGENT_PID
+fi
+
+export GPG_TTY=$(tty)
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+gpgconf --launch gpg-agent
+gpg-connect-agent updatestartuptty /bye >/dev/null
+
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
+    exec Hyprland
+fi
+
+source /usr/lib/git-core/git-sh-prompt
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWCOLORHINTS=1
+export GIT_PS1_SHOWUPSTREAM="auto"
 set -o vi
+bind 'set show-mode-in-prompt on'
+
+eval "$(fzf --bash)"
+eval "$(zoxide init bash)"
