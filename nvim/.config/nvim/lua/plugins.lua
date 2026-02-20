@@ -8,15 +8,19 @@ return {
 				{
 					mode = { "n", "x" },
 					{ "<leader>b", group = "misc" },
-					-- { "<leader>d", group = "debug" },
 					{ "<leader>g", group = "Goto" },
 					{ "<leader>h", group = "git" },
 					{ "<leader>s", group = "search" },
 					{ "<leader>t", group = "tabs" },
-					-- { "<leader>v", group = "splits" },
 				},
 			},
 		},
+	},
+	{
+		"mbbill/undotree",
+		config = function()
+			vim.keymap.set("n", "<leader>bt", vim.cmd.UndotreeToggle, { desc = "UndotreeToggle" })
+		end,
 	},
 	{
 		"akinsho/bufferline.nvim",

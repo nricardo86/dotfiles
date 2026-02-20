@@ -1,9 +1,5 @@
 return {
-	{ "nvim-mini/mini.sessions", lazy = true, opts = {} },
-	{ "nvim-mini/mini.ai", opts = {
-		n_lines = 500,
-	} },
-	-- { "nvim-mini/mini.icons", lazy = true, opts = {} },
+	{ "nvim-mini/mini.ai", opts = { n_lines = 500 } },
 	{
 		"nvim-mini/mini.surround",
 		opts = {},

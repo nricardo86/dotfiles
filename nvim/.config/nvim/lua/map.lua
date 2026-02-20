@@ -3,7 +3,6 @@ vim.keymap.set("n", "x", [["_x]])
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
-
 vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -12,20 +11,14 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 vim.keymap.set("x", "<leader>p", [["_dP]], { desc = "[p]aste over selection" })
 
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[y]ank selection" })
-vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "[Y]ank line" })
-
 vim.keymap.set({ "n", "v" }, "<leader>D", [["_d]], { desc = "[d]elete to blackhole" })
 
 vim.keymap.set("n", "Q", "<nop>")
 
 vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "[o]pen new tab" })
 vim.keymap.set("n", "<leader>tt", "<cmd>tabnew %<CR>", { desc = "Open curren[t] buffer in new tab" })
-
--- vim.keymap.set("n", "<leader>te", "<C-w>=", { desc = "Make splits [e]qual size" })
 vim.keymap.set("n", "<leader>tv", "<C-w>v", { desc = "Split window [v]ertically" })
 vim.keymap.set("n", "<leader>th", "<C-w>s", { desc = "Split window [h]orizontally" })
--- vim.keymap.set("n", "<leader>tx", "<cmd>close<CR>", { desc = "Close current split" })
 
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "[q]uit" })
 vim.keymap.set("n", "<leader>Q", "<cmd>q!<CR>", { desc = "[Q]uit without saving" })
