@@ -2,7 +2,7 @@
 set -g fish_key_bindings fish_vi_key_bindings
 set -gx EDITOR nvim
 set -gx BROWSER librewolf
-set -gx TERM tmux-256color
+set -gx TERM screen-256color
 set -gx PASSWORD_STORE_ENABLE_EXTENSIONS true
 
 if type -q eza
@@ -49,7 +49,9 @@ abbr gp "git add . && git commit && git push"
 abbr gs "git status"
 abbr gd "git diff"
 abbr lg "lazygit"
-abbr fzfp "fzf --preview='batcat --color=always {}'"
+abbr fd "fd --type f --hidden --exclude .git --exclude node_modules"
+abbr fzfp "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p --preview='batcat --color=always {}'"
+abbr fzfn "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
 
 function gbr --description "Git browse commits"
     set -l log_line_to_hash "echo {} | grep -o '[a-f0-9]\{7\}' | head -1"

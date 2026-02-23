@@ -91,6 +91,7 @@ function gbr() {
 # Variables
 export EDITOR="nvim"
 export BROWSER="firefox"
+export TERM=screen-256color
 
 # Support
 if [ -e ~/.bin ]; then
