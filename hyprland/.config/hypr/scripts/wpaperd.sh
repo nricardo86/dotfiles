@@ -2,4 +2,4 @@
 
 sleep 3
 
-$HOME/.local/bin/wpaperd -d
+uwsm app -- $HOME/.local/bin/wpaperd -d
