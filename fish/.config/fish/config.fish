@@ -3,7 +3,6 @@ set -g fish_key_bindings fish_vi_key_bindings
 set -gx EDITOR nvim
 set -gx BROWSER librewolf
 set -gx TERM screen-256color
-set -gx PASSWORD_STORE_ENABLE_EXTENSIONS true
 
 if type -q eza
   abbr ls "eza --icons"
@@ -96,15 +95,15 @@ set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
-# if uwsm check may-start > /dev/null
-#     exec uwsm start hyprland.desktop 
-# end
-
-if status is-login
-  if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
-   exec /bin/Hyprland
-  end
+if uwsm check may-start > /dev/null
+    exec uwsm start hyprland.desktop 
 end
+
+# if status is-login
+#   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
+#    exec /bin/Hyprland
+#   end
+# end
 
 zoxide init fish | source
 fzf --fish | source
