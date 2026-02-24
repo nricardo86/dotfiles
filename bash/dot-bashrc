@@ -113,8 +113,8 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
-if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-    exec Hyprland
+if uwsm check may-start >/dev/null && [ "$XDG_VTNR" -eq 1 ]; then
+    exec uwsm start hyprland.desktop
 fi
 
 source /usr/lib/git-core/git-sh-prompt

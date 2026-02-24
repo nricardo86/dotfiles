@@ -84,6 +84,12 @@ function y
 	rm -f -- "$tmp"
 end
 
+#Start Hyprland
+if uwsm check may-start > /dev/null && [ "$XDG_VTNR" -eq 1 ]
+    exec uwsm start hyprland.desktop 
+end
+
+#Suport ssh-agent and gpg-agent
 if ! pgrep ssh-agent > /dev/null
   eval (ssh-agent -c)
   set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
@@ -95,16 +101,7 @@ set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
-if uwsm check may-start > /dev/null
-    exec uwsm start hyprland.desktop 
-end
-
-# if status is-login
-#   if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]
-#    exec /bin/Hyprland
-#   end
-# end
-
+#initializing zoxide and fzf
 zoxide init fish | source
 fzf --fish | source
 fzf_configure_bindings
