@@ -2,6 +2,9 @@
 
 # $HOME/.config/hypr/scripts/wgDisconnect.sh
 
+pkill ssh-agent
+pkill gpg-agent
+
 nmcli radio wifi off
 bluetooth off
 

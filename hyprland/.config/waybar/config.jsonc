@@ -77,8 +77,8 @@
             "󰃟",
             "󰃠"
         ],
-        "on-scroll-up": "brightnessctl set 1%+",
-        "on-scroll-down": "brightnessctl set 1%-",
+        "on-scroll-up": "brightnessctl set 10%+",
+        "on-scroll-down": "brightnessctl set 10%-",
         "on-click-right": "ghostty --title=display -e display-settings-tui",
         "min-length": 6
     },

@@ -15,8 +15,8 @@ abbr za "zathura"
 abbr cd "z"
 abbr rsync "rsync -avhP"
 abbr nmc "nmcli --ask"
-abbr wtf "curl --connect-timeout 5 -fSsk https://ipv4.json.myip.wtf 2>/dev/null | jq"
-abbr wtf6 "curl --connect-timeout 5 -fSsk https://ipv6.json.myip.wtf 2>/dev/null | jq"
+abbr wtf "curl --connect-timeout 5 -fSs ipv4.json.myip.wtf 2>/dev/null | jq"
+abbr wtf6 "curl --connect-timeout 5 -fSs ipv6.json.myip.wtf 2>/dev/null | jq"
 abbr dd "dd status=progress"
 abbr cal "ncal -C"
 abbr free "free -mh"
@@ -44,7 +44,8 @@ abbr img "chafa"
 abbr b "batcat"
 abbr pff "pass ff"
 abbr gp "git add . && git commit && git push"
-abbr gs "git status"
+abbr gs "git status -s"
+abbr gl "git log --oneline --graph --all"
 abbr gd "git diff"
 abbr lg "lazygit"
 abbr fd "fd --type f --hidden --exclude .git --exclude node_modules"
@@ -83,24 +84,28 @@ function y
 	rm -f -- "$tmp"
 end
 
-#Start Hyprland
-if uwsm check may-start > /dev/null && [ "$XDG_VTNR" -eq 1 ]
-    exec uwsm start hyprland.desktop 
-end
-
-#Suport ssh-agent and gpg-agent
+#Suport ssh-agent
 if ! pgrep ssh-agent > /dev/null
-  eval (ssh-agent -c)
-  set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
-  set -Ux SSH_AGENT_PID $SSH_AGENT_PID
+    eval (ssh-agent -c > /dev/null)
+    set -Ux SSH_AUTH_SOCK $SSH_AUTH_SOCK
+    set -Ux SSH_AGENT_PID $SSH_AGENT_PID
 end
 
-set -x GPG_TTY (tty)
-set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-gpgconf --launch gpg-agent
+#Support gpg smartcard
+if ! pgrep gpg-agent > /dev/null
+    set -x GPG_TTY (tty)
+    gpgconf --launch gpg-agent
+    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+end
 gpg-connect-agent updatestartuptty /bye > /dev/null
 
 #initializing zoxide and fzf
 zoxide init fish | source
 fzf --fish | source
 fzf_configure_bindings
+
+#Start Hyprland
+if uwsm check may-start > /dev/null && [ "$XDG_VTNR" -eq 1 ]
+    exec uwsm start hyprland.desktop 
+end
+

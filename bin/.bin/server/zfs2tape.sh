@@ -50,7 +50,7 @@ function findEOM {
 }
 
 function checkSize {
-	local snap_size=$(zfs send -Pnwc "$@" | tail -1 | awk '{print $2}' | bc) || return $?
+	local snap_size=$(zfs send -Pnwc $1 | tail -1 | awk '{print $2}' | bc) || return $?
 	local snap_size_mb=$(echo "${snap_size} / 1024^2" | bc)
 	local snap_size_gb=$(echo "scale=2;${snap_size_mb} / 1024" | bc)
 	echo "Snapshot Size: ${snap_size_mb}MiB / ${snap_size_gb}GiB"
@@ -64,17 +64,19 @@ function checkSize {
 }
 
 function destroySnap {
+	echo "Destroying $1"
 	zfs destroy "$1" &>/dev/null
 }
 
 function send2tape {
-	zfs send -wc "$@" | dd status=progess of="${TAPE}" bs="${BS}"
+	echo "Sending..."
+	zfs send -wc $1 | dd status=progress of="${TAPE}" bs="${BS}"
 }
 
 function firstSnapshot {
 	tapeRewind || exit $?
 	echo "Sending First Snapshot"
-	local snap_init=$(zfs list -t snapshot "$1" -H | grep "$2" | head -n1 | awk '{print $1}') || return $?
+	local snap_init=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}') || return $?
 
 	checkSize "${snap_init}" || exit $?
 
@@ -85,9 +87,11 @@ function firstSnapshot {
 }
 
 function snapshot {
-	local last_snapshot=$(zfs list -t snapshot -H -o name "$1" | grep "$2" | tail -1)
+	local last_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
 	zfs snapshot -r "${1}@${2}-$(date --utc +%Y%m%d-%H%M)" || return $?
-	local now_snapshot=$(zfs list -t snapshot -H -o name "$1" | grep "$2" | tail -1)
+	local now_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
+
+	echo "Creating snapshot: $now_snapshot"
 
 	if ! checkSize "-RI ${last_snapshot} ${now_snapshot}"; then
 		destroySnap "${now_snapshot}"
@@ -99,10 +103,11 @@ function snapshot {
 }
 
 function recursiveSend {
+	echo "Sending Recursive Snapshots"
 	local count=0
 	local snapshots=()
-	for i in $(zfs list -t snapshot "$1" -H -o name); do
-		[[ "$i" == *"$2"* ]] && snapshots+=("$i")
+	for i in $(zfs list -t snapshot $1 -H -o name | grep $2); do
+		snapshots+=("$i")
 	done
 
 	snaps=${#snapshots[@]}
@@ -141,7 +146,7 @@ function main {
 	tapeRewind || exit $?
 	findEOM || exit $?
 
-	[[ "${FILES_ONTAPE}" -eq 0 ]] && firstSnapshot "${ds}" "${prefix}" || exit $?
+	[[ "${FILES_ONTAPE}" -eq 0 ]] && firstSnapshot "${ds}" "${prefix}"
 
 	recursiveSend "${ds}" "${prefix}" || exit $?
 	snapshot "${ds}" "${prefix}" || exit $?
