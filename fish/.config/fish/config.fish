@@ -32,10 +32,14 @@ abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr lp 'lp -o fit-to-page'
 abbr lpbln 'lp -o fit-to-page -d bln'
-abbr update "doas apt update && doas apt upgrade && flatpak upgrade -y"
+abbr update "doas apt update && doas apt upgrade -q && flatpak upgrade"
 abbr install "doas apt install"
 abbr remove "doas apt autoremove --purge"
-abbr mullsplit "mullvad split-tunnel add $fish_pid"
+abbr msplit "mullvad split-tunnel add $fish_pid"
+abbr mu "mullvad"
+abbr mus "mullvad status"
+abbr muc "mullvad connect"
+abbr mud "mullvad disconnect"
 abbr dnsgoogle "q @https://dns.google.com"
 abbr dnscloud "q @https://dns.cloudflare.com"
 abbr dnsnasatto "q @https://dns.nasatto.com"
@@ -84,6 +88,15 @@ function y
 	rm -f -- "$tmp"
 end
 
+function gpga 
+    pkill gpg-agent
+    set -x GPG_TTY (tty)
+    gpgconf --launch gpg-agent
+    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+    gpg-connect-agent updatestartuptty /bye > /dev/null
+    gpg-connect-agent reloadagent /bye
+end
+
 #Suport ssh-agent
 if ! pgrep ssh-agent > /dev/null
     eval (ssh-agent -c > /dev/null)
@@ -91,13 +104,6 @@ if ! pgrep ssh-agent > /dev/null
     set -Ux SSH_AGENT_PID $SSH_AGENT_PID
 end
 
-#Support gpg smartcard
-if ! pgrep gpg-agent > /dev/null
-    set -x GPG_TTY (tty)
-    gpgconf --launch gpg-agent
-    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-end
-gpg-connect-agent updatestartuptty /bye > /dev/null
 
 #initializing zoxide and fzf
 zoxide init fish | source
