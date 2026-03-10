@@ -1,21 +1,18 @@
 #!/usr/bin/env bash
 TAPE=/dev/nst0
-TAPELIBRARY=/dev/sg11
-TAPEDRIVE=0
 BS=256k
+TAPELIBRARY=$(lsscsi -g | grep mediumx | awk '{print $7}')
+TAPEDRIVE=${TAPE: -1:1}
 FILES_ONTAPE=0
-SLOT=10
 
 function usage {
-	echo "usage: $(basename $0) [-b '$BS'] [-t '$TAPE'] -l '$TAPELIBRARY' dataset"
+	echo "usage: $(basename $0) [-b '$BS'] [-t '$TAPE'] dataset slot [prefix]"
 	exit 1
 }
 
-while getopts "s:b:t:l:" o; do
+while getopts "rb:t:" o; do
 	case "${o}" in
-	r) RECURSIVE_ONLY=true;
-	l) TAPELIBRARY="${OPTARG}" ;;
-	s) SLOT="${OPTARG}" ;;
+	r) RECURSIVE_ONLY=true ;;
 	b) BS="${OPTARG}" ;;
 	t) TAPE="${OPTARG}" ;;
 	*) usage ;;
@@ -26,7 +23,7 @@ function tapeSerial {
 	local tape_serial=$(sudo sg_read_attr "${TAPE}" -f 0x401 2>/dev/null | awk '{print $4}')
 	if [[ -z "${tape_serial}" ]]; then
 		echo "fail to identify tape"
-		exit 8
+		exit 100
 	fi
 	echo "Tape Serial: ${tape_serial}"
 }
@@ -36,11 +33,6 @@ function tapeRewind {
 	mt -f "$TAPE" rewind
 }
 
-function tapeEject {
-	echo "Rewinding and Ejecting Tape!"
-	mt -f "$TAPE" eject
-}
-
 function findEOM {
 	echo "Finding EOM..."
 	local count=3
@@ -48,7 +40,7 @@ function findEOM {
 		mt -f "${TAPE}" eom 2>/dev/null && break
 		if [[ "${count}" -eq "0" ]]; then
 			echo "EOM not Found!"
-			return 9
+			return 101
 		fi
 		((count--))
 		tapeRewind || return $?
@@ -59,8 +51,8 @@ function findEOM {
 
 function loadTape {
 	echo "Loading Tape..."
-	mtx -f $TAPELIBRARY load $SLOT $TAPEDRIVE || exit $?
-	tapeSerial
+	mtx -f $TAPELIBRARY load $1 $TAPEDRIVE || exit $?
+	tapeSerial || exit $?
 	findEOM || exit $?
 }
 
@@ -72,22 +64,20 @@ function unloadTape {
 function loadNextTape {
 	echo "Loading next Tape..."
 	mtx -f $TAPELIBRARY next $TAPEDRIVE || exit $?
-	tapeSerial
+	tapeSerial || exit $?
 	findEOM || exit $?
 }
 
 function checkSize {
 	local snap_size=$(zfs send -Pnwc $1 | tail -1 | awk '{print $2}' | bc) || return $?
 	local snap_size_mb=$(echo "${snap_size} / 1024^2" | bc)
-	local snap_size_gb=$(echo "scale=2;${snap_size_mb} / 1024" | bc)
-	echo "Snapshot Size: ${snap_size_mb}MiB / ${snap_size_gb}GiB"
+	echo "Snapshot Size: ${snap_size_mb}MiB"
 
-	local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc)
-	local size_remain_gb=$(echo "scale=2;${size_remain_mb} / 1024" | bc)
-	echo "Remain space on tape: ${size_remain_mb}MiB / ${size_remain_gb}GiB"
+	local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc) || return $?
+	echo "Remain space on tape: ${size_remain_mb}MiB"
 
-	[[ "${size_remain_mb}" -ge "((snap_size_mb+1000))" ]] && return $? || echo "Insuficient remain space on tape"
-	return 1
+	[[ "${size_remain_mb}" -ge "((snap_size_mb))" ]] && return $? || echo "Insuficient remain space on tape"
+	return 102
 }
 
 function destroySnap {
@@ -96,13 +86,7 @@ function destroySnap {
 }
 
 function send2tape {
-	echo "Sending..."
-	local remain=$(sizeRemain)
-	zfs send -wc $1 | mbuffer -m 50G -s $((BS * 512)) -D "${remain}M" -A "loadNextTape;sizeRemain" -o "${TAPE}"
-}
-
-function sizeRemain {
-	echo $(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc)
+	zfs send -wc $1 | mbuffer -m 50G -s $((BS * 512)) -o "${TAPE}"
 }
 
 function firstSnapshot {
@@ -116,22 +100,6 @@ function firstSnapshot {
 	send2tape "-R ${snap_init}" || return $?
 
 	FILES_ONTAPE=1
-}
-
-function snapshot {
-	local last_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
-	zfs snapshot -r "${1}@${2}-$(date --utc +%Y%m%d-%H%M)" || return $?
-	local now_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
-
-	echo "Creating snapshot: $now_snapshot"
-
-	[[ $(checkSize "-RI ${last_snapshot} ${now_snapshot}") ]] || loadNextTape
-
-	echo "Incremental Snapshot from ${last_snapshot} to ${now_snapshot}"
-	if [[ ! $(send2tape "-RI ${last_snapshot} ${now_snapshot}") ]]; then
-		destroySnap $now_snapshot
-		return 1
-	fi
 }
 
 function recursiveSend {
@@ -160,16 +128,34 @@ function recursiveSend {
 	done
 }
 
+function snapshot {
+	local last_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
+	zfs snapshot -r "${1}@${2}-$(date --utc +%Y%m%d-%H%M)" || return $?
+	local now_snapshot=$(zfs list -t snapshot -H -o name $1 | grep $2 | tail -1)
+
+	echo "Creating snapshot: $now_snapshot"
+
+	while [[ ! $(checkSize "-RI ${last_snapshot} ${now_snapshot}") ]]; do
+		loadNextTape
+	done
+
+	echo "Incremental Snapshot from ${last_snapshot} to ${now_snapshot}"
+	if [[ ! $(send2tape "-RI ${last_snapshot} ${now_snapshot}") ]]; then
+		destroySnap $now_snapshot
+		return 103
+	fi
+}
+
 function main {
 	echo "Block Size set: ${BS}"
 	echo "Tape Drive set: ${TAPE}"
 	echo "TapeLibrary set: ${TAPELIBRARY}"
-	echo "TapeDrive num set: ${TAPEDRIVE}"
 
+	local slot=${2}
 	local ds=${1}
-	local prefix="${2:-tapebkp}"
+	local prefix="${3:-tapebkp}"
 
-	[[ -z "${ds}" ]] && usage
+	[[ -z "${ds}" || -z "${slot}" ]] && usage
 	[[ $(zfs list -H -o name ${ds}) ]] || exit $?
 
 	echo "Dataset: ${ds}"
@@ -179,14 +165,14 @@ function main {
 	echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 	echo "----------------------------------"
 
-	loadTape
+	loadTape $slot
 
-	[[ "${FILES_ONTAPE}" -eq 0 ]] && firstSnapshot "${ds}" "${prefix}"
+	[[ "${FILES_ONTAPE}" -eq 0 ]] && firstSnapshot "${ds}" "${prefix}" || exit $?
 
 	recursiveSend "${ds}" "${prefix}" || exit $?
-	[[ -n $RECURSIVE_ONLY ]] || snapshot "${ds}" "${prefix}"
+	[[ -z $RECURSIVE_ONLY ]] && snapshot "${ds}" "${prefix}" || exit $?
 
-	unloadTape 
+	unloadTape
 
 	echo "--------------------------------"
 	echo "End of backup - $(date --utc +%Y/%m/%d-%H:%M)"
