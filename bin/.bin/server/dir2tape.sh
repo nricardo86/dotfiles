@@ -7,7 +7,10 @@ TAPEDRIVE=${TAPE: -1:1}
 while getopts "b:t:s" o; do
         case "${o}" in
         s) STATS_ONLY=true ;;
-        t) TAPE=$OPTARG ;;
+        t)
+                TAPE=$OPTARG
+                TAPEDRIVE=${TAPE: -1:1}
+                ;;
         b) BS=$OPTARG ;;
         *) usage ;;
         esac
@@ -48,7 +51,7 @@ function sizeRemain {
 
 function mbuffer_send {
         mbuffer -s $((BS * 512)) \
-                -m 20G \
+                -m 10% \
                 -D $(sizeRemain)M \
                 -A "echo -e;mtx -f $TAPELIBRARY next $TAPEDRIVE" \
                 -o $TAPE 2>/dev/null && touch $DIR/lastTapeBackup

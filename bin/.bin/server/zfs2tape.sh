@@ -170,7 +170,9 @@ function main {
 	[[ "${FILES_ONTAPE}" -eq 0 ]] && firstSnapshot "${ds}" "${prefix}" || exit $?
 
 	recursiveSend "${ds}" "${prefix}" || exit $?
-	[[ -z $RECURSIVE_ONLY ]] && snapshot "${ds}" "${prefix}" || exit $?
+	if [[ -z $RECURSIVE_ONLY ]]; then
+		snapshot "${ds}" "${prefix}" || exit $?
+	fi
 
 	unloadTape
 
