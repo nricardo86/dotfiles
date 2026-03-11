@@ -4,13 +4,15 @@ BS=512
 TAPELIBRARY=$(lsscsi -g | grep mediumx | awk '{print $7}')
 TAPEDRIVE=${TAPE: -1:1}
 
-while getopts "b:t:" o; do
+while getopts "b:t:s" o; do
         case "${o}" in
+        s) STATS_ONLY=true ;;
         t) TAPE=$OPTARG ;;
         b) BS=$OPTARG ;;
         *) usage ;;
         esac
 done
+shift $((OPTIND - 1))
 
 function usage {
         echo "$(basename $0) [options] directory slot"
@@ -31,9 +33,9 @@ function unloadTape {
 function find_select {
         if [[ -e $DIR/lastTapeBackup ]]; then
                 DAYS=("-mtime")
-                DAYS+=($((($(stat -c %Y $DIR/lastTapeBackup) - $(date +%s)) / 86400)))
+                DAYS+=($echo $((($(stat -c %Y $DIR/lastTapeBackup) - $(date +%s)) / 86400)))
         fi
-        find $DIR -type f ${DAYS[@]}
+        find $DIR -type f ${DAYS[@]} -print0
 }
 
 function tar_cmd {
@@ -45,11 +47,15 @@ function sizeRemain {
 }
 
 function mbuffer_send {
-        mbuffer -m 50G \
-                -s $((BS * 512)) \
+        mbuffer -s $((BS * 512)) \
+                -m 20G \
                 -D $(sizeRemain)M \
-                -A "mtx -f $TAPELIBRARY next $TAPEDRIVE" \
+                -A "echo -e;mtx -f $TAPELIBRARY next $TAPEDRIVE" \
                 -o $TAPE 2>/dev/null && touch $DIR/lastTapeBackup
+}
+
+function sizeFiles {
+        du -s --files0-from=- | awk '{sum += $1} END {print sum}'
 }
 
 function main {
@@ -62,6 +68,12 @@ function main {
         fi
 
         echo "Directory: $DIR"
+        if [[ -n $STATS_ONLY ]]; then
+                echo "Processing sizes..."
+                echo "Size to backup since last: $(($(find_select | sizeFiles) / 1024))M"
+                return 0
+        fi
+
         echo "Tape dev: $TAPE"
         echo "Blocksize: $((BS * 512 / 1024))kb"
         echo "Tape Library dev: $TAPELIBRARY"
@@ -73,7 +85,7 @@ function main {
                 unload
                 return 0
         fi
-        while [[ "$(($(find_select | du -s | awk '{print $1}') / 1024))" -gt "$(sizeRemain)" ]]; do
+        while [[ "$(($(find_select | sizeFiles) / 1024))" -gt "$(sizeRemain)" ]]; do
                 mtx -f $TAPELIBRARY next $TAPEDRIVE
         done
         find_select | tar_cmd | mbuffer_send
