@@ -85,6 +85,11 @@ function checkSize {
     return 102
 }
 
+function sizeRemain {
+    local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc) || return $?
+    echo "Remain space on tape: ${size_remain_mb}MiB"
+}
+
 function destroySnap {
     echo "Destroying $1"
     zfs destroy "$1" &>/dev/null
@@ -133,7 +138,7 @@ function recursiveSend {
         while [[ ! $? -eq 0 ]]; do
             loadNextTape || exit $?
             ((SLOT++))
-            if [[ $SLOT -eq $((NSLOTS + SLOT)) ]]; then
+            if [[ $SLOT -ge $NSLOTS ]]; then
                 echo "Last Tape full"
                 unloadTape
                 exit 200
@@ -157,7 +162,7 @@ function snapshot {
     while [[ ! $? -eq 0 ]]; do
         loadNextTape || exit $?
         ((SLOT++))
-        if [[ $SLOT -eq $((NSLOTS + SLOT)) ]]; then
+        if [[ $SLOT -ge $NSLOTS ]]; then
             echo "Last Tape full"
             unloadTape
             exit 200
@@ -177,7 +182,8 @@ function main {
     local ds=${1}
     local prefix="${4:-tapebkp}"
 
-    [[ -z "${ds}" || -z "${slot}" ]] && usage
+    [[ -z "${ds}" || -z "${SLOT}" || -z "${NSLOTS}" ]] && usage
+    NSLOTS=$((SLOT + NSLOTS))
     [[ $(zfs list -H -o name ${ds}) ]] || exit $?
 
     echo "Block Size set: $((BS * 512 / 1024))k"
@@ -189,13 +195,16 @@ function main {
 
     loadTape $SLOT || exit $?
 
-    [[ "${FILES_ONTAPE}" -eq 0 ]] && firstSnapshot "${ds}" "${prefix}" || exit $?
+    if [[ "${FILES_ONTAPE}" -eq 0 ]]; then
+        firstSnapshot "${ds}" "${prefix}" || exit $?
+    fi
 
     recursiveSend "${ds}" "${prefix}" || exit $?
     if [[ -z $RECURSIVE_ONLY ]]; then
         snapshot "${ds}" "${prefix}" || exit $?
     fi
 
+    sizeRemain
     unloadTape
 
     echo "End of backup - $(date --utc +%Y/%m/%d-%H:%M)"

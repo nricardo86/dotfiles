@@ -12,32 +12,32 @@ function usage {
 
 function backup {
     unlock_vault
-    /usr/bin/bash $DIR/.bin/vault.sh backup --one-file-system \
+    /usr/bin/bash $DIR/.bin/vault backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
 }
 
 function idrive {
     unlock_idrive
-    /usr/bin/bash $DIR/.bin/idrive.sh backup --one-file-system \
+    /usr/bin/bash $DIR/.bin/idrive backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true \
         /home/ricardo/Documents/ricardo/config/dotfiles/ --tag "dotfiles"
     unlock_idrive || return 1
-    /usr/bin/bash ~/.bin/idrive.sh forget \
+    /usr/bin/bash ~/.bin/idrive forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
 function clean {
     unlock_vault || return 1
-    /usr/bin/bash ~/.bin/vault.sh forget \
+    /usr/bin/bash ~/.bin/vault forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
 function unlock_vault {
-    /usr/bin/bash $DIR/.bin/vault.sh -q unlock
+    /usr/bin/bash $DIR/.bin/vault -q unlock
 }
 
 function unlock_idrive {
-    /usr/bin/bash $DIR/.bin/vault.sh -q unlock
+    /usr/bin/bash $DIR/.bin/vault -q unlock
 }
 
 function git {

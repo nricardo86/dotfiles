@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+TAPE=/dev/nst0
+BS=512
+DS=$1
+SLOT=$2
+TAPELIBRARY=$(lsscsi -g | grep mediumx | awk '{print $7}')
+
+if [[ -z "$DS" || -z "$SLOT" ]]; then
+    echo "$(basename $0) <destination dataset> <tape library slot>"
+    exit 1
+fi
+
+mtx -f $TAPELIBRARY load $SLOT || exit 1
+
+TAPE_ATTR=$(sudo sg_read_attr ${TAPE}) || exit 1
+
+echo "Tape2zfs init! - $(date --utc +%Y/%m/%d-%H%M)"
+
+while (mbuffer -m 10% -s $((BS * 512)) -i ${TAPE} -A "mtx -f $TAPELIBRARY next" 2>/dev/null | zfs receive -Fuv ${DS}); do
+    :
+done
+
+mtx -f $TAPELIBRARY unload
+
+echo "Tape2zfs done! - $(date --utc +%Y/%m/%d-%H%M)"
