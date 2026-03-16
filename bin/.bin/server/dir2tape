@@ -31,13 +31,16 @@ function loadTape {
 }
 
 function unloadTape {
-    mtx -f $TAPELIBRARY unload $TAPEDRIVE
+    mtx -f $TAPELIBRARY unload $SLOT $TAPEDRIVE
 }
 
 function find_select {
     if [[ -e $DIR/lastTapeBackup ]]; then
+        local lastBackup=$(stat -c %Y $DIR/lastTapeBackup)
+        local now=$(date +%s)
+        local nDays=$(((lastBackup - now) / 86400))
         DAYS=("-mtime")
-        DAYS+=($echo $((($(stat -c %Y $DIR/lastTapeBackup) - $(date +%s)) / 86400)))
+        DAYS+=($nDays)
     fi
     find $DIR -type f ${DAYS[@]} $@
 }
@@ -54,7 +57,7 @@ function mbuffer_send {
     mbuffer -s $((BS * 512)) \
         -m 10% \
         -D $(sizeRemain)M \
-        -A "mtx -f $TAPELIBRARY next $TAPEDRIVE" \
+        -A "mtx -f $TAPELIBRARY next $TAPEDRIVE;((SLOT++))" \
         -o $TAPE 2>/dev/null && touch $DIR/lastTapeBackup
 }
 
@@ -65,12 +68,10 @@ function sizeFiles {
 function main {
     DIR=$1
     SLOT=$2
-    [[ -z $SLOT || -z $DIR ]] && usage
     if [[ ! -d $DIR ]]; then
         echo directory invalid
         exit 1
     fi
-
     echo "Directory: $DIR"
     if [[ -n $STATS_ONLY ]]; then
         if [[ -e $DIR/lastTapeBackup ]]; then
@@ -80,9 +81,11 @@ function main {
             echo "Full Backup"
         fi
         echo "Processing sizes..."
-        echo "Size for next backup: $(($(sizeFiles) / 1048576))M"
+        local size=$(sizeFiles)
+        echo "Size for next backup: $((size / 1048576))M"
         return 0
     fi
+    [[ -z $SLOT ]] && usage
 
     echo "Tape dev: $TAPE"
     echo "Blocksize: $((BS * 512 / 1024))kb"
@@ -98,6 +101,7 @@ function main {
     fi
     while [[ "$(($(sizeFiles) / 1048576))" -gt "$(sizeRemain)" ]]; do
         mtx -f $TAPELIBRARY next $TAPEDRIVE
+        ((SLOT++))
     done
     echo "Partial Backup"
     find_select "-print0" | tar_cmd | mbuffer_send

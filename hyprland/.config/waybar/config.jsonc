@@ -154,9 +154,9 @@
         "format-disconnected": "󰌙",
         "interval": 1,
         "format-ethernet": "󰈀",
-        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}\n {bandwidthDownBits} {bandwidthUpBits}",
+        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}",
         "format-wifi": "  {signalStrength}%",
-        "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\n {bandwidthDownBits} {bandwidthUpBits}",
+        "tooltip-format-wifi": "  {ifname} @ {essid} {signalStrength}%\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}GHz",
         "max-length": 50,
         "on-click": "ghostty --title=nmtui -e nmtui",
         "on-click-right": "ghostty --title=nmtui -e $HOME/.config/hypr/scripts/impala.sh"

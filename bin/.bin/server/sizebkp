@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 DS=(z/main z/pbs z/alt)
-snapshot_name="remoteBkp"
 
-date --utc
-echo -e
-
-echo -e "ZFS snapshot size -> Remote"
+echo "ZFS snapshot size -> Remote"
 for ds in ${DS[@]}; do
-    LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
-    zfs snapshot -r ${ds}@${snapshot_name}-Now
-    NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | grep ${snapshot_name} | tail -1)
+    snapshot_name="remote"
+    LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | grep ${snapshot_name} | tail -1)
+    zfs snapshot -r ${ds}@Now
+    NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name ${ds} | tail -1)
 
     options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
+
+    echo -e
+    echo $ds
     echo "Since Snapshot ${LAST_SNAPSHOT}"
 
     SNAP_SIZE=$(zfs send -Pnwc ${options} | tail -1 | awk '{print $2}' | bc)
@@ -22,26 +22,25 @@ for ds in ${DS[@]}; do
 
     ((sum = sum + ${SNAP_SIZE_MB}))
     echo -e "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
-    echo -e
 done
 
 sum_gb=$(echo "scale=2;$sum / 1024" | bc)
-echo -e "Total Remote Size: ${sum}MiB / ${sum_gb}GiB\n"
+echo -e
+echo "Total Remote Size: ${sum}MiB / ${sum_gb}GiB"
 
-echo -e "***********************************************************************\n"
-
-echo -e "ZFS snapshot size -> Tape"
+echo -e "\nZFS snapshot size -> Tape"
 DS=(z/main z/pbs)
 for i in ${DS[@]}; do
-    echo -e
-    echo $i
-    snapshot_name="tapebkp"
-
+    snapshot_name="tape"
     LAST_SNAPSHOT=$(zfs list -t snapshot -H -o name $i | grep ${snapshot_name} | tail -1)
-    zfs snapshot -r $i@${snapshot_name}-Now
-    NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name $i | grep ${snapshot_name} | tail -1)
+    [[ -z ${LAST_SNAPSHOT} ]] && continue
+    zfs snapshot -r $i@Now
+    NOW_SNAPSHOT=$(zfs list -t snapshot -H -o name $i | tail -1)
 
     options="-I ${LAST_SNAPSHOT} ${NOW_SNAPSHOT}"
+
+    echo -e
+    echo $i
     echo "Since Snapshot ${LAST_SNAPSHOT}"
 
     SNAP_SIZE=$(zfs send -Pnwc ${options} | tail -1 | awk '{print $2}' | bc)
@@ -50,5 +49,13 @@ for i in ${DS[@]}; do
 
     zfs destroy ${NOW_SNAPSHOT}
 
-    echo "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
+    echo -e "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
+    echo -e "Snapshot Count: $(zfs list -t snapshot -H -o name | grep $snapshot_name | wc -l)"
+done
+
+echo -e "\nDir Size -> Tape"
+DIR=(/z/alt /z/torrent)
+for i in ${DIR[@]}; do
+    echo -e
+    sudo $HOME/dir2tape -s $i
 done

@@ -6,7 +6,7 @@ TAPEDRIVE=${TAPE: -1:1}
 FILES_ONTAPE=0
 
 function usage {
-    echo "usage: $(basename $0) [options] dataset init_slot n_slots [prefix]"
+    echo "usage: $(basename $0) [options] dataset init_slot [n_slots] [prefix]"
     echo "options:"
     echo "[-r] Don't create new snapshot, only backup existing ones"
     echo "[-b '$BS']"
@@ -75,19 +75,19 @@ function loadNextTape {
 }
 
 function checkSize {
-    local snap_size=$(zfs send -Pnwc $1 2>/dev/null | tail -1 | awk '{print $2}' | bc) || return $?
-    local snap_size_mb=$(echo "${snap_size} / 1024^2" | bc)
+    local snap_size=$(zfs send -Pnwc $1 2>/dev/null | tail -1 | awk '{print $2}') || return $?
+    local snap_size_mb=$((snap_size / 1048576))
     local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc) || return $?
-    echo "Snapshot size: ${snap_size_mb}MiB"
-    echo "Remain space on tape: ${size_remain_mb}MiB"
+    [[ $snap_size_mb -ge 10000 ]] && echo "Snapshot size: $((snap_size_mb / 1024))GiB" || echo "Snapshot size: ${snap_size_mb}MiB"
+    [[ $size_remain_mb -ge 10000 ]] && echo "Tape remain size: $((size_remain_mb / 1024))GiB" || echo "Tape remain size: ${size_remain_mb}MiB"
 
     [[ "${size_remain_mb}" -ge "((snap_size_mb))" ]] && return $? || echo "Insuficient remain space on tape"
     return 102
 }
 
 function sizeRemain {
-    local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc) || return $?
-    echo "Remain space on tape: ${size_remain_mb}MiB"
+    local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}') || return $?
+    [[ "$size_remain_mb" -ge 10000 ]] && echo "Remain space on tape: $((size_remain_mb / 1024))GiB" || echo "Remain space on tape: ${size_remain_mb}MiB"
 }
 
 function destroySnap {
@@ -178,7 +178,7 @@ function snapshot {
 
 function main {
     SLOT=${2}
-    NSLOTS=${3}
+    NSLOTS=${3:-1}
     local ds=${1}
     local prefix="${4:-tapebkp}"
 
@@ -186,9 +186,10 @@ function main {
     NSLOTS=$((SLOT + NSLOTS))
     [[ $(zfs list -H -o name ${ds}) ]] || exit $?
 
-    echo "Block Size set: $((BS * 512 / 1024))k"
-    echo "Tape Drive set: ${TAPE}"
-    echo "TapeLibrary set: ${TAPELIBRARY}"
+    echo "TapeLibrary: ${TAPELIBRARY}"
+    echo "Library Drive: ${TAPEDRIVE})"
+    echo "Tape Drive: ${TAPE}"
+    echo "Block Size: $((BS * 512 / 1024))k"
     echo "Dataset: ${ds}"
     echo "Prefix: ${prefix}"
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
