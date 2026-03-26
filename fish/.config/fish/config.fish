@@ -53,8 +53,8 @@ abbr gl "git log --oneline --graph --all"
 abbr gd "git diff"
 abbr lg "lazygit"
 abbr fd "fd --type f --hidden --exclude .git --exclude node_modules"
-abbr fzfp "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p --preview='batcat --color=always {}'"
-abbr fzfn "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
+abbr fp "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p --preview='batcat --color=always {}'"
+abbr fn "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
 
 function gbr --description "Git browse commits"
     set -l log_line_to_hash "echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
@@ -90,6 +90,15 @@ end
 
 function gpga 
     pkill gpg-agent
+    set -x GPG_TTY (tty)
+    gpgconf --launch gpg-agent
+    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+    gpg-connect-agent updatestartuptty /bye > /dev/null
+    gpg-connect-agent reloadagent /bye
+end
+
+#Support gpg-agent
+if ! pgrep gpg-agent > /dev/null
     set -x GPG_TTY (tty)
     gpgconf --launch gpg-agent
     set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)

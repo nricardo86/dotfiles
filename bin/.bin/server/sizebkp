@@ -50,11 +50,11 @@ for i in ${DS[@]}; do
     zfs destroy ${NOW_SNAPSHOT}
 
     echo -e "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
-    echo -e "Snapshot Count: $(zfs list -t snapshot -H -o name | grep $snapshot_name | wc -l)"
+    echo -e "Snapshot Count: $(zfs list -t snapshot -H -o name $i | grep $snapshot_name | wc -l)"
 done
 
-echo -e "\nDir Size -> Tape"
-DIR=(/z/alt /z/torrent)
+echo -e "\nDir -> Tape"
+DIR=(/z/torrent)
 for i in ${DIR[@]}; do
     echo -e
     sudo $HOME/dir2tape -s $i

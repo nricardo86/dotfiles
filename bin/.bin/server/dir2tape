@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-TAPE=/dev/nst0
+TAPE=$(lsscsi | grep HH6 | awk '{print $6}')
+TAPE=$(echo "/dev/nst${TAPE: -1:1}")
 BS=512
 TAPELIBRARY=$(lsscsi -g | grep mediumx | awk '{print $7}')
 TAPEDRIVE=${TAPE: -1:1}
 
-while getopts "b:t:s" o; do
+while getopts "b:t:sf" o; do
     case "${o}" in
-    s) STATS_ONLY=true ;;
+    s) STATS_ONLY=TRUE ;;
     t)
         TAPE=$OPTARG
         TAPEDRIVE=${TAPE: -1:1}
         ;;
     b) BS=$OPTARG ;;
+    f) FULL=TRUE ;;
     *) usage ;;
     esac
 done
@@ -82,7 +84,7 @@ function main {
         fi
         echo "Processing sizes..."
         local size=$(sizeFiles)
-        echo "Size for next backup: $((size / 1048576))M"
+        echo "Size for next backup: $((size / 1048576))MiB"
         return 0
     fi
     [[ -z $SLOT ]] && usage
@@ -93,8 +95,9 @@ function main {
     echo "Slot TapeLibrary: $SLOT"
 
     loadTape
-    if [[ ! -e $DIR/lastTapeBackup ]]; then
+    if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
         echo "Full Backup"
+        mt -f $TAPE erase 0
         find_select "-print0" | tar_cmd | mbuffer_send
         unloadTape
         return 0
