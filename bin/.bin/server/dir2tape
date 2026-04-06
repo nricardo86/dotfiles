@@ -1,9 +1,21 @@
 #!/usr/bin/env bash
+MTX="/usr/local/bin/mtx"
+MT="/usr/bin/mt"
+SG="/usr/bin/sg_read_attr"
 TAPE=$(lsscsi | grep HH6 | awk '{print $6}')
 TAPE=$(echo "/dev/nst${TAPE: -1:1}")
 BS=512
 TAPELIBRARY=$(lsscsi -g | grep mediumx | awk '{print $7}')
 TAPEDRIVE=${TAPE: -1:1}
+
+function usage {
+    echo "$(basename $0) [options] directory slot [nslots]"
+    echo "options:"
+    echo "[-s] Statistics only"
+    echo "[-t <Tape dev>] default $TAPE"
+    echo "[-b <n blocksize>] \"n*512bytes\" default $((BS * 512 / 1024))kb"
+    exit 1
+}
 
 while getopts "b:t:sf" o; do
     case "${o}" in
@@ -19,21 +31,17 @@ while getopts "b:t:sf" o; do
 done
 shift $((OPTIND - 1))
 
-function usage {
-    echo "$(basename $0) [options] directory slot"
-    echo "options:"
-    echo "[-s] Statistics only"
-    echo "[-t <Tape dev>] default $TAPE"
-    echo "[-b <n blocksize>] \"n*512bytes\" default $((BS * 512 / 1024))kb"
-    exit 1
-}
-
 function loadTape {
-    mtx -f $TAPELIBRARY load $SLOT $TAPEDRIVE
+    $MTX -f $TAPELIBRARY load $SLOT $TAPEDRIVE
 }
 
 function unloadTape {
-    mtx -f $TAPELIBRARY unload $SLOT $TAPEDRIVE
+    $MTX -f $TAPELIBRARY unload $SLOT $TAPEDRIVE
+}
+
+function eraseTape {
+    echo "Erasing Tape..."
+    $MT -f $TAPE erase 0
 }
 
 function find_select {
@@ -52,15 +60,15 @@ function tar_cmd {
 }
 
 function sizeRemain {
-    sudo sg_read_attr $TAPE -f 0x0 2>/dev/null | awk '{print $6}'
+    sudo $SG $TAPE -f 0x0 2>/dev/null | awk '{print $6}'
 }
 
 function mbuffer_send {
     mbuffer -s $((BS * 512)) \
         -m 10% \
-        -D $(sizeRemain)M \
-        -A "mtx -f $TAPELIBRARY next $TAPEDRIVE;((SLOT++))" \
-        -o $TAPE 2>/dev/null && touch $DIR/lastTapeBackup
+        -l /tmp/mbuffer-$(date +%s).log \
+        -A "((SLOT++));[[ $SLOT -lt $NSLOTS ]] && $MTX -f $TAPELIBRARY next $TAPEDRIVE" \
+        -o $TAPE 2>/dev/null
 }
 
 function sizeFiles {
@@ -70,11 +78,9 @@ function sizeFiles {
 function main {
     DIR=$1
     SLOT=$2
-    if [[ ! -d $DIR ]]; then
-        echo directory invalid
-        exit 1
-    fi
-    echo "Directory: $DIR"
+    NSLOTS=${3:-1}
+    NSLOTS=$((SLOT + NSLOTS))
+
     if [[ -n $STATS_ONLY ]]; then
         if [[ -e $DIR/lastTapeBackup ]]; then
             echo "Partial Backup"
@@ -87,7 +93,14 @@ function main {
         echo "Size for next backup: $((size / 1048576))MiB"
         return 0
     fi
+
     [[ -z $SLOT ]] && usage
+
+    if [[ ! -d $DIR ]]; then
+        echo directory invalid
+        exit 1
+    fi
+    echo "Directory: $DIR"
 
     echo "Tape dev: $TAPE"
     echo "Blocksize: $((BS * 512 / 1024))kb"
@@ -95,16 +108,22 @@ function main {
     echo "Slot TapeLibrary: $SLOT"
 
     loadTape
+    [[ -z $FULL ]] && touch $DIR/lastTapeBackup
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
         echo "Full Backup"
-        mt -f $TAPE erase 0
+        eraseTape
         find_select "-print0" | tar_cmd | mbuffer_send
         unloadTape
         return 0
     fi
     while [[ "$(($(sizeFiles) / 1048576))" -gt "$(sizeRemain)" ]]; do
-        mtx -f $TAPELIBRARY next $TAPEDRIVE
+        $MTX -f $TAPELIBRARY next $TAPEDRIVE
         ((SLOT++))
+        if [[ $SLOT -ge $NSLOTS ]]; then
+            echo "Last Tape full"
+            unloadTape
+            exit 2
+        fi
     done
     echo "Partial Backup"
     find_select "-print0" | tar_cmd | mbuffer_send

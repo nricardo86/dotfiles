@@ -11,17 +11,18 @@ zfs mount z/alt
 
 if [[ -z $(zfs mount | grep -i "z/main") ]]; then exit 1; fi
 
-containers=(100 101 105 106 302 303 304 305 306)
+containers=(100 101 104 105 106 302 303 304 305 306 200)
 vms=(400)
 
 for i in ${containers[@]}; do
-	if [ $(lxc-info -n $i | grep State | awk '{print $2}') != "RUNNING" ]; then
-		lxc-start -n $i &
-	fi
+    sleep 0.5
+    if [ $(lxc-info -n $i | grep State | awk '{print $2}') != "RUNNING" ]; then
+        lxc-start -n $i &
+    fi
 done
 
 for i in ${vms[@]}; do
-	if [ $(qm status $i | grep status | awk '{print $2}') != "running" ]; then
-		qm start $i &
-	fi
+    if [ $(qm status $i | grep status | awk '{print $2}') != "running" ]; then
+        qm start $i &
+    fi
 done

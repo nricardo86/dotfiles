@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+MTX="/usr/local/bin/mtx"
+MT="/usr/bin/mt"
+SG="/usr/bin/sg_read_attr"
 TAPE=$(lsscsi | grep HH6 | awk '{print $6}')
 TAPE=$(echo "/dev/nst${TAPE: -1:1}")
 BS=512
@@ -28,25 +31,11 @@ while getopts "rb:t:" o; do
 done
 shift $((OPTIND - 1))
 
-function tapeSerial {
-    local tape_serial=$(sudo sg_read_attr "${TAPE}" -f 0x401 2>/dev/null | awk '{print $4}')
-    if [[ -z "${tape_serial}" ]]; then
-        echo "Fail to identify tape"
-        exit 100
-    fi
-    echo "Tape serial: ${tape_serial}"
-}
-
-function tapeRewind {
-    echo "Rewinding tape!"
-    mt -f "$TAPE" rewind
-}
-
 function findEOM {
     echo "Finding EOM..."
     local count=3
     while true; do
-        mt -f "${TAPE}" eom 2>/dev/null && break
+        $MT -f "${TAPE}" eom 2>/dev/null && break
         if [[ "${count}" -eq "0" ]]; then
             echo "EOM not found!"
             return 101
@@ -55,30 +44,57 @@ function findEOM {
         tapeRewind || return $?
     done
     echo "EOM found!"
-    FILES_ONTAPE=$(($FILES_ONTAPE + $(mt -f "${TAPE}" status | grep 'file number' | awk '{print $4}')))
+    FILES_ONTAPE=$(($FILES_ONTAPE + $($MT -f "${TAPE}" status | grep 'file number' | awk '{print $4}')))
     echo "Files on Tape: $FILES_ONTAPE"
 }
 
-function loadTape {
-    mtx -f $TAPELIBRARY load $1 $TAPEDRIVE || exit $?
-    tapeSerial || exit $?
-    findEOM || exit $?
+function tapeSerial {
+    local tape_serial=$(sudo $SG "${TAPE}" -f 0x401 2>/dev/null | awk '{print $4}')
+    echo "Tape serial: ${tape_serial}"
+}
+
+function tapeBarcode {
+    local driveStatus=$($MTX -f $TAPELIBRARY status | grep "Data Transfer Element ${TAPEDRIVE}:")
+    local barcode=$(echo $driveStatus | awk '{print $10}')
+    echo "Tape barcode: $barcode"
 }
 
 function unloadTape {
-    mtx -f $TAPELIBRARY unload $SLOT $TAPEDRIVE || exit $?
+    $MTX -f $TAPELIBRARY unload ${1:-$SLOT} $TAPEDRIVE
+}
+
+function checkDrive {
+    local driveStatus=$($MTX -f ${TAPELIBRARY} status | grep "Data Transfer Element ${TAPEDRIVE}:")
+    local driveLoaded=$(echo $driveStatus | awk -F ':' '{print $2}')
+    [[ ${driveLoaded} == "Empty" ]] && return
+    local storageSlot=$(echo $driveStatus | awk '{print $7}')
+    [[ ! $storageSlot == $SLOT ]] && unloadTape $storageSlot
+}
+
+function loadTape {
+    checkDrive
+    $MTX -f $TAPELIBRARY load $1 $TAPEDRIVE || return $?
+    tapeBarcode
+    tapeSerial
+    findEOM || return $?
 }
 
 function loadNextTape {
-    mtx -f $TAPELIBRARY next $TAPEDRIVE || exit $?
-    tapeSerial || exit $?
-    findEOM || exit $?
+    $MTX -f $TAPELIBRARY next $TAPEDRIVE || return $?
+    tapeBarcode
+    tapeSerial
+    findEOM || return $?
+}
+
+function tapeRewind {
+    echo "Rewinding tape!"
+    $MT -f "$TAPE" rewind || return $?
 }
 
 function checkSize {
     local snap_size=$(zfs send -Pnwc $1 2>/dev/null | tail -1 | awk '{print $2}') || return $?
     local snap_size_mb=$((snap_size / 1048576))
-    local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc) || return $?
+    local size_remain_mb=$(sudo $SG "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}' | bc) || return $?
     [[ $snap_size_mb -ge 10000 ]] && echo "Snapshot size: $((snap_size_mb / 1024))GiB" || echo "Snapshot size: ${snap_size_mb}MiB"
     [[ $size_remain_mb -ge 10000 ]] && echo "Tape remain size: $((size_remain_mb / 1024))GiB" || echo "Tape remain size: ${size_remain_mb}MiB"
 
@@ -87,7 +103,7 @@ function checkSize {
 }
 
 function sizeRemain {
-    local size_remain_mb=$(sudo sg_read_attr "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}') || return $?
+    local size_remain_mb=$(sudo $SG "${TAPE}" -f 0x0 2>/dev/null | awk '{print $6}') || return $?
     [[ "$size_remain_mb" -ge 10000 ]] && echo "Remain space on tape: $((size_remain_mb / 1024))GiB" || echo "Remain space on tape: ${size_remain_mb}MiB"
 }
 
@@ -97,11 +113,15 @@ function destroySnap {
 }
 
 function send2tape {
-    zfs send -wc $1 | mbuffer -m 10% -s $((BS * 512)) -o ${TAPE} 2>/dev/null
+    zfs send -wc $1 | mbuffer \
+        -m 10% \
+        -s $((BS * 512)) \
+        -o ${TAPE} \
+        -l /tmp/mbuffer-$(date +%s).log 2>/dev/null
 }
 
 function firstSnapshot {
-    tapeRewind || exit $?
+    tapeRewind
     local snap_init=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}')
     if [[ -z $snap_init ]]; then
         zfs snapshot -r "${1}@${2}-$(date --utc +%Y%m%d-%H%M)" || return $?
@@ -137,7 +157,7 @@ function recursiveSend {
         echo "Sending incremental snapshot from ${snap_from} to ${snap_to}"
         checkSize "-I ${snap_from} ${snap_to}"
         while [[ ! $? -eq 0 ]]; do
-            loadNextTape || exit $?
+            loadNextTape
             ((SLOT++))
             if [[ $SLOT -ge $NSLOTS ]]; then
                 echo "Last Tape full"
@@ -161,7 +181,7 @@ function snapshot {
     echo "Sending incremental snapshot from ${last_snapshot} to ${now_snapshot}"
     checkSize "-RI ${last_snapshot} ${now_snapshot}"
     while [[ ! $? -eq 0 ]]; do
-        loadNextTape || exit $?
+        loadNextTape
         ((SLOT++))
         if [[ $SLOT -ge $NSLOTS ]]; then
             echo "Last Tape full"
@@ -183,7 +203,7 @@ function main {
     local ds=${1}
     local prefix="${4:-tapebkp}"
 
-    [[ -z "${ds}" || -z "${SLOT}" || -z "${NSLOTS}" ]] && usage
+    [[ -z "${ds}" || -z "${SLOT}" ]] && usage
     NSLOTS=$((SLOT + NSLOTS))
 
     zfs list -H -o name ${ds} >/dev/null || exit $?
@@ -192,9 +212,11 @@ function main {
     echo "Library Drive: ${TAPEDRIVE}"
     echo "Tape Drive: ${TAPE}"
     echo "Block Size: $((BS * 512 / 1024))k"
+    echo "Storage Slot: ${SLOT}"
     echo "Dataset: ${ds}"
     echo "Prefix: ${prefix}"
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
+    [[ -n $RECURSIVE_ONLY ]] && echo "Recursive Snapshot Send Only, no new snapshot"
 
     loadTape $SLOT || exit $?
 
@@ -203,6 +225,7 @@ function main {
     fi
 
     recursiveSend "${ds}" "${prefix}" || exit $?
+
     if [[ -z $RECURSIVE_ONLY ]]; then
         snapshot "${ds}" "${prefix}" || exit $?
     fi
