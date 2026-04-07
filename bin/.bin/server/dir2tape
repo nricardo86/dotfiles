@@ -64,10 +64,11 @@ function sizeRemain {
 }
 
 function mbuffer_send {
-    mbuffer -s $((BS * 512)) \
+    mbuffer -q \
+        -s $((BS * 512)) \
         -m 10% \
-        -l /tmp/mbuffer-$(date +%s).log \
-        -A "((SLOT++));[[ $SLOT -lt $NSLOTS ]] && $MTX -f $TAPELIBRARY next $TAPEDRIVE" \
+        -l /tmp/mbuffer_dir2tape-$(date +%s).log \
+        -A "((SLOT++));[[ $SLOT -lt $NSLOTS ]] && $MTX -f $TAPELIBRARY next $TAPEDRIVE || exit 1" \
         -o $TAPE 2>/dev/null
 }
 

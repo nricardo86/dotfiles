@@ -22,6 +22,7 @@ for i in ${containers[@]}; do
 done
 
 for i in ${vms[@]}; do
+    sleep 0.5
     if [ $(qm status $i | grep status | awk '{print $2}') != "running" ]; then
         qm start $i &
     fi

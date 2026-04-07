@@ -2,10 +2,11 @@
 MTX="/usr/local/bin/mtx"
 MT="/usr/bin/mt"
 SG="/usr/bin/sg_read_attr"
-TAPE=$(lsscsi | grep HH6 | awk '{print $6}')
+LSSCSI="/usr/bin/lsscsi"
+TAPE=$($LSSCSI | grep HH6 | awk '{print $6}')
 TAPE=$(echo "/dev/nst${TAPE: -1:1}")
 BS=512
-TAPELIBRARY=$(lsscsi -g | grep mediumx | awk '{print $7}')
+TAPELIBRARY=$($LSSCSI -g | grep mediumx | awk '{print $7}')
 TAPEDRIVE=${TAPE: -1:1}
 FILES_ONTAPE=0
 
@@ -113,11 +114,11 @@ function destroySnap {
 }
 
 function send2tape {
-    zfs send -wc $1 | mbuffer \
+    zfs send -wc $1 | mbuffer -q \
         -m 10% \
         -s $((BS * 512)) \
         -o ${TAPE} \
-        -l /tmp/mbuffer-$(date +%s).log 2>/dev/null
+        -l /tmp/mbuffer_zfs2tape-$(date +%s).log 2>/dev/null
 }
 
 function firstSnapshot {
