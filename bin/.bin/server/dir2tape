@@ -31,17 +31,32 @@ while getopts "b:t:sf" o; do
 done
 shift $((OPTIND - 1))
 
+function unloadTape {
+    local driveStatus=$($MTX -f ${TAPELIBRARY} status | grep "Data Transfer Element ${TAPEDRIVE}:")
+    local driveLoaded=$(echo $driveStatus | awk -F ':' '{print $2}')
+    [[ ${driveLoaded} == "Empty" ]] && return 0
+    local storageSlot=$(echo $driveStatus | awk '{print $7}')
+    $MTX -f $TAPELIBRARY unload $storageSlot $TAPEDRIVE
+}
+
 function loadTape {
+    unloadTape
     $MTX -f $TAPELIBRARY load $SLOT $TAPEDRIVE
 }
 
-function unloadTape {
-    $MTX -f $TAPELIBRARY unload $SLOT $TAPEDRIVE
+function tapeRewind {
+    echo "Rewinding Tape..."
+    $MT -f $TAPE rewind
 }
 
 function eraseTape {
+    tapeRewind
     echo "Erasing Tape..."
     $MT -f $TAPE erase 0
+}
+
+function sizeRemain {
+    sudo $SG $TAPE -f 0x0 2>/dev/null | awk '{print $6}'
 }
 
 function find_select {
@@ -52,6 +67,7 @@ function find_select {
         DAYS=("-mtime")
         DAYS+=($nDays)
     fi
+    [[ -n $FULL ]] && unset DAYS
     find $DIR -type f ${DAYS[@]} $@
 }
 
@@ -59,21 +75,45 @@ function tar_cmd {
     tar --format=pax -T - -cf - 2>/dev/null
 }
 
-function sizeRemain {
-    sudo $SG $TAPE -f 0x0 2>/dev/null | awk '{print $6}'
-}
-
 function mbuffer_send {
-    mbuffer -q \
+    mbuffer \
         -s $((BS * 512)) \
         -m 10% \
-        -l /tmp/mbuffer_dir2tape-$(date +%s).log \
-        -A "((SLOT++));[[ $SLOT -lt $NSLOTS ]] && $MTX -f $TAPELIBRARY next $TAPEDRIVE || exit 1" \
+        -A "$MTX -f $TAPELIBRARY next $TAPEDRIVE" \
         -o $TAPE 2>/dev/null
 }
 
 function sizeFiles {
     find_select "-printf %s\n" | awk '{sum += $1} END {print sum}'
+}
+
+function showFilesSize {
+    local size_files_mb=$(($(sizeFiles) / 1048576))
+    [[ "$size_remain_mb" -ge 10000 ]] && echo "Files to backup: $((size_files_mb / 1024))GiB" || echo "Files to backup: ${size_files_mb}MiB"
+}
+
+function showRemainSize {
+    local size_remain_mb=$(sizeRemain)
+    [[ "$size_remain_mb" -ge 10000 ]] && echo "Remain space on tape: $((size_remain_mb / 1024))GiB" || echo "Remain space on tape: ${size_remain_mb}MiB"
+}
+
+function send2tape {
+    showFilesSize
+    showRemainSize
+    echo "Sending to Tape.."
+    touch $DIR/lastTapeBackup
+    find_select "-print0" | tar_cmd | mbuffer_send
+}
+
+function fullBackup {
+    echo "Full Backup"
+    eraseTape
+    send2tape
+}
+
+function partialBackup {
+    echo "Partial Backup"
+    send2tape
 }
 
 function main {
@@ -82,52 +122,50 @@ function main {
     NSLOTS=${3:-1}
     NSLOTS=$((SLOT + NSLOTS))
 
+    if [[ ! -d $DIR ]]; then
+        echo directory invalid
+        exit 1
+    fi
+
     if [[ -n $STATS_ONLY ]]; then
-        if [[ -e $DIR/lastTapeBackup ]]; then
+        if [[ -z $FULL && -e $DIR/lastTapeBackup ]]; then
             echo "Partial Backup"
             echo "Last Backup: $(stat -c %y $DIR/lastTapeBackup)"
         else
             echo "Full Backup"
         fi
-        echo "Processing sizes..."
-        local size=$(sizeFiles)
-        echo "Size for next backup: $((size / 1048576))MiB"
-        return 0
+        echo -ne "Processing sizes...\r"
+        showFilesSize
+        exit 0
     fi
 
     [[ -z $SLOT ]] && usage
 
-    if [[ ! -d $DIR ]]; then
-        echo directory invalid
-        exit 1
-    fi
     echo "Directory: $DIR"
-
     echo "Tape dev: $TAPE"
     echo "Blocksize: $((BS * 512 / 1024))kb"
     echo "Tape Library dev: $TAPELIBRARY"
-    echo "Slot TapeLibrary: $SLOT"
+    echo "TapeLibrary Storage: $SLOT"
 
     loadTape
-    [[ -z $FULL ]] && touch $DIR/lastTapeBackup
+
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
-        echo "Full Backup"
-        eraseTape
-        find_select "-print0" | tar_cmd | mbuffer_send
-        unloadTape
-        return 0
+        fullBackup
+    else
+        while [[ "$(($(sizeFiles) / 1048576))" -gt "$(sizeRemain)" ]]; do
+            ((SLOT++))
+            if [[ $SLOT -ge $NSLOTS ]]; then
+                echo "Last Tape full"
+                unloadTape
+                exit 2
+            fi
+            echo "Files Sizes: $((sizeFiles / 1048576))"
+            echo "Size Remain on Tape: $(sizeRemain)"
+            $MTX -f $TAPELIBRARY next $TAPEDRIVE
+        done
+        partialBackup
     fi
-    while [[ "$(($(sizeFiles) / 1048576))" -gt "$(sizeRemain)" ]]; do
-        $MTX -f $TAPELIBRARY next $TAPEDRIVE
-        ((SLOT++))
-        if [[ $SLOT -ge $NSLOTS ]]; then
-            echo "Last Tape full"
-            unloadTape
-            exit 2
-        fi
-    done
-    echo "Partial Backup"
-    find_select "-print0" | tar_cmd | mbuffer_send
+
     unloadTape
 }
 

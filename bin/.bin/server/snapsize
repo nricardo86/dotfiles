@@ -6,7 +6,11 @@ fi
 repo=$1
 filter=$2
 
-list=$(zfs list -t snapshot -H -o name ${repo}) || exit $?
+list=$(zfs list -t snapshot -H -o name ${repo} 2>/dev/null)
+if [ -z $list ]; then
+    echo "no snapshots for $repo"
+    exit 1
+fi
 
 for i in ${list[@]}; do
     [[ "$i" == *"${filter}"* ]] && arr+=($i)
