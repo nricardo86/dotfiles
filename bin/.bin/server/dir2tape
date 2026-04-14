@@ -166,6 +166,7 @@ function main {
         partialBackup
     fi
 
+    echo "Size Remain on Tape: $(sizeRemain)"
     unloadTape
 }
 
