@@ -147,6 +147,8 @@ function main {
     echo "Tape Library dev: $TAPELIBRARY"
     echo "TapeLibrary Storage: $SLOT"
 
+    echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
+
     loadTape
 
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
@@ -159,15 +161,17 @@ function main {
                 unloadTape
                 exit 2
             fi
-            echo "Files Sizes: $((sizeFiles / 1048576))"
-            echo "Size Remain on Tape: $(sizeRemain)"
+            showFilesSize
+            showRemainSize
             $MTX -f $TAPELIBRARY next $TAPEDRIVE
         done
         partialBackup
     fi
 
-    echo "Size Remain on Tape: $(sizeRemain)"
+    showRemainSize
     unloadTape
+
+    echo "End of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 }
 
 main $@
