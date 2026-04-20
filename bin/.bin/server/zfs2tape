@@ -66,19 +66,19 @@ function unloadTape {
     local driveLoaded=$(echo $driveStatus | awk -F ':' '{print $2}')
     [[ ${driveLoaded} == "Empty" ]] && return 0
     local storageSlot=$(echo $driveStatus | awk '{print $7}')
-    $MTX -f $TAPELIBRARY unload $storageSlot $TAPEDRIVE
+    $MTX -f $TAPELIBRARY unload $storageSlot $TAPEDRIVE || return $?
 }
 
 function loadTape {
     unloadTape
-    $MTX -f $TAPELIBRARY load $1 $TAPEDRIVE
+    $MTX -f $TAPELIBRARY load $1 $TAPEDRIVE || return $?
     tapeBarcode
     tapeSerial
     findEOM || return $?
 }
 
 function loadNextTape {
-    $MTX -f $TAPELIBRARY next $TAPEDRIVE
+    $MTX -f $TAPELIBRARY next $TAPEDRIVE || return $?
     tapeBarcode
     tapeSerial
     findEOM || return $?

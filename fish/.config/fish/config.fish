@@ -3,6 +3,7 @@ set -g fish_key_bindings fish_vi_key_bindings
 set -gx EDITOR nvim
 set -gx BROWSER librewolf
 set -gx TERM screen-256color
+set -x MANPAGER "sh -c 'batcat -l man -p'"
 
 if type -q eza
   abbr ls "eza --icons"
