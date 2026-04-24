@@ -106,7 +106,7 @@ function sizeFiles {
 
 function showFilesSize {
     local size_files_mb=$(($(sizeFiles) / 1048576))
-    [[ "$size_remain_mb" -ge 10000 ]] && echo "Files to backup: $((size_files_mb / 1024))GiB" || echo "Files to backup: ${size_files_mb}MiB"
+    [[ "$size_files_mb" -ge 10000 ]] && echo "Files to backup: $((size_files_mb / 1024))GiB" || echo "Files to backup: ${size_files_mb}MiB"
 }
 
 function showRemainSize {
@@ -136,7 +136,7 @@ function partialBackup {
 function main {
     DIR=$1
     SLOT=$2
-    NSLOTS=${3:-1}
+    NSLOTS=${3:-0}
     NSLOTS=$((SLOT + NSLOTS))
 
     if [[ ! -d $DIR ]]; then
@@ -173,7 +173,7 @@ function main {
     else
         while [[ "$(($(sizeFiles) / 1048576))" -gt "$(sizeRemain)" ]]; do
             ((SLOT++))
-            if [[ $SLOT -ge $NSLOTS ]]; then
+            if [[ $SLOT -eq $NSLOTS ]]; then
                 echo "Last Tape full"
                 unloadTape
                 exit 2

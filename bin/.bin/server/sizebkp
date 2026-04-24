@@ -57,5 +57,6 @@ echo -e "\nDir -> Tape"
 DIR=(/z/torrent)
 for i in ${DIR[@]}; do
     echo -e
+    echo $i
     sudo $HOME/dir2tape -s $i
 done
