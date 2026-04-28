@@ -81,6 +81,7 @@ function find_select {
         local lastBackup=$(stat -c %Y $DIR/lastTapeBackup)
         local now=$(date +%s)
         local nDays=$(((lastBackup - now) / 86400))
+        [[ "$nDays" != "0" ]] && local nDays="-0"
         DAYS=("-mtime")
         DAYS+=($nDays)
     fi
@@ -105,7 +106,8 @@ function sizeFiles {
 }
 
 function showFilesSize {
-    local size_files_mb=$(($(sizeFiles) / 1048576))
+    local file_sizes=$(sizeFiles)
+    local size_files_mb=$((file_sizes / 1048576))
     [[ "$size_files_mb" -ge 10000 ]] && echo "Files to backup: $((size_files_mb / 1024))GiB" || echo "Files to backup: ${size_files_mb}MiB"
 }
 
