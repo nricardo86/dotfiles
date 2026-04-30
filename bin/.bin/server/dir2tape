@@ -164,7 +164,12 @@ function main {
     echo "Tape dev: $TAPE"
     echo "Blocksize: $((BS * 512 / 1024))kb"
     echo "Tape Library dev: $TAPELIBRARY"
-    echo "TapeLibrary Storage: $SLOT"
+    echo "TapeLibrary Storage: $SLOT..$NSLOTS"
+
+    if [[ -z $FULL && $(sizeFiles) -lt 1048576 ]]; then
+        echo "Nothing new to backup"
+        exit 0
+    fi
 
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 

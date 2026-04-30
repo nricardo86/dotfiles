@@ -212,7 +212,7 @@ function main {
     echo "Library Drive: ${TAPEDRIVE}"
     echo "Tape Drive: ${TAPE}"
     echo "Block Size: $((BS * 512 / 1024))k"
-    echo "Storage Slot: ${SLOT}"
+    echo "Storage Slot: ${SLOT}..${NSLOTS}"
     echo "Dataset: ${ds}"
     echo "Prefix: ${prefix}"
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
