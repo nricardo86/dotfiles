@@ -94,11 +94,13 @@ function tar_cmd {
 }
 
 function mbuffer_send {
+    local mbuffer_args="-A \"echo Tape Full\""
+    [[ $NSLOTS -gt $SLOT ]] && mbuffer_args="-A \"$MTX -f $TAPELIBRARY next $TAPEDRIVE\""
     mbuffer \
         -s $((BS * 512)) \
         -m 10% \
-        -A "$MTX -f $TAPELIBRARY next $TAPEDRIVE" \
-        -o $TAPE 2>/dev/null
+        -o $TAPE \
+        $mbuffer_args 2>/dev/null
 }
 
 function sizeFiles {

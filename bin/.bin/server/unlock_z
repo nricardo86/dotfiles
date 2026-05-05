@@ -11,8 +11,8 @@ zfs mount z/alt
 
 if [[ -z $(zfs mount | grep -i "z/main") ]]; then exit 1; fi
 
-containers=(100 101 104 105 106 302 303 304 305 306 200)
-vms=(400)
+containers=(100 101 104 105 106 107 302 303 304 305 200)
+vms=()
 
 for i in ${containers[@]}; do
     sleep 0.5
