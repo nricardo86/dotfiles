@@ -77,30 +77,24 @@ function sizeRemain {
 }
 
 function find_select {
-    if [[ -e $DIR/lastTapeBackup ]]; then
+    if [[ -z $FULL && -e $DIR/lastTapeBackup ]]; then
         local lastBackup=$(stat -c %Y $DIR/lastTapeBackup)
         local now=$(date +%s)
         local nDays=$(((lastBackup - now) / 86400))
-        [[ "$nDays" != "0" ]] && local nDays="-0"
+        [[ "$nDays" == "0" ]] && local nDays="-0"
         DAYS=("-mtime")
         DAYS+=($nDays)
     fi
-    [[ -n $FULL ]] && unset DAYS
     find $DIR -type f ${DAYS[@]} $@
 }
 
 function tar_cmd {
-    tar --format=pax -T - -cf - 2>/dev/null
+    tar --format=pax -T - -c -I"zstd -19 -T0" -f - 2>/dev/null
 }
 
 function mbuffer_send {
-    local mbuffer_args="-A \"echo Tape Full\""
-    [[ $NSLOTS -gt $SLOT ]] && mbuffer_args="-A \"$MTX -f $TAPELIBRARY next $TAPEDRIVE\""
-    mbuffer \
-        -s $((BS * 512)) \
-        -m 10% \
-        -o $TAPE \
-        $mbuffer_args 2>/dev/null
+    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args="-A \"$MTX -f $TAPELIBRARY next $TAPEDRIVE\""
+    mbuffer -s $((BS * 512)) -m 10% -o $TAPE ${mbuffer_args} 2>/dev/null
 }
 
 function sizeFiles {
@@ -180,16 +174,17 @@ function main {
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
         fullBackup
     else
+        showFilesSize
+        showRemainSize
         while [[ "$(($(sizeFiles) / 1048576))" -gt "$(sizeRemain)" ]]; do
-            ((SLOT++))
+            $MTX -f $TAPELIBRARY next $TAPEDRIVE
+            showRemainSize
             if [[ $SLOT -eq $NSLOTS ]]; then
                 echo "Last Tape full"
                 unloadTape
                 exit 2
             fi
-            showFilesSize
-            showRemainSize
-            $MTX -f $TAPELIBRARY next $TAPEDRIVE
+            ((SLOT++))
         done
         findEOM
         partialBackup
