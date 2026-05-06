@@ -111,11 +111,9 @@ function destroySnap {
 }
 
 function send2tape {
+    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args="-A \"$MTX -f $TAPELIBRARY next $TAPEDRIVE\""
     zfs send -wc $1 | mbuffer \
-        -m 10% \
-        -s $((BS * 512)) \
-        -A "$MTX -f $TAPELIBRARY next $TAPEDRIVE" \
-        -o $TAPE 2>/dev/null
+        -m 10% -s $((BS * 512)) ${mbuffer_args} -o $TAPE 2>/dev/null
 }
 
 function firstSnapshot {
