@@ -52,10 +52,3 @@ for i in ${DS[@]}; do
     echo -e "Snapshot Size: ${SNAP_SIZE_MB}MiB / ${SNAP_SIZE_GB}GiB"
     echo -e "Snapshot Count: $(zfs list -t snapshot -H -o name $i | grep $snapshot_name | wc -l)"
 done
-
-echo -e "\nDir -> Tape\n"
-echo "/z/torrent"
-sudo $HOME/dir2tape -s /z/torrent/
-echo -e
-echo "/z/alt"
-sudo $HOME/dir2tape -sf /z/alt/

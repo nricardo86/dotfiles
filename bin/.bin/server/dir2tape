@@ -2,10 +2,12 @@
 MTX="/usr/local/bin/mtx"
 MT="/usr/bin/mt"
 SG="/usr/bin/sg_read_attr"
-TAPE=$(lsscsi | grep HH6 | awk '{print $6}')
+TAPEDRIVEMODEL="HH6"
+TAPE=$(lsscsi | grep $TAPEDRIVEMODEL | awk '{print $6}')
 TAPE=$(echo "/dev/nst${TAPE: -1:1}")
 BS=512
-TAPELIBRARY=$(lsscsi -g | grep mediumx | awk '{print $7}')
+TAPELIBRARYMODEL="mediumx"
+TAPELIBRARY=$(lsscsi -g | grep $TAPELIBRARYMODEL | awk '{print $7}')
 TAPEDRIVE=${TAPE: -1:1}
 
 function usage {
@@ -73,7 +75,7 @@ function eraseTape {
 }
 
 function sizeRemain {
-    sudo $SG $TAPE -f 0x0 2>/dev/null | awk '{print $6}'
+    $SG $TAPE -f 0x0 2>/dev/null | awk '{print $6}'
 }
 
 function find_select {
@@ -81,7 +83,7 @@ function find_select {
         local lastBackup=$(stat -c %Y $DIR/lastTapeBackup)
         local now=$(date +%s)
         local nDays=$(((lastBackup - now) / 86400))
-        [[ "$nDays" == "0" ]] && local nDays="-0"
+        [[ "$nDays" -eq 0 ]] && local nDays="-0"
         DAYS=("-mtime")
         DAYS+=($nDays)
     fi
@@ -89,12 +91,12 @@ function find_select {
 }
 
 function tar_cmd {
-    tar --format=pax -T - -c -I"zstd -19 -T0" -f - 2>/dev/null
+    tar --format=pax -T - -I"zstd -19 -T0" -cf - 2>/dev/null
 }
 
 function mbuffer_send {
-    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args="-A \"$MTX -f $TAPELIBRARY next $TAPEDRIVE\""
-    mbuffer -s $((BS * 512)) -m 10% -o $TAPE ${mbuffer_args} 2>/dev/null
+    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args="-A $MTX -f $TAPELIBRARY next $TAPEDRIVE"
+    mbuffer -s $((BS * 512)) -m 10% -o $TAPE "${mbuffer_args}" 2>/dev/null
 }
 
 function sizeFiles {
@@ -113,14 +115,13 @@ function showRemainSize {
 }
 
 function send2tape {
-    showFilesSize
-    showRemainSize
     echo "Sending to Tape.."
     touch $DIR/lastTapeBackup
     find_select "-print0" | tar_cmd | mbuffer_send
 }
 
 function fullBackup {
+    FULL=TRUE
     echo "Full Backup"
     eraseTape
     send2tape
@@ -132,6 +133,12 @@ function partialBackup {
 }
 
 function main {
+
+    if [ "$EUID" -ne 0 ]; then
+        echo "Not running as root"
+        exit 1
+    fi
+
     DIR=$1
     SLOT=$2
     NSLOTS=${3:-0}
@@ -172,6 +179,8 @@ function main {
     loadTape
 
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
+        showFilesSize
+        showRemainSize
         fullBackup
     else
         showFilesSize
