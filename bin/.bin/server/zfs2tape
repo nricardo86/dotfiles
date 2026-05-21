@@ -233,13 +233,11 @@ function main {
 
     loadTape $SLOT || exit $?
 
-    if [[ "${FILES_ONTAPE}" -eq 0 ]]; then
+    if [[ -n $FULL || -z $RECURSIVE_ONLY && "${FILES_ONTAPE}" -eq 0 ]]; then
         firstSnapshot "${ds}" "${prefix}" || exit $?
     fi
 
-    if [[ -z $FULL ]]; then
-        recursiveSend "${ds}" "${prefix}" || exit $?
-    fi
+    recursiveSend "${ds}" "${prefix}" || exit $?
 
     if [[ -z $RECURSIVE_ONLY || -z $FULL ]]; then
         snapshot "${ds}" "${prefix}" || exit $?

@@ -12,7 +12,6 @@ if type -q eza
 end
 abbr sudo "doas"
 abbr hl "grep -z"
-abbr za "zathura"
 abbr cd "z"
 abbr rsync "rsync -avhP"
 abbr nmc "nmcli --ask"
@@ -55,6 +54,7 @@ abbr lg "lazygit"
 abbr fd "fd --type f --hidden --exclude .git --exclude node_modules"
 abbr fp "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p --preview='batcat --color=always {}'"
 abbr fn "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
+abbr filediff "find . -type f | awk -F \".\" '{ print \$(NF) }' | sort -u"
 
 function gbr --description "Git browse commits"
     set -l log_line_to_hash "echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
@@ -86,15 +86,6 @@ function y
 		builtin cd -- "$cwd"
 	end
 	rm -f -- "$tmp"
-end
-
-function gpga 
-    pkill gpg-agent
-    set -x GPG_TTY (tty)
-    gpgconf --launch gpg-agent
-    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-    gpg-connect-agent updatestartuptty /bye > /dev/null
-    gpg-connect-agent reloadagent /bye
 end
 
 #Support gpg-agent

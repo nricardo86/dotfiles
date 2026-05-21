@@ -91,7 +91,8 @@ function find_select {
 }
 
 function tar_cmd {
-    tar --format=pax -T - -I"zstd -19 -T0" -cf - 2>/dev/null
+    # tar --format=pax -T - -I"zstd -19 -T0" -cf - 2>/dev/null
+    tar --format=pax -T - -cf - 2>/dev/null
 }
 
 function mbuffer_send {

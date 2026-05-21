@@ -6,13 +6,12 @@ fi
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-# alias sudo="doas"
+alias sudo="doas"
 alias hl="grep -z"
 alias za="zathura"
-alias cd="z"
-alias ..="cd .."
 alias rsync="rsync -avhP"
 alias nmc="nmcli --ask"
+alias open='xdg-open'
 alias wtf="curl --connect-timeout 5 -fSs ipv4.json.myip.wtf 2>/dev/null | jq"
 alias wtf6="curl --connect-timeout 5 -fSs ipv6.json.myip.wtf 2>/dev/null | jq"
 alias dd="dd status=progress"
