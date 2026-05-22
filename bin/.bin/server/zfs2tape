@@ -132,11 +132,11 @@ function send2tape {
 function firstSnapshot {
     tapeRewind
     local snap_init=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}')
-    if [[ -z $snap_init || -n $FULL ]]; then
+    if [[ -z $snap_init ]]; then
         zfs snapshot -r "${1}@${2}-$(date --utc +%Y%m%d-%H%M)" || return $?
         local snap_init=$(zfs list -t snapshot $1 -H | grep $2 | head -n1 | awk '{print $1}')
         echo "Creating snapshot: $snap_init"
-        [[ -z $FULL ]] && local created_now=true
+        local created_now=true
     fi
 
     echo "Full Backup"
@@ -229,17 +229,17 @@ function main {
     echo "Dataset: ${ds}"
     echo "Prefix: ${prefix}"
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
-    [[ -n $RECURSIVE_ONLY || -n $FULL ]] && echo "Recursive Snapshot Send Only, no new snapshot"
+    [[ -n $RECURSIVE_ONLY ]] && echo "Recursive Snapshot Send Only, no new snapshot"
 
     loadTape $SLOT || exit $?
 
-    if [[ -n $FULL || -z $RECURSIVE_ONLY && "${FILES_ONTAPE}" -eq 0 ]]; then
+    if [[ -n $FULL || "${FILES_ONTAPE}" -eq 0 ]]; then
         firstSnapshot "${ds}" "${prefix}" || exit $?
     fi
 
     recursiveSend "${ds}" "${prefix}" || exit $?
 
-    if [[ -z $RECURSIVE_ONLY || -z $FULL ]]; then
+    if [[ -z $RECURSIVE_ONLY ]]; then
         snapshot "${ds}" "${prefix}" || exit $?
     fi
 
