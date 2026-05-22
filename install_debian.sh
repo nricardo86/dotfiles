@@ -33,7 +33,7 @@ sudo apt dist-upgrade -qy
 sudo apt install -qy bc eza rsync fontconfig restic pass npm nodejs \
     python3 python3-pip python3-venv gcc zip luarocks curl jq wget git gnupg \
     scdaemon vnstat acpi acpid stow doas htop neovim tmux btop bat ripgrep \
-    fish zsh zoxide bash-completion smartmontools extrepo
+    zoxide bash-completion smartmontools extrepo
 
 #config doas
 cat <<EOF | sudo tee /etc/doas.conf

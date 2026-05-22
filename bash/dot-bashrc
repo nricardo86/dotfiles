@@ -6,16 +6,25 @@ case $- in
 *) return ;;
 esac
 
+# 0 	Default
+# 1 	Block (blinking)
+# 2 	Block (steady)
+# 3 	Underline (blinking)
+# 4 	Underline (steady)
+# 5 	Bar (blinking)
+# 6 	Bar (steady)
+echo -ne "\e[2 q"
+
 HISTCONTROL=ignoreboth
 HISTSIZE=10000
 HISTFILESIZE=10000
 
 shopt -s histappend
 shopt -s cdspell
+shopt -s dirspell
 shopt -s checkwinsize
 shopt -s extglob
 shopt -s autocd
-shopt -s dirspell
 shopt -s globstar
 
 _GREEN=$(tput setaf 2)
@@ -24,7 +33,8 @@ _BLUE=$(tput setaf 4)
 _RED=$(tput setaf 1)
 _RESET=$(tput sgr0)
 _BOLD=$(tput bold)
-PS1='\[${_BLUE}\]\[${_BOLD}\]\w \[${_RESET}\]$(__git_ps1 "(%s)")$(atmp=$?; [[ ! $atmp == 0 ]] && echo "\[${_RED}\][$atmp] ")\[${_RESET}\]$ '
+PS1='\[${_BLUE}\]\[${_BOLD}\]\u@\H \w \[${_RESET}\]$(__git_ps1 "(%s)")$(atmp=$?; 
+[[ ! $atmp == 0 ]] && echo "\[${_RED}\][$atmp] ")\[${_RESET}\]\$ '
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 if [ -f ~/.bash_aliases ]; then
@@ -85,12 +95,6 @@ fi
 
 if [ -e ~/.local/bin ]; then
     export PATH="~/.local/bin:$PATH"
-fi
-
-if ! pgrep ssh-agent >/dev/null; then
-    eval $(ssh-agent -c)
-    export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
-    export SSH_AGENT_PID=$SSH_AGENT_PID
 fi
 
 export GPG_TTY=$(tty)
