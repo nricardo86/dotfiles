@@ -14,7 +14,7 @@ echo -ne "\e[2 q"
 export HISTCONTROL=ignoreboth
 export HISTSIZE=10000
 export HISTFILESIZE=10000
-export GREP_COLOR='1;36'
+export GREP_COLORS='mt=1;36'
 # export PAGER='less'
 export EDITOR="nvim"
 export VISUAL="nvim"
@@ -41,59 +41,59 @@ PS1='\[${_BLUE}\]\[${_BOLD}\]\u@\H \w\[${_RESET}\]$(__git_ps1 "(%s)")$(atmp=$?;
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+  . ~/.bash_aliases
 fi
 
 if ! shopt -oq posix; then
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
-        . /etc/bash_completion
-    fi
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
 fi
 
 # functions
 function mkcd() {
-    mkdir -p -- "$1" && cd -P -- "$1"
+  mkdir -p -- "$1" && cd -P -- "$1"
 }
 
 function y() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-    command yazi "$@" --cwd-file="$tmp"
-    IFS= read -r -d '' cwd <"$tmp"
-    [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
-    rm -f -- "$tmp"
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  command yazi "$@" --cwd-file="$tmp"
+  IFS= read -r -d '' cwd <"$tmp"
+  [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+  rm -f -- "$tmp"
 }
 
 function gbr() {
-    log_line_to_hash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
-    view_commit="$log_line_to_hash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy | less -R'"
-    copy_commit_hash="$log_line_to_hash | wl-copy"
-    git_checkout="$log_line_to_hash | xargs -I % sh -c 'git checkout %'"
+  log_line_to_hash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
+  view_commit="$log_line_to_hash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy | less -R'"
+  copy_commit_hash="$log_line_to_hash | wl-copy"
+  git_checkout="$log_line_to_hash | xargs -I % sh -c 'git checkout %'"
 
-    if test $(uname) = Linux; then
-        open_cmd="xdg-open"
-    fi
+  if test $(uname) = Linux; then
+    open_cmd="xdg-open"
+  fi
 
-    github_open="$log_line_to_hash | xargs -I % sh -c '$open_cmd https://github.\$(git config remote.origin.url | cut -f2 -d. | tr \':\' /)/commit/%'"
+  github_open="$log_line_to_hash | xargs -I % sh -c '$open_cmd https://github.\$(git config remote.origin.url | cut -f2 -d. | tr \':\' /)/commit/%'"
 
-    git log --color=always --format='%C(auto)%h%d %s %C(green)%C(bold)%cr% C(blue)%an' |
-        fzf --no-sort --reverse --tiebreak=index --no-multi --ansi \
-            --preview="$view_commit" \
-            --header="ENTER to view, CTRL-Y to copy hash, CTRL-O to open on GitHub, CTRL-X to checkout, CTRL-C to exit" \
-            --bind "enter:execute:$view_commit" \
-            --bind "ctrl-y:execute:$copy_commit_hash" \
-            --bind "ctrl-x:execute:$git_checkout" \
-            --bind "ctrl-o:execute:$github_open"
+  git log --color=always --format='%C(auto)%h%d %s %C(green)%C(bold)%cr% C(blue)%an' |
+    fzf --no-sort --reverse --tiebreak=index --no-multi --ansi \
+      --preview="$view_commit" \
+      --header="ENTER to view, CTRL-Y to copy hash, CTRL-O to open on GitHub, CTRL-X to checkout, CTRL-C to exit" \
+      --bind "enter:execute:$view_commit" \
+      --bind "ctrl-y:execute:$copy_commit_hash" \
+      --bind "ctrl-x:execute:$git_checkout" \
+      --bind "ctrl-o:execute:$github_open"
 }
 
 colordiff() {
-    local red=$(tput setaf 1 2>/dev/null)
-    local green=$(tput setaf 2 2>/dev/null)
-    local cyan=$(tput setaf 6 2>/dev/null)
-    local reset=$(tput sgr0 2>/dev/null)
+  local red=$(tput setaf 1 2>/dev/null)
+  local green=$(tput setaf 2 2>/dev/null)
+  local cyan=$(tput setaf 6 2>/dev/null)
+  local reset=$(tput sgr0 2>/dev/null)
 
-    diff -u "$@" | awk "
+  diff -u "$@" | awk "
 	/^\-/ {
 		printf(\"%s\", \"$red\");
 	}
@@ -108,20 +108,20 @@ colordiff() {
 		print \$0 \"$reset\";
 	}"
 
-    return "${PIPESTATUS[0]}"
+  return "${PIPESTATUS[0]}"
 }
 
 epoch() {
-    local num=${1:--1}
-    printf '%(%B %d, %Y %-I:%M:%S %p %Z)T\n' "$num"
+  local num=${1:--1}
+  printf '%(%B %d, %Y %-I:%M:%S %p %Z)T\n' "$num"
 }
 
 if [ -e ~/.bin ]; then
-    export PATH="~/.bin:$PATH"
+  export PATH="~/.bin:$PATH"
 fi
 
 if [ -e ~/.local/bin ]; then
-    export PATH="~/.local/bin:$PATH"
+  export PATH="~/.local/bin:$PATH"
 fi
 
 export GPG_TTY=$(tty)
@@ -148,7 +148,7 @@ eval "$(fzf --bash)"
 eval "$(zoxide init bash)"
 
 if uwsm check may-start >/dev/null && [ "$XDG_VTNR" -eq 1 ]; then
-    exec uwsm start hyprland.desktop
+  exec uwsm start hyprland.desktop
 fi
 
 true
