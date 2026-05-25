@@ -123,10 +123,10 @@ function destroySnap {
 }
 
 function send2tape {
-    local mbuffer_args="--pid"
-    [[ $NSLOTS -gt $SLOT ]] && mbuffer_args="--pid -A $MTX -f $TAPELIBRARY next $TAPEDRIVE"
+    local mbuffer_args=("--pid")
+    [[ $NSLOTS -gt $SLOT ]] && mbuffer_args+=("-A $MTX -f $TAPELIBRARY next $TAPEDRIVE")
     zfs send -wc $1 | mbuffer \
-        -m 10% -s $((BS * 512)) "${mbuffer_args}" -o $TAPE 2>/dev/null
+        -m 10% -s $((BS * 512)) "${mbuffer_args[@]}" -o $TAPE 2>/dev/null
 }
 
 function firstSnapshot {
@@ -160,6 +160,7 @@ function recursiveSend {
 
     snaps=${#snapshots[@]}
     count=$(("${#snapshots[@]}" - "${FILES_ONTAPE}" + 1))
+    echo "Sending Recursive Snapshots"
     echo "Snapshots count: $snaps"
     echo "Snapshots on Tape: $FILES_ONTAPE"
     while [ "${count}" -gt "1" ]; do

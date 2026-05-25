@@ -96,8 +96,9 @@ function tar_cmd {
 }
 
 function mbuffer_send {
-    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args="-A $MTX -f $TAPELIBRARY next $TAPEDRIVE"
-    mbuffer -s $((BS * 512)) -m 10% -o $TAPE "${mbuffer_args}" 2>/dev/null
+    local mbuffer_args=("--pid")
+    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args+=("-A $MTX -f $TAPELIBRARY next $TAPEDRIVE")
+    mbuffer -s $((BS * 512)) -m 10% -o $TAPE "${mbuffer_args[@]}" 2>/dev/null
 }
 
 function sizeFiles {
@@ -117,14 +118,14 @@ function showRemainSize {
 
 function send2tape {
     echo "Sending to Tape.."
-    touch $DIR/lastTapeBackup
+    [[ -z $FULL ]] && touch $DIR/lastTapeBackup
     find_select "-print0" | tar_cmd | mbuffer_send
 }
 
 function fullBackup {
     FULL=TRUE
     echo "Full Backup"
-    eraseTape
+    # eraseTape
     send2tape
 }
 
@@ -181,7 +182,7 @@ function main {
 
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
         showFilesSize
-        showRemainSize
+        # showRemainSize
         fullBackup
     else
         showFilesSize

@@ -2,69 +2,79 @@
 DIR=/home/ricardo
 
 function usage {
-    echo "Usage $(basename $0): [-b] [-c] [-g] [-h]"
-    echo "backup: $(basename $0) [-b]"
-    echo "clean: $(basename $0) [-c]"
-    echo "idrivee2 backup and clean $(basename $0) [-i]"
-    echo "password-store backup: $(basename $0) [-g]"
-    echo "help: $(basename $0) [-h]"
+  echo "Usage $(basename $0): [-b] [-c] [-g] [-h]"
+  echo "backup: $(basename $0) [-b]"
+  echo "clean: $(basename $0) [-c]"
+  echo "idrivee2 backup and clean $(basename $0) [-i]"
+  echo "password-store backup: $(basename $0) [-g]"
+  echo "help: $(basename $0) [-h]"
 }
 
 function backup {
-    unlock_vault
-    /usr/bin/bash $DIR/.bin/vault backup --one-file-system \
-        --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
+  unlock_vault
+  /usr/bin/bash $DIR/.bin/vault backup --one-file-system \
+    --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
 }
 
 function idrive {
-    unlock_idrive
-    /usr/bin/bash $DIR/.bin/idrive backup --one-file-system \
-        --exclude="*/node_modules/*" --exclude-caches=true \
-        /home/ricardo/Documents/ricardo/config/dotfiles/ --tag "dotfiles"
-    unlock_idrive || return 1
-    /usr/bin/bash ~/.bin/idrive forget \
-        --keep-daily=30 --keep-monthly=12 --prune $@
+  unlock_idrive
+  /usr/bin/bash $DIR/.bin/idrive backup --one-file-system \
+    --exclude="*/node_modules/*" --exclude-caches=true \
+    /home/ricardo/Documents/ricardo/config/dotfiles/ --tag "dotfiles"
+  unlock_idrive || return 1
+  /usr/bin/bash ~/.bin/idrive forget \
+    --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
 function clean {
-    unlock_vault || return 1
-    /usr/bin/bash ~/.bin/vault forget \
-        --keep-daily=30 --keep-monthly=12 --prune $@
+  unlock_vault || return 1
+  /usr/bin/bash ~/.bin/vault forget \
+    --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
 function unlock_vault {
-    /usr/bin/bash $DIR/.bin/vault -q unlock
+  /usr/bin/bash $DIR/.bin/vault -q unlock
 }
 
 function unlock_idrive {
-    /usr/bin/bash $DIR/.bin/vault -q unlock
+  /usr/bin/bash $DIR/.bin/vault -q unlock
 }
 
 function git {
-    /usr/bin/pass git pull
-    /usr/bin/pass git push
+  /usr/bin/pass git pull
+  /usr/bin/pass git push
 }
+
+function checkYubikey {
+  /usr/bin/gpg --card-status &>/dev/null
+  if [[ ! $? -eq 0 ]]; then
+    echo "Yubikey not found"
+    exit 1
+  fi
+}
+
+checkYubikey
 
 no_args=1
 while getopts "bcgi" o; do
-    case "${o}" in
-    b)
-        backup
-        ;;
-    c)
-        clean
-        ;;
-    g)
-        git
-        ;;
-    i)
-        idrive
-        ;;
-    *)
-        usage && exit 1
-        ;;
-    esac
-    unset no_args
+  case "${o}" in
+  b)
+    backup
+    ;;
+  c)
+    clean
+    ;;
+  g)
+    git
+    ;;
+  i)
+    idrive
+    ;;
+  *)
+    usage && exit 1
+    ;;
+  esac
+  unset no_args
 done
 
 [[ -z "$no_args" ]] || usage

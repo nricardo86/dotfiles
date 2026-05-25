@@ -1,7 +1,7 @@
 if type eza >/dev/null; then
-    alias ls="eza --icons"
-    alias l="eza --icons -lg"
-    alias la="eza --icons -lag"
+  alias ls="eza --icons"
+  alias l="eza --icons -lg"
+  alias la="eza --icons -lag"
 fi
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -29,13 +29,16 @@ alias fmu='fusermount -u'
 alias lp='lp -o fit-to-page'
 alias lpbln='lp -o fit-to-page -d bln'
 alias update="sudo apt update && sudo apt upgrade && flatpak upgrade -y"
-alias install="sudo apt install"
 alias remove="sudo apt autoremove --purge"
 alias musplit="mullvad split-tunnel add $fish_pid"
 alias mu="mullvad"
 alias mus="mullvad status"
 alias muc="mullvad connect"
 alias mud="mullvad disconnect"
+alias ta="tailscale"
+alias tas="tailscale status"
+alias tau="tailscale up"
+alias tad="tailscale down"
 alias dnsgoogle="q @https://dns.google.com"
 alias dnscloud="q @https://dns.cloudflare.com"
 alias i="swayimg"
@@ -51,5 +54,5 @@ alias gl="git log --oneline --graph --all"
 alias lg="lazygit"
 alias fd="fd --type f --hidden --exclude .git --exclude node_modules"
 alias fp="fd --type f --hidden --exclude .git --exclude node_modules | fzf --preview='batcat --color=always {}'"
-alias fn="fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
+alias fe="fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
 alias fileext="find . -type f | awk -F \".\" '{print \$(NF)}' | sort -u"
