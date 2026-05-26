@@ -1,58 +1,12 @@
-if type eza >/dev/null; then
-  alias ls="eza --icons"
-  alias l="eza --icons -lg"
-  alias la="eza --icons -lag"
-fi
+alias l="ls -plh --color=always"
+alias la="ls -palh --color=always"
+alias ls="ls -p --color=always"
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias sudo="doas"
 alias hl="grep -z"
-alias rsync="rsync -avhP"
-alias nmc="nmcli --ask"
 alias open='xdg-open'
-alias wtf="curl --connect-timeout 5 -fSs ipv4.json.myip.wtf 2>/dev/null | jq"
-alias wtf6="curl --connect-timeout 5 -fSs ipv6.json.myip.wtf 2>/dev/null | jq"
-alias dd="dd status=progress"
-alias cal="ncal -C"
 alias free="free -mh"
-alias df="df -hT"
-alias s="du -hcs"
 alias mkdir="mkdir -pv"
-alias newKey='gpg-connect-agent "scd serialno" "learn --force" /bye'
-alias reloadAgent='gpg-connect-agent reloadagent /bye'
-alias wq='sudo wg-quick'
-alias wg='sudo wg'
-alias um='udisksctl mount -b'
-alias uu='udisksctl unmount -b'
-alias fmu='fusermount -u'
-alias lp='lp -o fit-to-page'
-alias lpbln='lp -o fit-to-page -d bln'
-alias update="sudo apt update && sudo apt upgrade && flatpak upgrade -y"
-alias remove="sudo apt autoremove --purge"
-alias musplit="mullvad split-tunnel add $fish_pid"
-alias mu="mullvad"
-alias mus="mullvad status"
-alias muc="mullvad connect"
-alias mud="mullvad disconnect"
-alias ta="tailscale"
-alias tas="tailscale status"
-alias tau="tailscale up"
-alias tad="tailscale down"
-alias dnsgoogle="q @https://dns.google.com"
-alias dnscloud="q @https://dns.cloudflare.com"
-alias i="swayimg"
-alias img="chafa"
 alias b="batcat"
 alias bat="batcat"
-alias pff="pass ff"
-alias p2fa="pass 2fa"
-alias gp="git add . && git commit && git push"
-alias gs="git status"
-alias gd="git diff"
-alias gl="git log --oneline --graph --all"
-alias lg="lazygit"
-alias fd="fd --type f --hidden --exclude .git --exclude node_modules"
-alias fp="fd --type f --hidden --exclude .git --exclude node_modules | fzf --preview='batcat --color=always {}'"
-alias fe="fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
-alias fileext="find . -type f | awk -F \".\" '{print \$(NF)}' | sort -u"
