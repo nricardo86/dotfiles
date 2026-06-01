@@ -5,7 +5,7 @@ SG="/usr/bin/sg_read_attr"
 TAPEDRIVEMODEL="HH6"
 TAPE=$(lsscsi | grep $TAPEDRIVEMODEL | awk '{print $6}')
 TAPE=$(echo "/dev/nst${TAPE: -1:1}")
-BS=512
+BS=256
 TAPELIBRARYMODEL="mediumx"
 TAPELIBRARY=$(lsscsi -g | grep $TAPELIBRARYMODEL | awk '{print $7}')
 TAPEDRIVE=${TAPE: -1:1}
@@ -26,7 +26,7 @@ while getopts "b:t:sf" o; do
         TAPE=$OPTARG
         TAPEDRIVE=${TAPE: -1:1}
         ;;
-    b) BS=$OPTARG ;;
+    # b) BS=$OPTARG ;;
     f) FULL=TRUE ;;
     *) usage ;;
     esac
@@ -125,7 +125,6 @@ function send2tape {
 function fullBackup {
     FULL=TRUE
     echo "Full Backup"
-    # eraseTape
     send2tape
 }
 
@@ -182,7 +181,6 @@ function main {
 
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
         showFilesSize
-        # showRemainSize
         fullBackup
     else
         showFilesSize
