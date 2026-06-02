@@ -43,8 +43,6 @@ abbr ta tailscale
 abbr tas "tailscale status"
 abbr tau "tailscale up"
 abbr tad "tailscale down"
-abbr dnsgoogle "q @https://dns.google.com"
-abbr dnscloud "q @https://dns.cloudflare.com"
 abbr i swayimg
 abbr img chafa
 abbr b batcat

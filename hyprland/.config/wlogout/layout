@@ -1,0 +1,25 @@
+{
+    "label" : "lock",
+    "action" : "$HOME/.config/hypr/scripts/lock.sh",
+    "text" : "Lock"
+}
+{
+    "label" : "logout",
+    "action" : "$HOME/.config/hypr/scripts/logout.sh",
+    "text" : "Logout"
+}
+{
+    "label" : "shutdown",
+    "action" : "systemctl poweroff",
+    "text" : "Shutdown"
+}
+{
+    "label" : "suspend",
+    "action" : "systemctl suspend",
+    "text" : "Suspend"
+}
+{
+    "label" : "reboot",
+    "action" : "systemctl reboot",
+    "text" : "Reboot"
+}
