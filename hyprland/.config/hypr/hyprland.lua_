@@ -1,0 +1,6 @@
+require("config/env")
+require("config/general")
+require("config/init")
+require("config/keybinds")
+require("config/monitors")
+require("config/windowrules")

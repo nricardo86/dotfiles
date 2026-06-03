@@ -101,7 +101,7 @@ sudo apt install -qfy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
     zig wlsunset inotify-tools ghostty lazygit network-manager playerctl yazi \
     uwsm uv waybar tofi pavucontrol-qt libreoffice pulseaudio \
     pulseaudio-module-bluetooth pulseaudio-utils firefox-esr chromium \
-    fonts-stix fonts-lmodern libreoffice-gtk3 librewolf \
+    fonts-stix fonts-lmodern libreoffice-gtk3 librewolf wlogout \
     libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \
     wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad \
     xdg-utils mpv pamixer nvtop nwg-look nwg-displays adwaita-icon-theme \

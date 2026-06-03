@@ -1,0 +1,21 @@
+-- windowrule = match:float false, opacity 1.0 0.8 1.0
+-- windowrule = match:float true, opacity 1.0 0.8 1.0, center true
+-- windowrule = match:fullscreen true, opacity 1.0
+-- windowrule = match:class ^(librewolf|firefox-esr|chromium|SheetCamTNG-dev|librewolf|[kK]i[cC]ad|pcb_calculator|eeschema|gerbview|pcbnew|bitmap2component|FreeCAD|Tor Browser|soffice)$, opacity 1.0
+-- windowrule = match:class ^([kK]i[cC]ad|bitmap2component|pcb_calculator|Tor Browser|virt-manager|qt.ct|nwg-look|xdg-desktop-portal*|org.remmina.Remmina)$, float true, center true
+-- windowrule = match:class ^(io.bassi.Amberol|xdg-desktop-portal-gtk)$, float true, size 1200 1000, center true
+-- windowrule = match:class ^([eE]lectrum|feather)$, float true, size 800 400,center true
+-- windowrule = match:title ^(Moonlight|chiaki-ng|Open File|OnionShare)$, float true
+-- windowrule = match:title ^(ghostty)$, opacity 0.9 0.8 1.0
+-- windowrule = match:title ^(tmux)$, opacity 1.0
+-- windowrule = match:title ^(ghostty|yazi|Open File|chiaki-ng)$, float true, size 1200 1000, center true
+-- windowrule = match:title ^(galc|nmtui|bluetuith|pass|wiremix|display)$, float true, size 800 600, center true
+--
+-- workspace=1,monitor:DP-3
+-- workspace=2,monitor:DP-3
+-- workspace=3,monitor:DP-3
+-- workspace=4,monitor:DP-3
+-- workspace=5,monitor:DP-3
+-- workspace=6,monitor:eDP-1
+-- workspace=7,monitor:eDP-1
+-- workspace=8,monitor:eDP-1
