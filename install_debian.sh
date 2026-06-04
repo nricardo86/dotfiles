@@ -99,7 +99,7 @@ sudo apt install -qfy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
     hyprland hyprcursor-util hypridle hyprland-protocols hyprland-qtutils \
     hyprlock hyprpaper hyprpicker hyprwayland-scanner hyprland-backgrounds \
     zig wlsunset inotify-tools ghostty lazygit network-manager playerctl yazi \
-    uwsm uv waybar tofi pavucontrol-qt libreoffice pulseaudio \
+    uwsm uv waybar pavucontrol-qt libreoffice pulseaudio \
     pulseaudio-module-bluetooth pulseaudio-utils firefox-esr chromium \
     fonts-stix fonts-lmodern libreoffice-gtk3 librewolf wlogout \
     libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \

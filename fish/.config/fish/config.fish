@@ -35,9 +35,10 @@ abbr update "doas apt update && doas apt upgrade -q && flatpak upgrade -y"
 abbr install "doas apt install"
 abbr remove "doas apt autoremove --purge"
 abbr mu mullvad
-abbr mus "mullvad status"
+abbr mus "mullvad status -v"
 abbr muc "mullvad connect"
 abbr mud "mullvad disconnect"
+abbr mur "mullvad reconnect"
 abbr msplit "mullvad split-tunnel add $fish_pid"
 abbr ta tailscale
 abbr tas "tailscale status"
