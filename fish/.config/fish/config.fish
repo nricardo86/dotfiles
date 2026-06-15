@@ -47,6 +47,7 @@ abbr tad "tailscale down"
 abbr i swayimg
 abbr img chafa
 abbr b batcat
+abbr bat batcat
 abbr pff "pass ff"
 abbr p2fa "pass 2fa"
 abbr gp "git add . && git commit && git push"
@@ -58,6 +59,7 @@ abbr fd "fd --type f --hidden --exclude .git --exclude node_modules"
 abbr fp "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p --preview='batcat --color=always {}'"
 abbr fe "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
 abbr fileext "find . -type f | awk -F \".\" '{ print \$(NF) }' | sort -u"
+abbr peso "websocat ws://10.0.20.11:33001"
 
 function y
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
