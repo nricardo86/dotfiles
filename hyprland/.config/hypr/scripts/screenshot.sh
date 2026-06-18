@@ -2,16 +2,12 @@
 DIR="$HOME/Pictures/"
 NAME="screenshot_$(date +%d%m%Y_%H%M%S).png"
 
-option2="Selected area"
-option3="All Displays"
-option4="Current display"
-option5="Current Active Window"
+options="Selected area,All Displays,Current display,Current Active Window"
 
-options="$option2\n$option3\n$option4\n$option5"
-choice=$(echo -e "$options" | tofi --placeholder-text "Take Screenshot > ")
-[[ -z $choice ]] && exit $?
-if [[ "$choice" != "$option2" ]]; then
-    delay=$(echo -e "Instant\n2s\n10s" | tofi --placeholder-text "Select Delay! > ")
+choice=$(hyprlauncher -o "$options")
+[[ "$choice" = "Exited without selection" ]] && exit
+if [[ "$choice" != "Selected area" ]]; then
+    delay=$(hyprlauncher -o "Instant,2s,10s")
     case $delay in
     2s) delay_set=2 ;;
     10s) delay_set=10 ;;
@@ -21,20 +17,20 @@ if [[ "$choice" != "$option2" ]]; then
 fi
 
 case $choice in
-$option2)
+"Selected area")
     grim -g "$(slurp)" "$DIR$NAME" || exit 1
     cat "$DIR$NAME" | wl-copy -t image/png -o
     notify-send "Screenshot created and copied to clipboard" "Mode: Selected area"
     # swappy -f "$DIR$NAME"
     ;;
-$option3)
+"All Displays")
     sleep $delay_set
     grim "$DIR$NAME"
     cat "$DIR$NAME" | wl-copy -t image/png -o
     notify-send "Screenshot created and copied to clipboard" "Mode: Fullscreen"
     # swappy -f "$DIR$NAME"
     ;;
-$option4)
+"Current display")
     monitor="$(hyprctl monitors | awk '/Monitor/{monitor=$2} /focused: yes/{print monitor; exit}')"
     sleep $delay_set
     grim -o "$monitor" "$DIR$NAME"
@@ -42,8 +38,7 @@ $option4)
     notify-send "Screenshot created and copied to clipboard" "Mode: Fullscreen"
     # swappy -f "$DIR$NAME"
     ;;
-
-$option5)
+"Current Active Window")
     activewindow=$(hyprctl -j activewindow)
     pos_x=$(echo $activewindow | jq -r '(.at[0])')
     pos_y=$(echo $activewindow | jq -r '(.at[1])')
