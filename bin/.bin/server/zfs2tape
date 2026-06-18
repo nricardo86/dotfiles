@@ -62,6 +62,10 @@ function findEOM {
     echo "Files on Tape: $FILES_ONTAPE"
 }
 
+function tapeStatus {
+    $MT -f $TAPE status
+}
+
 function tapeSerial {
     local tape_serial=$(sudo $SG "${TAPE}" -f 0x401 2>/dev/null | awk '{print $4}')
     echo "Tape serial: ${tape_serial}"
@@ -232,7 +236,12 @@ function main {
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
     [[ -n $RECURSIVE_ONLY ]] && echo "Recursive Snapshot Send Only, no new snapshot"
 
-    loadTape $SLOT || exit $?
+    loadTape $SLOT
+
+    if [[ ! $(tapeStatus 2>/dev/null) ]]; then
+        echo "Tape Not Found!"
+        exit 1
+    fi
 
     if [[ -n $FULL || "${FILES_ONTAPE}" -eq 0 ]]; then
         firstSnapshot "${ds}" "${prefix}" || exit $?
