@@ -37,7 +37,7 @@ sudo apt install -qy bc eza rsync fontconfig restic pass npm nodejs \
 
 #config doas
 cat <<EOF | sudo tee /etc/doas.conf
-permit persist $USER as root
+permit persist keepenv :sudo
 permit nopass $USER as root cmd "wg"
 permit nopass $USER as root cmd "wg-quick"
 EOF
@@ -98,10 +98,10 @@ sudo apt install -qfy libdw1t64 usb.ids i2c-tools libarchive13t64 libmalcontent-
 sudo apt install -qfy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
     hyprland hyprcursor-util hypridle hyprland-protocols hyprland-qtutils \
     hyprlock hyprpaper hyprpicker hyprwayland-scanner hyprland-backgrounds \
-    zig wlsunset inotify-tools ghostty lazygit network-manager playerctl yazi \
+    zig inotify-tools ghostty lazygit network-manager playerctl yazi \
     uwsm uv waybar pavucontrol-qt libreoffice pulseaudio hyprlauncher \
     pulseaudio-module-bluetooth pulseaudio-utils firefox-esr chromium \
-    fonts-stix fonts-lmodern libreoffice-gtk3 librewolf wlogout \
+    fonts-stix fonts-lmodern libreoffice-gtk3 librewolf wlogout hyprsunsest \
     libreoffice-style-breeze brightnessctl ddcutil flatpak rfkill wireguard \
     wireguard-tools tlp tlp-rdw tlp-pd upower grim swappy qt5ct qt6ct yad \
     xdg-utils mpv pamixer nvtop nwg-look nwg-displays adwaita-icon-theme \
@@ -111,8 +111,27 @@ sudo apt install -qfy xdg-dbus-proxy xdg-desktop-portal-hyprland fzf bluez \
 #cleaning up install
 sudo apt autoremove --purge -qy
 
+#set global env var
+cat <<EOF | sudo tee -a /etc/environment
+EDITOR=nvim
+BROWSER=librewolf
+
+PASSWORD_STORE_ENABLE_EXTENSIONS=true
+
+LANGUAGE=en_US.UTF-8
+LC_CTYPE=pt_BR.UTF-8
+LC_MONETARY=pt_BR.UTF-8
+LC_TIME=pt_BR.UTF-8
+
+COIN_GL_NO_CURRENT_CONTEXT_CHECK=1
+LIBGL_ALWAYS_SOFTWARE=1
+EOF
+
 #set fish shell default for current user
-# sudo chsh -s $(which fish) $USER
+sudo chsh -s $(which fish) $USER
+
+#addgroups to main user
+sudo usermod -aG tty,lp,dialout,sudo,video,plugdev,netdev,bluetooth,lpadmin,polkitd $USER
 
 #install nodejs neovim plugin
 sudo npm -g install neovim
