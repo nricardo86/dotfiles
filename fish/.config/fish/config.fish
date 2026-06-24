@@ -30,7 +30,6 @@ abbr um 'udisksctl mount -b'
 abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr lp 'lp -o fit-to-page'
-abbr lpbln 'lp -o fit-to-page -d bln'
 abbr update "doas apt update && doas apt upgrade -q && flatpak upgrade -y"
 abbr install "doas apt install"
 abbr remove "doas apt autoremove --purge"
@@ -48,6 +47,7 @@ abbr i swayimg
 abbr img chafa
 abbr b batcat
 abbr bat batcat
+abbr bc "bc -l"
 abbr pff "pass ff"
 abbr p2fa "pass 2fa"
 abbr gp "git add . && git commit && git push"
