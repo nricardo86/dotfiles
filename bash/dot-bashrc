@@ -36,25 +36,25 @@ PS1='\[${_BLUE}\]\[${_BOLD}\]\u@\H \w\[${_RESET}\]$(__git_ps1 "(%s)")$(atmp=$?;
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
+    . ~/.bash_aliases
 fi
 
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 fi
 
 # functions
 colordiff() {
-  local red=$(tput setaf 1 2>/dev/null)
-  local green=$(tput setaf 2 2>/dev/null)
-  local cyan=$(tput setaf 6 2>/dev/null)
-  local reset=$(tput sgr0 2>/dev/null)
+    local red=$(tput setaf 1 2>/dev/null)
+    local green=$(tput setaf 2 2>/dev/null)
+    local cyan=$(tput setaf 6 2>/dev/null)
+    local reset=$(tput sgr0 2>/dev/null)
 
-  diff -u "$@" | awk "
+    diff -u "$@" | awk "
 	/^\-/ {
 		printf(\"%s\", \"$red\");
 	}
@@ -69,12 +69,12 @@ colordiff() {
 		print \$0 \"$reset\";
 	}"
 
-  return "${PIPESTATUS[0]}"
+    return "${PIPESTATUS[0]}"
 }
 
 epoch() {
-  local num=${1:--1}
-  printf '%(%B %d, %Y %-I:%M:%S %p %Z)T\n' "$num"
+    local num=${1:--1}
+    printf '%(%B %d, %Y %-I:%M:%S %p %Z)T\n' "$num"
 }
 
 set -o vi

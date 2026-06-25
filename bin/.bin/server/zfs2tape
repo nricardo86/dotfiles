@@ -63,6 +63,7 @@ function findEOM {
     done
     echo "EOM found!"
     FILES_ONTAPE=$(($FILES_ONTAPE + $($MT -f "${TAPE}" status | grep 'file number' | awk '{print $4}')))
+
     echo "Files on Tape: $FILES_ONTAPE"
 }
 

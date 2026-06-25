@@ -3,7 +3,9 @@ set -g fish_key_bindings fish_vi_key_bindings
 set -gx EDITOR nvim
 set -gx BROWSER librewolf
 set -gx TERM screen-256color
-set -gx MANPAGER "batcat -l man"
+
+set -x MANROFFOPT '-c'
+set -x MANPAGER 'sh -c "col -bx | batcat -plman"'
 
 if type -q eza
     abbr ls "eza --icons"
@@ -60,6 +62,7 @@ abbr fp "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -
 abbr fe "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
 abbr fileext "find . -type f | awk -F \".\" '{ print \$(NF) }' | sort -u"
 abbr peso "websocat ws://10.0.20.11:33001"
+
 
 function y
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
