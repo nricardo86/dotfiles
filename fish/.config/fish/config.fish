@@ -4,8 +4,22 @@ set -gx EDITOR nvim
 set -gx BROWSER librewolf
 set -gx TERM screen-256color
 
+set -x LESS_TERMCAP_mb (printf '\e[1;35m')
+set -x LESS_TERMCAP_md (printf '\e[1;35m')
+set -x LESS_TERMCAP_me (printf '\e[0m')
+set -x LESS_TERMCAP_se (printf '\e[0m')
+set -x LESS_TERMCAP_so (printf '\e[1;30;42m')
+set -x LESS_TERMCAP_ue (printf '\e[0m')
+set -x LESS_TERMCAP_us (printf '\e[4;1;31m')
+set -x LESS_TERMCAP_mr (printf '\e[7m')
+set -x LESS_TERMCAP_mh (printf '\e[2m')
+set -x LESS_TERMCAP_ZN (printf '\e[74m')
+set -x LESS_TERMCAP_ZV (printf '\e[75m')
+set -x LESS_TERMCAP_ZO (printf '\e[73m')
+set -x LESS_TERMCAP_ZW (printf '\e[75m')
+set -x MANPAGER 'less'
 set -x MANROFFOPT '-c'
-set -x MANPAGER 'sh -c "col -bx | batcat -plman"'
+# set -x MANPAGER 'sh -c "col -bx | batcat -plman"'
 
 if type -q eza
     abbr ls "eza --icons"
