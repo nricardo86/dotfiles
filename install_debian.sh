@@ -38,8 +38,6 @@ sudo apt install -qy bc eza rsync fontconfig restic pass npm nodejs \
 #config doas
 cat <<EOF | sudo tee /etc/doas.conf
 permit persist keepenv :sudo
-permit nopass $USER as root cmd "wg"
-permit nopass $USER as root cmd "wg-quick"
 EOF
 
 #adding Ghostty repo
@@ -80,7 +78,7 @@ sudo apt install -qfy meson ninja-build openssl psmisc python3-mako \
     qt6-base-dev scdoc seatd spirv-tools unzip vulkan-utility-libraries-dev \
     vulkan-validationlayers wayland-protocols xdg-desktop-portal xwayland \
     liblua5.2-0 libmujs3 libsixel1 libva-wayland2 libxpresent1 yt-dlp \
-    gir1.2-gtklayershell-0.1 python3-i3ipc xcur2png
+    gir1.2-gtklayershell-0.1 python3-i3ipc xcur2png isc-dhcp-client
 sudo apt install -qfy bc binutils libc6 libcairo2-dev libdisplay-info3 libdrm2 \
     libjpeg-dev libjxl-dev libmagic-dev libmuparser-dev libpixman-1-dev \
     libpugixml-dev libre2-dev librsvg2-dev libspng-dev libtomlplusplus-dev \

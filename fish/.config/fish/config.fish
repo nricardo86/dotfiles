@@ -30,8 +30,8 @@ abbr grep "grep --color=auto"
 abbr hl "grep -z"
 abbr rsync "rsync -avhP"
 abbr nmc "nmcli --ask"
-abbr wtf "curl --connect-timeout 5 -fSs ipv4.json.myip.wtf 2>/dev/null | jq"
-abbr wtf6 "curl --connect-timeout 5 -fSs ipv6.json.myip.wtf 2>/dev/null | jq"
+abbr wtf "curl --doh-url https://8.8.8.8/dns-query --connect-timeout 5 -fSs ipv4.json.myip.wtf 2>/dev/null | jq"
+abbr wtf6 "curl --doh-url https://8.8.8.8/dns-query --connect-timeout 5 -fSs ipv6.json.myip.wtf 2>/dev/null | jq"
 abbr dd "dd status=progress"
 abbr cal "ncal -C"
 abbr free "free -mh"
@@ -40,15 +40,15 @@ abbr s "du -hcs"
 abbr mkdir "mkdir -pv"
 abbr newKey 'gpg-connect-agent "scd serialno" "learn --force" /bye'
 abbr reloadAgent 'gpg-connect-agent reloadagent /bye'
-abbr wq 'doas wg-quick'
-abbr wg 'doas wg'
+abbr wq 'sudo wg-quick'
+abbr wg 'sudo wg'
 abbr um 'udisksctl mount -b'
 abbr uu 'udisksctl unmount -b'
 abbr fmu 'fusermount -u'
 abbr lp 'lp -o fit-to-page'
-abbr update "doas apt update && doas apt upgrade -q && flatpak upgrade -y"
-abbr install "doas apt install"
-abbr remove "doas apt autoremove --purge"
+abbr update "sudo apt update && sudo apt upgrade -q && flatpak upgrade -y"
+abbr install "sudo apt install"
+abbr remove "sudo apt autoremove --purge"
 abbr mu mullvad
 abbr mus "mullvad status -v"
 abbr muc "mullvad connect"

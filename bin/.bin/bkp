@@ -2,26 +2,67 @@
 DIR=/home/ricardo
 
 function usage {
-    echo "Usage $(basename $0): [-b] [-c] [-g] [-h]"
-    echo "backup: $(basename $0) [-b]"
+    echo "Usage $(basename $0): [-b] [-c] [-g] [-u]"
+    echo "backup to vault: $(basename $0) [-b]"
+    echo "backup USB: $(basename $0) [-u]"
+    echo "backup BTRFS System and HOME to vault: $(basename $0) [-t]"
     echo "clean: $(basename $0) [-c]"
-    echo "idrivee2 backup and clean $(basename $0) [-i]"
+    echo "idrivee2 dotfiles backup $(basename $0) [-i]"
     echo "password-store backup: $(basename $0) [-g]"
     echo "help: $(basename $0) [-h]"
 }
 
+function backupBtrfs {
+last_snap=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+snapper create -d "system-backup-$(date +%s)"
+now_snap=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+
+sudo btrfs send \
+    -p /.snapshots/$last_snap/snapshot \
+    /.snapshots/$now_snap/snapshot | pv | pzstd -qf \
+    -o /mnt/nfs/vault/xps_btrfs/system/${last_snap}-${now_snap}.zst
+
+last_snap=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+snapper -c home create -d "home-backup-$(date +%s)"
+now_snap=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+
+sudo btrfs send \
+    -p /home/.snapshots/$last_snap/snapshot \
+    /home/.snapshots/$now_snap/snapshot | pv | pzstd -qf \
+    -o /mnt/nfs/vault/xps_btrfs/home/${last_snap}-${now_snap}.zst
+}
+
+function backupUSB {
+if [[ -z "$1" ]]; then
+    echo "Need Destination Device /dev/sdx#"
+    exit 1
+fi
+
+mountpoint=$(udisksctl mount -b $1 | awk '{print $4}')
+
+[[ -n $mountpoint ]] || exit 2
+
+git
+backup
+clean
+
+rsync -avh -e ssh root@10.0.4.57:/data/asdfg98/ $mountpoint/asdfg98/ --delete-excluded
+rsync -avh $HOME/.password-store/ $mountpoint/password-store/ --delete-excluded
+
+udisksctl unmount -b $1
+}
+
 function backup {
-    unlock_vault
+    unlock_vault || return 1
     /usr/bin/bash $DIR/.bin/vault backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
 }
 
 function idrive {
-    unlock_idrive
+    unlock_idrive || return 1
     /usr/bin/bash $DIR/.bin/idrive backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true \
         /home/ricardo/Documents/ricardo/config/dotfiles/ --tag "dotfiles"
-    unlock_idrive || return 1
     /usr/bin/bash ~/.bin/idrive forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
@@ -56,25 +97,18 @@ function checkYubikey {
 checkYubikey
 
 no_args=1
-while getopts "bcgi" o; do
+while getopts "bcgiu:t" o; do
     case "${o}" in
-    b)
-        backup
-        ;;
-    c)
-        clean
-        ;;
-    g)
-        git
-        ;;
-    i)
-        idrive
-        ;;
-    *)
-        usage && exit 1
-        ;;
+    b) backup ;;
+    c) clean ;;
+    g) git ;;
+    i) idrive ;;
+    u) backupUSB $OPTARG;;
+    t) backupBtrfs ;;
+    *) usage && exit 1 ;;
     esac
     unset no_args
 done
+shift $((OPTIND - 1))
 
 [[ -z "$no_args" ]] || usage

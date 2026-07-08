@@ -3,7 +3,7 @@ show=()
 if [[ -n $BLOCK_INSTANCE ]]; then
   INTERFACE=$BLOCK_INSTANCE
 else
-  INTERFACE=$(doas wg show | grep interface | cut -d" " -f2)
+  INTERFACE=$(sudo wg show | grep interface | cut -d" " -f2)
 fi
 
 if [[ -n $INTERFACE ]]; then

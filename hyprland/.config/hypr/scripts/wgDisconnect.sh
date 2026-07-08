@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-vpn=$(doas wg show | grep interface | cut -d" " -f2)
+vpn=$(sudo wg show | grep interface | cut -d" " -f2)
 
 for i in ${vpn[@]}; do
-    doas wg-quick down $i
+    sudo wg-quick down $i
 done
