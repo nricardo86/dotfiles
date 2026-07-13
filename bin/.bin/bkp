@@ -2,34 +2,41 @@
 DIR=/home/ricardo
 
 function usage {
-    echo "Usage $(basename $0): [-b] [-c] [-g] [-u]"
+    echo "Usage $(basename $0): [-bcgit] [-u /dev/sdx#]"
     echo "backup to vault: $(basename $0) [-b]"
-    echo "backup USB: $(basename $0) [-u]"
-    echo "backup BTRFS System and HOME to vault: $(basename $0) [-t]"
     echo "clean: $(basename $0) [-c]"
-    echo "idrivee2 dotfiles backup $(basename $0) [-i]"
     echo "password-store backup: $(basename $0) [-g]"
-    echo "help: $(basename $0) [-h]"
+    echo "idrivee2 dotfiles backup $(basename $0) [-i]"
+    echo "backup BTRFS System and HOME to vault: $(basename $0) [-t]"
+    echo "backup USB: $(basename $0) [-u]"
 }
 
 function backupBtrfs {
-last_snap=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+local dst_base=/mnt/nfs/vault/xps_btrfs
+local dst_system=${dst_base}/system
+local dst_home=${dst_base}/home
+local snap_system=/.snapshots
+local snap_home=/home/.snapshots
+
+[[ -d $dst_base ]] || return $?
+
+last_system=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
 snapper create -d "system-backup-$(date +%s)"
-now_snap=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+now_system=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
 
 sudo btrfs send \
-    -p /.snapshots/$last_snap/snapshot \
-    /.snapshots/$now_snap/snapshot | pv | pzstd -qf \
-    -o /mnt/nfs/vault/xps_btrfs/system/${last_snap}-${now_snap}.zst
+    -p ${snap_system}/${last_system}/snapshot \
+    ${snap_system}/${now_system}/snapshot | pv | pzstd -qf \
+    -o ${dst_system}/${last_system}-${now_system}.zst
 
-last_snap=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+last_home=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
 snapper -c home create -d "home-backup-$(date +%s)"
-now_snap=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+now_home=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
 
 sudo btrfs send \
-    -p /home/.snapshots/$last_snap/snapshot \
-    /home/.snapshots/$now_snap/snapshot | pv | pzstd -qf \
-    -o /mnt/nfs/vault/xps_btrfs/home/${last_snap}-${now_snap}.zst
+    -p ${snap_home}/${last_home}/snapshot \
+    ${snap_home}/${now_home}/snapshot | pv | pzstd -qf \
+    -o ${dst_home}/${last_home}-${now_home}.zst
 }
 
 function backupUSB {
@@ -53,31 +60,27 @@ udisksctl unmount -b $1
 }
 
 function backup {
-    unlock_vault || return 1
+    unlock_vault || return $?
     /usr/bin/bash $DIR/.bin/vault backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true $DIR/Documents
 }
 
 function idrive {
-    unlock_idrive || return 1
+    /usr/bin/bash $DIR/.bin/idrive -q unlock || return $?
     /usr/bin/bash $DIR/.bin/idrive backup --one-file-system \
         --exclude="*/node_modules/*" --exclude-caches=true \
         /home/ricardo/Documents/ricardo/config/dotfiles/ --tag "dotfiles"
-    /usr/bin/bash ~/.bin/idrive forget \
+    /usr/bin/bash $DIR/.bin/idrive forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
 function clean {
-    unlock_vault || return 1
-    /usr/bin/bash ~/.bin/vault forget \
+    unlock_vault || return $?
+    /usr/bin/bash $DIR/.bin/vault forget \
         --keep-daily=30 --keep-monthly=12 --prune $@
 }
 
 function unlock_vault {
-    /usr/bin/bash $DIR/.bin/vault -q unlock
-}
-
-function unlock_idrive {
     /usr/bin/bash $DIR/.bin/vault -q unlock
 }
 
