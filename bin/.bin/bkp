@@ -20,18 +20,18 @@ local snap_home=/home/.snapshots
 
 [[ -d $dst_base ]] || return $?
 
-last_system=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+last_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
 snapper create -d "system-backup-$(date +%s)"
-now_system=$(snapper ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+now_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
 
 sudo btrfs send \
     -p ${snap_system}/${last_system}/snapshot \
     ${snap_system}/${now_system}/snapshot | pv | pzstd -qf \
     -o ${dst_system}/${last_system}-${now_system}.zst
 
-last_home=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+last_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
 snapper -c home create -d "home-backup-$(date +%s)"
-now_home=$(snapper -c home ls | grep --color=auto $USER | tail -1 | awk '{print $1}')
+now_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
 
 sudo btrfs send \
     -p ${snap_home}/${last_home}/snapshot \

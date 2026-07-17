@@ -2,38 +2,45 @@
 MTX="/usr/local/bin/mtx"
 MT="/usr/bin/mt"
 SG="/usr/bin/sg_read_attr"
-TAPEDRIVEMODEL="HH6"
-TAPE=$(lsscsi | grep $TAPEDRIVEMODEL | awk '{print $6}')
-TAPE=$(echo "/dev/nst${TAPE: -1:1}")
-BS=1024
-TAPELIBRARYMODEL="mediumx"
-TAPELIBRARY=$(lsscsi -g | grep $TAPELIBRARYMODEL | awk '{print $7}')
-TAPEDRIVE=${TAPE: -1:1}
+RE='^[0-9]+$'
+DRIVE=${DRIVE:-0}
+[[ $DRIVE =~ $RE ]] || exit 1
+if [[ "$DRIVE" -eq 0 ]]; then
+    TAPE=/dev/tape/by-path/pci-0000:0b:00.1-fc-0x2002000e11150604-lun-0-nst
+elif [[ "$DRIVE" -eq 1 ]]; then
+    TAPE=/dev/tape/by-path/pci-0000:85:00.0-sas-phy3-lun-0-nst
+else
+    echo "Drive not found"
+    exit 1
+fi
+TAPEREWIND_TIMEOUT=300
+TAPEREADY_TIMEOUT=3
+TAPELIBRARY=/dev/tape/by-path/pci-0000:0b:00.1-fc-0x2002000e11150604-lun-1-changer
+BS=${BS:-512}
+[[ $BS =~ $RE ]] || exit 1
+FILES_ONTAPE=0
 
 function usage {
     echo "$(basename $0) [options] directory slot [nslots]"
     echo "options:"
+    echo "[-f] Full Backup (will erase tape first)"
     echo "[-s] Statistics only"
-    echo "[-t <Tape dev>] default $TAPE"
-    echo "[-b <n blocksize>] \"n*512bytes\" default $((BS * 512 / 1024))kb"
+    echo "[-v Verbose]"
     exit 1
 }
 
-while getopts "b:t:sf" o; do
+while getopts "fsv" o; do
     case "${o}" in
-    s) STATS_ONLY=TRUE ;;
-    t)
-        TAPE=$OPTARG
-        TAPEDRIVE=${TAPE: -1:1}
-        ;;
-    # b) BS=$OPTARG ;;
     f) FULL=TRUE ;;
+    s) STATS_ONLY=TRUE ;;
+    v) VERBOSE=TRUE ;;
     *) usage ;;
     esac
 done
 shift $((OPTIND - 1))
 
 function findEOM {
+    [[ -n $FULL ]] && eraseTape
     echo "Finding EOM..."
     local count=3
     while true; do
@@ -51,27 +58,27 @@ function findEOM {
 }
 
 function unloadTape {
-    local driveStatus=$($MTX -f ${TAPELIBRARY} status | grep "Data Transfer Element ${TAPEDRIVE}:")
+    local driveStatus=$($MTX -f ${TAPELIBRARY} status | grep "Data Transfer Element ${DRIVE}:")
     local driveLoaded=$(echo $driveStatus | awk -F ':' '{print $2}')
     [[ ${driveLoaded} == "Empty" ]] && return 0
     local storageSlot=$(echo $driveStatus | awk '{print $7}')
-    $MTX -f $TAPELIBRARY unload $storageSlot $TAPEDRIVE
-}
-
-function loadTape {
-    unloadTape
-    $MTX -f $TAPELIBRARY load $SLOT $TAPEDRIVE
+    $MTX -f $TAPELIBRARY unload $storageSlot $DRIVE
 }
 
 function tapeRewind {
     echo "Rewinding Tape..."
-    $MT -f $TAPE rewind
+    timeout $TAPEREWIND_TIMEOUT $MT -f $TAPE rewind
 }
 
 function eraseTape {
     tapeRewind
     echo "Erasing Tape..."
     $MT -f $TAPE erase 0
+}
+
+function loadTape {
+    unloadTape
+    $MTX -f $TAPELIBRARY load $SLOT $DRIVE || return $?
 }
 
 function sizeRemain {
@@ -91,13 +98,13 @@ function find_select {
 }
 
 function tar_cmd {
-    # tar --format=pax -T - -I"zstd -19 -T0" -cf - 2>/dev/null
     tar --format=pax -T - -cf - 2>/dev/null
 }
 
 function mbuffer_send {
     local mbuffer_args=("--pid")
-    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args+=("-A $MTX -f $TAPELIBRARY next $TAPEDRIVE")
+    [[ -z $VERBOSE ]] && mbuffer_args+=("-q")
+    [[ $NSLOTS -gt $SLOT ]] && local mbuffer_args+=("-A $MTX -f $TAPELIBRARY next $DRIVE")
     mbuffer -s $((BS * 512)) -m 10% -o $TAPE "${mbuffer_args[@]}" 2>/dev/null
 }
 
@@ -164,11 +171,11 @@ function main {
 
     [[ -z $SLOT ]] && usage
 
-    echo "Directory: $DIR"
-    echo "Tape dev: $TAPE"
-    echo "Blocksize: $((BS * 512 / 1024))kb"
-    echo "Tape Library dev: $TAPELIBRARY"
-    echo "TapeLibrary Storage: $SLOT..$NSLOTS"
+    if [[ -n $VERBOSE ]]; then
+        echo "Directory: $DIR"
+        echo "Blocksize: $((BS * 512 / 1024))kb"
+        echo "TapeLibrary Storage: $SLOT..$NSLOTS"
+    fi
 
     if [[ -z $FULL && $(sizeFiles) -lt 1048576 ]]; then
         echo "Nothing new to backup"
@@ -186,7 +193,7 @@ function main {
         showFilesSize
         showRemainSize
         while [[ "$(($(sizeFiles) / 1048576))" -gt "$(sizeRemain)" ]]; do
-            $MTX -f $TAPELIBRARY next $TAPEDRIVE
+            $MTX -f $TAPELIBRARY next $DRIVE
             showRemainSize
             if [[ $SLOT -eq $NSLOTS ]]; then
                 echo "Last Tape full"
