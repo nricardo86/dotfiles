@@ -78,7 +78,7 @@ function eraseTape {
 
 function loadTape {
     unloadTape
-    $MTX -f $TAPELIBRARY load $SLOT $DRIVE || return $?
+    $MTX -f $TAPELIBRARY load $SLOT $DRIVE
 }
 
 function sizeRemain {
@@ -184,8 +184,18 @@ function main {
 
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
 
-    loadTape
+    if [[ $(tapeReady) == *'busy'* ]]; then
+        echo "Tape Drive is Busy"
+        exit 1
+    fi
+    
+    loadTape $SLOT || exit $?
 
+    if ! tapeReady >/dev/null; then
+        echo "Tape Not Found!"
+        exit 1
+    fi
+ 
     if [[ ! -e $DIR/lastTapeBackup || -n $FULL ]]; then
         showFilesSize
         fullBackup

@@ -74,7 +74,7 @@ function tapeStatus {
 }
 
 function tapeReady {
-    timeout $TAPEREADY_TIMEOUT $MT -f $TAPE status >/dev/null 2>&1
+    timeout $TAPEREADY_TIMEOUT $MT -f $TAPE status 2>&1
 }
 
 function tapeSerial {
@@ -152,8 +152,7 @@ function firstSnapshot {
     echo "Full Backup"
     echo "Sending first snapshot: $snap_init"
     checkSize "-R $snap_init"
-    send2tape "-R $snap_init"
-    if [[ $? -ne 0 ]]; then
+    if ! send2tape "-R $snap_init"; then
         [[ -n $created_now ]] && destroySnap $snap_init
         unloadTape
         return 1
@@ -183,7 +182,7 @@ function recursiveSend {
 
         echo "Sending incremental snapshot from $snap_from to $snap_to"
         checkSize "-I $snap_from $snap_to"
-        while [[ ! $? -eq 0 ]]; do
+        while ! checkSize "-I $snap_from $snap_to"; do
             loadNextTape
             ((SLOT++))
             if [[ $SLOT -ge $NSLOTS ]]; then
@@ -192,7 +191,6 @@ function recursiveSend {
                 exit 1
             fi
             count=$(("${#snapshots[@]}" - "$FILES_ONTAPE" + 1))
-            checkSize "-RI $last_snapshot $now_snapshot"
         done
         send2tape "-RI $snap_from $snap_to" || return $?
         ((count--))
@@ -206,8 +204,7 @@ function snapshot {
 
     echo "Creating snapshot: $now_snapshot"
     echo "Sending incremental snapshot from $last_snapshot to $now_snapshot"
-    checkSize "-RI $last_snapshot $now_snapshot"
-    while [[ ! $? -eq 0 ]]; do
+    while ! checkSize "-RI $last_snapshot $now_snapshot"; do
         loadNextTape
         ((SLOT++))
         if [[ $SLOT -eq $NSLOTS ]]; then
@@ -215,10 +212,8 @@ function snapshot {
             unloadTape
             exit 1
         fi
-        checkSize "-RI $last_snapshot $now_snapshot"
     done
-    send2tape "-RI $last_snapshot $now_snapshot"
-    if [[ ! $? -eq 0 ]]; then
+    if ! send2tape "-RI $last_snapshot $now_snapshot"; then
         destroySnap $now_snapshot
         unloadTape
         return 1
@@ -247,14 +242,18 @@ function main {
     echo "Begin of backup - $(date --utc +%Y/%m/%d-%H:%M)"
     [[ -n $RECURSIVE_ONLY ]] && echo "Recursive Snapshot Send Only, no new snapshot"
 
+    if [[ $(tapeReady) == *'busy'* ]]; then
+        echo "Tape Drive is Busy"
+        exit 1
+    fi
+    
     loadTape $SLOT
 
-    tapeReady
-    if [[ $? -ne 0 ]]; then
+    if ! tapeReady >/dev/null; then
         echo "Tape Not Found!"
         exit 1
     fi
-
+    
     if [[ -n $FULL || $FILES_ONTAPE -eq 0 ]]; then
         firstSnapshot "$ds" "$prefix" || exit $?
     fi
