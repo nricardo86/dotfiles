@@ -12,51 +12,51 @@ function usage {
 }
 
 function backupBtrfs {
-local dst_base=/mnt/nfs/vault/xps_btrfs
-local dst_system=${dst_base}/system
-local dst_home=${dst_base}/home
-local snap_system=/.snapshots
-local snap_home=/home/.snapshots
+    local dst_base=/mnt/nfs/vault/xps_btrfs
+    local dst_system=${dst_base}/system
+    local dst_home=${dst_base}/home
+    local snap_system=/.snapshots
+    local snap_home=/home/.snapshots
 
-[[ -d $dst_base ]] || return $?
+    [[ -d $dst_base ]] || return $?
 
-last_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
-snapper create -d "system-backup-$(date +%s)"
-now_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    last_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    snapper create -d "system-backup-$(date +%s)"
+    now_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
 
-sudo btrfs send \
-    -p ${snap_system}/${last_system}/snapshot \
-    ${snap_system}/${now_system}/snapshot | pv | pzstd -qf \
-    -o ${dst_system}/${last_system}-${now_system}.zst
+    sudo btrfs send \
+        -p ${snap_system}/${last_system}/snapshot \
+        ${snap_system}/${now_system}/snapshot | pv | pzstd -qf \
+        -o ${dst_system}/${last_system}-${now_system}.zst
 
-last_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
-snapper -c home create -d "home-backup-$(date +%s)"
-now_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    last_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    snapper -c home create -d "home-backup-$(date +%s)"
+    now_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
 
-sudo btrfs send \
-    -p ${snap_home}/${last_home}/snapshot \
-    ${snap_home}/${now_home}/snapshot | pv | pzstd -qf \
-    -o ${dst_home}/${last_home}-${now_home}.zst
+    sudo btrfs send \
+        -p ${snap_home}/${last_home}/snapshot \
+        ${snap_home}/${now_home}/snapshot | pv | pzstd -qf \
+        -o ${dst_home}/${last_home}-${now_home}.zst
 }
 
 function backupUSB {
-if [[ -z "$1" ]]; then
-    echo "Need Destination Device /dev/sdx#"
-    exit 1
-fi
+    if [[ -z "$1" ]]; then
+        echo "Need Destination Device /dev/sdx#"
+        exit 1
+    fi
 
-mountpoint=$(udisksctl mount -b $1 | awk '{print $4}')
+    mountpoint=$(udisksctl mount -b $1 | awk '{print $4}')
 
-[[ -n $mountpoint ]] || exit 2
+    [[ -n $mountpoint ]] || exit 2
 
-git
-backup
-clean
+    git
+    backup
+    clean
 
-rsync -avh -e ssh root@10.0.4.57:/data/asdfg98/ $mountpoint/asdfg98/ --delete-excluded
-rsync -avh $HOME/.password-store/ $mountpoint/password-store/ --delete-excluded
+    rsync -avh -e ssh root@10.0.4.57:/data/asdfg98/ $mountpoint/asdfg98/ --delete-excluded
+    rsync -avh $HOME/.password-store/ $mountpoint/password-store/ --delete-excluded
 
-udisksctl unmount -b $1
+    udisksctl unmount -b $1
 }
 
 function backup {
@@ -89,26 +89,21 @@ function git {
     /usr/bin/pass git push
 }
 
-function checkYubikey {
-    /usr/bin/gpg --card-status &>/dev/null
-    if [[ ! $? -eq 0 ]]; then
-        echo "Yubikey not found"
-        exit 1
-    fi
-}
-
-checkYubikey
+if ! /usr/bin/gpg --card-status &>/dev/null; then 
+    echo "Yubikey not found"
+    exit 1
+fi
 
 no_args=1
 while getopts "bcgiu:t" o; do
     case "${o}" in
-    b) backup ;;
-    c) clean ;;
-    g) git ;;
-    i) idrive ;;
-    u) backupUSB $OPTARG;;
-    t) backupBtrfs ;;
-    *) usage && exit 1 ;;
+        b) backup ;;
+        c) clean ;;
+        g) git ;;
+        i) idrive ;;
+        u) backupUSB $OPTARG;;
+        t) backupBtrfs ;;
+        *) usage && exit 1 ;;
     esac
     unset no_args
 done
