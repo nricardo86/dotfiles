@@ -1,0 +1,7 @@
+require("config.bind")
+require("config.env")
+require("config.monitor")
+require("config.option")
+require("config.startup")
+require("config.window-rule")
+require("config.workspace-rule")

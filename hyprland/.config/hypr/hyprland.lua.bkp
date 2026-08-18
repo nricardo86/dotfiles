@@ -1,0 +1,334 @@
+hl.monitor({
+    output = "",
+    mode = "preferred",
+    position = "auto",
+    scale = "auto",
+})
+
+hl.monitor({
+    output = "DP-3",
+    mode = "preferred",
+    position = "0x0",
+    scale = "1",
+    bitdepth = 10,
+})
+
+hl.monitor({
+    output = "eDP-1",
+    mode = "preferred",
+    position = "960x2160",
+    scale = "1",
+    bitdepth = 10,
+})
+
+hl.env("WLR_EGL_NO_MODIFIER", "1")
+hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
+hl.env("XDG_SESSION_TYPE", "wayland")
+hl.env("XDG_SESSION_DESKTOP", "Hyprland")
+hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
+hl.env("GTK_IM_MODULE", "simple")
+hl.env("QT_IM_MODULE", "simple")
+hl.env("XWAYLAND_NO_GLAMOR", "1")
+hl.env("HYPRCURSOR_THEME", "Adwaita")
+hl.env("HYPRCURSOR_SIZE", "30")
+hl.env("QT_QPA_PLATFORM", "wayland")
+hl.env("QT_QPA_PLATFORM", "wayland;xcb")
+hl.env("AQ_DRM_DEVICES=", "/dev/dri/card0")
+
+hl.permission({ binary = "/usr/bin/hyprpm", type = "plugin", mode = "allow" })
+
+hl.window_rule({
+    match = {
+        float = false,
+    },
+    opacity = "1.0 0.8 1.0",
+})
+
+hl.window_rule({
+    match = {
+        float = true,
+    },
+    opacity = "1.0 0.8 1.0",
+})
+
+hl.window_rule({
+    match = {
+        fullscreen = true,
+    },
+    opacity = 1.0,
+})
+
+hl.window_rule({
+    match = {
+        class = "^(librewolf|firefox-esr|chromium|SheetCamTNG-dev|librewolf|[kK]i[cC]ad|pcb_calculator|eeschema|gerbview|pcbnew|bitmap2component|FreeCAD|Tor Browser|soffice)$",
+    },
+    opacity = 1.0,
+})
+
+hl.window_rule({
+    match = {
+        class = "^([kK]i[cC]ad|bitmap2component|pcb_calculator|Tor Browser|virt-manager|qt.ct|nwg-look|xdg-desktop-portal*|org.remmina.Remmina)$",
+    },
+    float = true,
+})
+
+hl.window_rule({
+    match = {
+        class = "^([eE]lectrum|feather)$",
+    },
+    float = true,
+    size = "800 400",
+})
+
+hl.window_rule({
+    match = {
+        class = "^(io.bassi.Amberol|xdg-desktop-portal-gtk)$",
+    },
+    float = true,
+    size = "1200 1000",
+})
+
+hl.window_rule({
+    match = {
+        class = "(org.gnupg.pinentry-qt)",
+    },
+    float = true,
+    center = true,
+})
+
+hl.window_rule({
+    match = {
+        title = "^(Moonlight|chiaki-ng|Open File|OnionShare)$",
+    },
+    float = true,
+})
+
+hl.window_rule({
+    match = {
+        title = "^(ghostty)$",
+    },
+    opacity = "0.9 0.8 1.0",
+})
+
+hl.window_rule({
+    match = {
+        title = "^(tmux)$",
+    },
+    opacity = 1.0,
+})
+
+hl.window_rule({
+    match = {
+        title = "^(galc|nmtui|bluetuith|pass|wiremix|display)$",
+    },
+    float = true,
+    size = "800 600",
+    center = true,
+})
+
+hl.window_rule({
+    match = {
+        title = "^(ghostty|yazi|Open File|chiaki-ng)$",
+    },
+    float = true,
+    size = "1200 1000",
+    center = true,
+})
+
+hl.workspace_rule({
+    workspace = "1",
+    monitor = "DP-3",
+})
+
+hl.workspace_rule({
+    workspace = "2",
+    monitor = "DP-3",
+})
+
+hl.workspace_rule({
+    workspace = "3",
+    monitor = "DP-3",
+})
+
+hl.workspace_rule({
+    workspace = "4",
+    monitor = "DP-3",
+})
+
+hl.workspace_rule({
+    workspace = "5",
+    monitor = "DP-3",
+})
+
+hl.workspace_rule({
+    workspace = "6",
+    monitor = "eDP-1",
+})
+
+hl.workspace_rule({
+    workspace = "7",
+    monitor = "eDP-1",
+})
+
+hl.workspace_rule({
+    workspace = "8",
+    monitor = "eDP-1",
+})
+
+local mainMod = "SUPER"
+
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("flatpak run io.bassi.Amberol"))
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf -P ricardo"))
+hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("librewolf -P firma"))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("ghostty --title=galc -e qalc"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty --title=yazi -e yazi"))
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen({ mode = "fullscreen", action = "toggle" }))
+hl.bind(mainMod .. " + G", hl.dsp.window.cycle_next({ next = true, floating = true }))
+hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.center())
+hl.bind(mainMod .. " + SHIFT + G", hl.dsp.window.resize({ x = 1200, y = 1000 }))
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.window.close())
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("libreoffice --quickstart --nolockcheck"))
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("ghostty --title=pass -e pass ff"))
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("ghostty --title=pass -e pass 2fa"))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
+hl.bind(mainMod .. " + MOD5 + T", hl.dsp.exec_cmd("ghostty --title=ghostty"))
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("ghostty --title=tmux -e $HOME/.config/hypr/scripts/tmux.sh"))
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("ghostty --title=ghostty -e nvim"))
+hl.bind(mainMod .. " + SHIFT + X", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/logout.sh"))
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("[fullscreen] librewolf -P whatsapp --kiosk https://web.whatsapp.com"))
+hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("hyprlauncher"))
+hl.bind("switch:Lid Switch", hl.dsp.exec_cmd("systemctl suspend"), { locked = true })
+hl.bind("XF86PowerOff", hl.dsp.exec_cmd("wlogout -P eDP-1 -m 400"))
+hl.bind("Print", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh"))
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -1%"), { repeating = true })
+hl.bind("SHIFT + XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -10%"), { repeating = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +1%"), { repeating = true })
+hl.bind("SHIFT + XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +10%"), { repeating = true })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"))
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl pause"))
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"))
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"))
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 10%-"), { repeating = true })
+hl.bind("SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh - 10"), { repeating = true })
+hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set 10%+"), { repeating = true })
+hl.bind("SHIFT + XF86MonBrightnessUp", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh + 10"), { repeating = true })
+
+hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + l", hl.dsp.focus({ direction = "right" }))
+hl.bind(mainMod .. " + k", hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + j", hl.dsp.focus({ direction = "down" }))
+
+hl.bind(mainMod .. " + SHIFT + h", hl.dsp.window.move({ direction = "l" }))
+hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.move({ direction = "r" }))
+hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.move({ direction = "u" }))
+hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.move({ direction = "d" }))
+hl.bind(mainMod .. " + SHIFT + r", hl.dsp.window.center())
+hl.bind(mainMod .. " + SHIFT + r", hl.dsp.window.resize({ x = 1200, y = 1000 }))
+
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag())
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize())
+
+local workspaceMod = "MOD5"
+
+hl.bind(workspaceMod .. " + a", hl.dsp.focus({ workspace = 1 }))
+hl.bind(workspaceMod .. " + s", hl.dsp.focus({ workspace = 2 }))
+hl.bind(workspaceMod .. " + d", hl.dsp.focus({ workspace = 3 }))
+hl.bind(workspaceMod .. " + f", hl.dsp.focus({ workspace = 4 }))
+hl.bind(workspaceMod .. " + g", hl.dsp.focus({ workspace = 5 }))
+hl.bind(workspaceMod .. " + h", hl.dsp.focus({ workspace = 6 }))
+hl.bind(workspaceMod .. " + j", hl.dsp.focus({ workspace = 7 }))
+hl.bind(workspaceMod .. " + k", hl.dsp.focus({ workspace = 8 }))
+
+hl.bind(workspaceMod .. " + SHIFT + a", hl.dsp.window.move({ workspace = 1 }))
+hl.bind(workspaceMod .. " + SHIFT + s", hl.dsp.window.move({ workspace = 2 }))
+hl.bind(workspaceMod .. " + SHIFT + d", hl.dsp.window.move({ workspace = 3 }))
+hl.bind(workspaceMod .. " + SHIFT + f", hl.dsp.window.move({ workspace = 4 }))
+hl.bind(workspaceMod .. " + SHIFT + g", hl.dsp.window.move({ workspace = 5 }))
+hl.bind(workspaceMod .. " + SHIFT + h", hl.dsp.window.move({ workspace = 6 }))
+hl.bind(workspaceMod .. " + SHIFT + j", hl.dsp.window.move({ workspace = 7 }))
+hl.bind(workspaceMod .. " + SHIFT + k", hl.dsp.window.move({ workspace = 8 }))
+
+hl.config({
+    input = {
+        kb_layout = "us",
+        kb_variant = "intl",
+        -- kb_model = 
+        kb_options = "caps:escape",
+        -- kb_rules = 
+        follow_mouse = 0,
+        float_switch_override_focus = 0,
+        touchpad = {
+            natural_scroll = false,
+        },
+        sensitivity = 0.3,
+        accel_profile = "\"adaptive\"",
+    },
+    binds = {
+        workspace_back_and_forth = true,
+        drag_threshold = 10,
+    },
+    cursor = {
+        inactive_timeout = 5,
+        hide_on_key_press = true,
+        hide_on_touch = true,
+        warp_on_change_workspace = true,
+    },
+    general = {
+        gaps_in = 0,
+        gaps_out = 0,
+        border_size = 3,
+        col = {
+            active_border = "rgb(FFA500)",
+        },
+        layout = "dwindle",
+        allow_tearing = true,
+    },
+    misc = {
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true,
+        vrr = 1,
+        font_family = "JetBrainsMono Nerd Font",
+    },
+    ecosystem = {
+        no_update_news = true,
+        no_donation_nag = true,
+    },
+    quirks = {
+        prefer_hdr = 1,
+    },
+    decoration = {
+        rounding = false,
+        blur = {
+            enabled = false,
+        },
+        shadow = {
+            enabled = false,
+        },
+    },
+    animations = {
+        enabled = false,
+    },
+    master = {
+        new_status = "master",
+    },
+    xwayland = {
+        force_zero_scaling = true,
+    },
+})
+
+hl.on("hyprland.start", function()
+    hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+    hl.exec_cmd("uwsm app -- hypridle &")
+    hl.exec_cmd("uwsm app -- hyprlauncher -d &")
+    hl.exec_cmd("uwsm app -- hyprpaper &")
+    hl.exec_cmd("uwsm app -- hyprsunset &")
+    hl.exec_cmd("uwsm app -- $HOME/.local/bin/hyprpolkitagent &")
+    hl.exec_cmd("uwsm app -- waybar &")
+    hl.exec_cmd("uwsm app -- swaync &")
+    hl.exec_cmd("$HOME/.config/hypr/scripts/xdg-portal-hyprland.sh &")
+    hl.exec_cmd("$HOME/.config/hypr/scripts/btconnect.sh &")
+end)
+

@@ -8,7 +8,7 @@ function usage {
     echo "password-store backup: $(basename $0) [-g]"
     echo "idrivee2 dotfiles backup $(basename $0) [-i]"
     echo "backup BTRFS System and HOME to vault: $(basename $0) [-t]"
-    echo "backup USB: $(basename $0) [-u]"
+    echo "backup USB: $(basename $0) [-u] /dev/sdx#"
 }
 
 function backupBtrfs {

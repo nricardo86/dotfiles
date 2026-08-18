@@ -1,0 +1,13 @@
+hl.on("hyprland.start", function()
+    hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+    hl.exec_cmd("uwsm app -- hypridle &")
+    hl.exec_cmd("uwsm app -- hyprlauncher -d &")
+    hl.exec_cmd("uwsm app -- hyprpaper &")
+    hl.exec_cmd("uwsm app -- hyprsunset &")
+    hl.exec_cmd("uwsm app -- $HOME/.local/bin/hyprpolkitagent &")
+    hl.exec_cmd("uwsm app -- waybar &")
+    hl.exec_cmd("uwsm app -- swaync &")
+    hl.exec_cmd("$HOME/.config/hypr/scripts/xdg-portal-hyprland.sh &")
+    hl.exec_cmd("$HOME/.config/hypr/scripts/btconnect.sh &")
+end)
+
