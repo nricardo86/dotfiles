@@ -75,7 +75,7 @@ abbr fd "fd --type f --hidden --exclude .git --exclude node_modules"
 abbr fp "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p --preview='batcat --color=always {}'"
 abbr fe "fd --type f --hidden --exclude .git --exclude node_modules | fzf-tmux -p | xargs nvim"
 abbr fileext "find . -type f | awk -F \".\" '{ print \$(NF) }' | sort -u"
-abbr peso "websocat ws://10.0.20.11:33001"
+abbr peso "websocat ws://10.0.35.11:33001"
 
 
 function y

@@ -16,6 +16,7 @@ hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("ghostty --title=pass -e pass ff"))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("ghostty --title=pass -e pass 2fa"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + MOD5 + T", hl.dsp.exec_cmd("ghostty --title=ghostty"))
+hl.bind(mainMod .. " + MOD1 + T", hl.dsp.exec_cmd("ghostty --title=ghostty"))
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("ghostty --title=tmux -e $HOME/.config/hypr/scripts/tmux.sh"))
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("ghostty --title=ghostty -e nvim"))
 hl.bind(mainMod .. " + SHIFT + X", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/logout.sh"))
@@ -26,18 +27,34 @@ hl.bind("XF86PowerOff", hl.dsp.exec_cmd("wlogout -P eDP-1 -m 400"))
 hl.bind("Print", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh"))
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -1%"), { repeating = true })
-hl.bind("SHIFT + XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -10%"), { repeating = true })
+hl.bind(
+	"SHIFT + XF86AudioLowerVolume",
+	hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -10%"),
+	{ repeating = true }
+)
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +1%"), { repeating = true })
-hl.bind("SHIFT + XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +10%"), { repeating = true })
+hl.bind(
+	"SHIFT + XF86AudioRaiseVolume",
+	hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +10%"),
+	{ repeating = true }
+)
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"))
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl pause"))
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"))
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"))
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 10%-"), { repeating = true })
-hl.bind("SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh - 10"), { repeating = true })
+hl.bind(
+	"SHIFT + XF86MonBrightnessDown",
+	hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh - 10"),
+	{ repeating = true }
+)
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set 10%+"), { repeating = true })
-hl.bind("SHIFT + XF86MonBrightnessUp", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh + 10"), { repeating = true })
+hl.bind(
+	"SHIFT + XF86MonBrightnessUp",
+	hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh + 10"),
+	{ repeating = true }
+)
 
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + l", hl.dsp.focus({ direction = "right" }))

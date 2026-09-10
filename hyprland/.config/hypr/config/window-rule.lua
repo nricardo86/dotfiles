@@ -7,13 +7,6 @@ hl.window_rule({
 
 hl.window_rule({
     match = {
-        float = true,
-    },
-    opacity = "1.0 0.8 1.0",
-})
-
-hl.window_rule({
-    match = {
         fullscreen = true,
     },
     opacity = 1.0,
