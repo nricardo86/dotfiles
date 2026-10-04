@@ -22,7 +22,6 @@ set -x MANROFFOPT '-c'
 # set -x MANPAGER 'sh -c "col -bx | batcat -plman"'
 
 if type -q eza
-    abbr ls "eza --icons"
     abbr l "eza --icons -lg"
     abbr la "eza --icons -lag"
 end
