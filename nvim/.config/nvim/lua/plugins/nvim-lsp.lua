@@ -236,12 +236,12 @@ return {
 				-- gopls = {},
 				pyright = {},
 				-- rust_analyzer = {},
-				eslint = {},
-				html = {},
+				-- eslint = {},
+				-- html = {},
 				bashls = {},
-				jsonls = {},
-				cssls = {},
-				ts_ls = {},
+				-- jsonls = {},
+				-- cssls = {},
+				-- ts_ls = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 				--
 				-- Some languages (like typescript) have entire language plugins that can be useful:
@@ -297,14 +297,7 @@ return {
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"lua_ls",
-				"stylua",
-				"luacheck",
-				"stylelint",
-				"jsonls",
-				"jsonlint",
 				"bashls",
-				"shfmt",
-				"mmdc",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed, auto_update = true })
 

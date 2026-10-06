@@ -3,11 +3,11 @@ return {
 	opts = {
 		notify_on_error = false,
 		formatters_by_ft = {
-			javascript = { "prettierd" },
-			typescript = { "prettierd" },
-			json = { "prettierd" },
-			css = { "prettierd" },
-			html = { "prettierd" },
+			-- javascript = { "prettierd" },
+			-- typescript = { "prettierd" },
+			-- json = { "prettierd" },
+			-- css = { "prettierd" },
+			-- html = { "prettierd" },
 			yaml = { "prettierd" },
 			markdown = { "prettierd" },
 			bash = { "shfmt" },

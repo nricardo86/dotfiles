@@ -1,15 +1,19 @@
 return {
-	{ "mxsdev/nvim-dap-vscode-js", requires = { "mfussenegger/nvim-dap" } },
 	"mfussenegger/nvim-dap",
 	dependencies = {
 		"rcarriga/nvim-dap-ui",
-		"nvim-neotest/nvim-nio",
 		"theHamsta/nvim-dap-virtual-text",
 	},
 
 	config = function()
 		require("nvim-dap-virtual-text").setup({})
 		local dap = require("dap")
+
+		dap.adapters.gdb = {
+			type = "executable",
+			command = "gdb",
+			args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
+		}
 
 		dap.configurations.c = {
 			{
@@ -61,11 +65,11 @@ return {
 			dapui.close()
 		end
 
-		vim.keymap.set("n", "<F1>", dap.toggle_breakpoint, { desc = "Dap Toogle Breakpoint" })
-		vim.keymap.set("n", "<F2>", dap.continue, { desc = "Dap Run/Continue" })
-		vim.keymap.set("n", "<F3>", dap.step_into, { desc = "Dap StepInto" })
-		vim.keymap.set("n", "<F4>", dap.step_over, { desc = "Dap StepOver" })
-		vim.keymap.set("n", "<F5>", dap.step_out, { desc = "Dap StepOut" })
-		vim.keymap.set("n", "<F10>", dap.terminate, { desc = "Dap Terminate" })
+		vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Dap Toogle Breakpoint" })
+		vim.keymap.set("n", "<leader>dr", dap.continue, { desc = "Dap Run/Continue" })
+		vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Dap StepInto" })
+		vim.keymap.set("n", "<leader>ds", dap.step_over, { desc = "Dap StepOver" })
+		vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Dap StepOut" })
+		vim.keymap.set("n", "<leader>dt", dap.terminate, { desc = "Dap Terminate" })
 	end,
 }

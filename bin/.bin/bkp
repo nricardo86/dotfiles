@@ -2,13 +2,13 @@
 DIR=/home/ricardo
 
 function usage {
-    echo "Usage $(basename $0): [-bcgit] [-u /dev/sdx#]"
-    echo "backup to vault: $(basename $0) [-b]"
-    echo "clean: $(basename $0) [-c]"
-    echo "password-store backup: $(basename $0) [-g]"
-    echo "idrivee2 dotfiles backup $(basename $0) [-i]"
-    echo "backup BTRFS System and HOME to vault: $(basename $0) [-t]"
-    echo "backup USB: $(basename $0) [-u] /dev/sdx#"
+    echo "Usage $(basename "$0"): [-bcgit] [-u /dev/sdx#]"
+    echo "backup to vault: $(basename "$0") [-b]"
+    echo "clean: $(basename "$0") [-c]"
+    echo "password-store backup: $(basename "$0") [-g]"
+    echo "idrivee2 dotfiles backup $(basename "$0") [-i]"
+    echo "backup BTRFS System and HOME to vault: $(basename "$0") [-t]"
+    echo "backup USB: $(basename "$0") [-u] /dev/sdx#"
 }
 
 function backupBtrfs {
@@ -20,23 +20,23 @@ function backupBtrfs {
 
     [[ -d $dst_base ]] || return $?
 
-    last_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    last_system=$(snapper ls -t single | grep "$USER" | tail -1 | awk '{print $1}')
     snapper create -d "system-backup-$(date +%s)"
-    now_system=$(snapper ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    now_system=$(snapper ls -t single | grep "$USER" | tail -1 | awk '{print $1}')
 
     sudo btrfs send \
-        -p ${snap_system}/${last_system}/snapshot \
-        ${snap_system}/${now_system}/snapshot | pv | pzstd -qf \
-        -o ${dst_system}/${last_system}-${now_system}.zst
+        -p "${snap_system}/${last_system}/snapshot" \
+        "${snap_system}/${now_system}/snapshot" | pv | pzstd -qf \
+        -o "${dst_system}/${last_system}-${now_system}.zst"
 
-    last_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    last_home=$(snapper -c home ls -t single | grep "$USER" | tail -1 | awk '{print $1}')
     snapper -c home create -d "home-backup-$(date +%s)"
-    now_home=$(snapper -c home ls -t single | grep $USER | tail -1 | awk '{print $1}')
+    now_home=$(snapper -c home ls -t single | grep "$USER" | tail -1 | awk '{print $1}')
 
     sudo btrfs send \
-        -p ${snap_home}/${last_home}/snapshot \
-        ${snap_home}/${now_home}/snapshot | pv | pzstd -qf \
-        -o ${dst_home}/${last_home}-${now_home}.zst
+        -p "${snap_home}/${last_home}/snapshot" \
+        "${snap_home}/${now_home}/snapshot" | pv | pzstd -qf \
+        -o "${dst_home}/${last_home}-${now_home}.zst"
 }
 
 function backupUSB {
@@ -45,7 +45,7 @@ function backupUSB {
         exit 1
     fi
 
-    mountpoint=$(udisksctl mount -b $1 | awk '{print $4}')
+    mountpoint=$(udisksctl mount -b "$1" | awk '{print $4}')
 
     [[ -n $mountpoint ]] || exit 2
 
@@ -53,10 +53,10 @@ function backupUSB {
     backup
     clean
 
-    rsync -avh -e ssh root@10.0.4.57:/data/asdfg98/ $mountpoint/asdfg98/ --delete-excluded
-    rsync -avh $HOME/.password-store/ $mountpoint/password-store/ --delete-excluded
+    rsync -avh -e ssh root@10.0.4.57:/data/asdfg98/ "$mountpoint"/asdfg98/ --delete-excluded
+    rsync -avh "$HOME"/.password-store/ "$mountpoint"/password-store/ --delete-excluded
 
-    udisksctl unmount -b $1
+    udisksctl unmount -b "$1"
 }
 
 function backup {
@@ -71,13 +71,13 @@ function idrive {
         --exclude="*/node_modules/*" --exclude-caches=true \
         /home/ricardo/Documents/ricardo/config/dotfiles/ --tag "dotfiles"
     /usr/bin/bash $DIR/.bin/idrive forget \
-        --keep-daily=30 --keep-monthly=12 --prune $@
+        --keep-daily=30 --keep-monthly=12 --prune
 }
 
 function clean {
     unlock_vault || return $?
     /usr/bin/bash $DIR/.bin/vault forget \
-        --keep-daily=30 --keep-monthly=12 --prune $@
+        --keep-daily=30 --keep-monthly=12 --prune
 }
 
 function unlock_vault {
@@ -89,7 +89,7 @@ function git {
     /usr/bin/pass git push
 }
 
-if ! /usr/bin/gpg --card-status &>/dev/null; then 
+if ! /usr/bin/gpg --card-status &>/dev/null; then
     echo "Yubikey not found"
     exit 1
 fi
@@ -97,13 +97,13 @@ fi
 no_args=1
 while getopts "bcgiu:t" o; do
     case "${o}" in
-        b) backup ;;
-        c) clean ;;
-        g) git ;;
-        i) idrive ;;
-        u) backupUSB $OPTARG;;
-        t) backupBtrfs ;;
-        *) usage && exit 1 ;;
+    b) backup ;;
+    c) clean ;;
+    g) git ;;
+    i) idrive ;;
+    u) backupUSB "$OPTARG" ;;
+    t) backupBtrfs ;;
+    *) usage && exit 1 ;;
     esac
     unset no_args
 done

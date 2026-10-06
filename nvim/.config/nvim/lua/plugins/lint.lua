@@ -3,12 +3,12 @@ return {
 	config = function()
 		local lint = require("lint")
 		lint.linters_by_ft = {
-			javascript = { "eslint" },
-			typescript = { "eslint" },
-			html = { "htmlhint" },
-			css = { "stylelint" },
+			-- javascript = { "eslint" },
+			-- typescript = { "eslint" },
+			-- html = { "htmlhint" },
+			-- css = { "stylelint" },
 			lua = { "luacheck" },
-			json = { "jsonlint" },
+			json = { "jsonlint-php" },
 			python = { "pylint" },
 			c = { "cpplint" },
 		}
