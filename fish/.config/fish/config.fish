@@ -95,3 +95,6 @@ fzf_configure_bindings
 if uwsm check may-start >/dev/null && [ "$XDG_VTNR" -eq 1 ]
     exec uwsm start hyprland.desktop
 end
+
+# opencode
+fish_add_path /home/ricardo/.opencode/bin

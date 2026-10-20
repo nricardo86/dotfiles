@@ -1,6 +1,6 @@
 local mainMod = "SUPER"
 
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("flatpak run io.bassi.Amberol"))
+-- hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("flatpak run io.bassi.Amberol"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf -P ricardo"))
 hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("librewolf -P firma"))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("ghostty --title=galc -e qalc"))
@@ -28,15 +28,15 @@ hl.bind("Print", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/screenshot.sh"))
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pactl set-sink-mute @DEFAULT_SINK@ toggle"))
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -1%"), { repeating = true })
 hl.bind(
-	"SHIFT + XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -10%"),
-	{ repeating = true }
+    "SHIFT + XF86AudioLowerVolume",
+    hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -10%"),
+    { repeating = true }
 )
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +1%"), { repeating = true })
 hl.bind(
-	"SHIFT + XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +10%"),
-	{ repeating = true }
+    "SHIFT + XF86AudioRaiseVolume",
+    hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +10%"),
+    { repeating = true }
 )
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"))
@@ -45,15 +45,15 @@ hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"))
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"))
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 10%-"), { repeating = true })
 hl.bind(
-	"SHIFT + XF86MonBrightnessDown",
-	hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh - 10"),
-	{ repeating = true }
+    "SHIFT + XF86MonBrightnessDown",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh - 10"),
+    { repeating = true }
 )
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl set 10%+"), { repeating = true })
 hl.bind(
-	"SHIFT + XF86MonBrightnessUp",
-	hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh + 10"),
-	{ repeating = true }
+    "SHIFT + XF86MonBrightnessUp",
+    hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/brigtness_lg.sh + 10"),
+    { repeating = true }
 )
 
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))

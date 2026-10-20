@@ -89,3 +89,5 @@ eval "$(fzf --bash)"
 eval "$(zoxide init bash)"
 
 true
+
+. "$HOME/.local/share/../bin/env"
