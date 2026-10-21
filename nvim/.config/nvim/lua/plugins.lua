@@ -1,81 +1,75 @@
 return {
-	{
-		"folke/which-key.nvim",
-		opts = {
-			preset = "helix",
-			defaults = {},
-			spec = {
-				{
-					mode = { "n", "x" },
-					{ "<leader>b", group = "misc" },
-					{ "<leader>g", group = "Goto" },
-					{ "<leader>h", group = "git" },
-					{ "<leader>s", group = "search" },
-					{ "<leader>v", group = "splits" },
-				},
-			},
-		},
-	},
-	{
-		"mbbill/undotree",
-		config = function()
-			vim.keymap.set("n", "<leader>bt", vim.cmd.UndotreeToggle, { desc = "UndotreeToggle" })
-		end,
-	},
-	{
-		"akinsho/bufferline.nvim",
-		version = "*",
-		dependencies = "nvim-tree/nvim-web-devicons",
-		opts = {
-			vim.keymap.set("n", "<C-n>", ":bn<CR>"),
-			vim.keymap.set("n", "<C-p>", ":bp<CR>"),
-			vim.keymap.set("n", "<C-o>", ":bd<CR>"),
-		},
-	},
-	{ "junegunn/fzf" },
-	{
-		"ibhagwan/fzf-lua",
-		-- optional for icon support
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		-- or if using mini.icons/mini.nvim
-		-- dependencies = { "nvim-mini/mini.icons" },
-		---@module "fzf-lua"
-		---@type fzf-lua.Config|{}
-		---@diagnostic disable: missing-fields
-		opts = {},
-		---@diagnostic enable: missing-fields
-	},
-	{
-		"stevearc/oil.nvim",
-		opts = {
-			columns = { "icon" },
-			view_options = {
-				show_hidden = true,
-			},
-			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open Parent Directory" }),
-		},
-	},
-	{
-		"terrortylor/nvim-comment",
-		config = function()
-			require("nvim_comment").setup({ create_mappings = false })
-			vim.keymap.set({ "n", "v" }, "<leader>/", ":CommentToggle<CR>", { desc = "Toggle Comment" })
-		end,
-	},
-	{
-		"norcalli/nvim-colorizer.lua",
-		config = function()
-			require("colorizer").setup({ "*" })
-		end,
-	},
-	{
-		"folke/tokyonight.nvim",
-		lazy = false,
-		priority = 1000,
-		opts = {},
-		init = function()
-			vim.cmd.colorscheme("tokyonight-night")
-		end,
-	},
-	{ "christoomey/vim-tmux-navigator" },
+    {
+        "folke/which-key.nvim",
+        opts = {
+            preset = "helix",
+            defaults = {},
+            spec = {
+                {
+                    mode = { "n", "x" },
+                    { "<leader>b", group = "misc" },
+                    { "<leader>g", group = "Goto" },
+                    { "<leader>h", group = "git" },
+                    { "<leader>s", group = "search" },
+                    { "<leader>v", group = "splits" },
+                },
+            },
+        },
+    },
+    {
+        "mbbill/undotree",
+        config = function()
+            vim.keymap.set("n", "<leader>bt", vim.cmd.UndotreeToggle, { desc = "UndotreeToggle" })
+        end,
+    },
+    {
+        "akinsho/bufferline.nvim",
+        version = "*",
+        dependencies = "nvim-tree/nvim-web-devicons",
+        opts = {
+            vim.keymap.set("n", "<C-n>", ":bn<CR>"),
+            vim.keymap.set("n", "<C-p>", ":bp<CR>"),
+            vim.keymap.set("n", "<C-o>", ":bd<CR>"),
+        },
+    },
+    { "junegunn/fzf" },
+    {
+        "ibhagwan/fzf-lua",
+        -- optional for icon support
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        -- or if using mini.icons/mini.nvim
+        -- dependencies = { "nvim-mini/mini.icons" },
+        ---@module "fzf-lua"
+        ---@type fzf-lua.Config|{}
+        ---@diagnostic disable: missing-fields
+        opts = {},
+        ---@diagnostic enable: missing-fields
+    },
+    {
+        "stevearc/oil.nvim",
+        opts = {
+            columns = { "icon" },
+            view_options = {
+                show_hidden = true,
+            },
+            vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open Parent Directory" }),
+        },
+    },
+    {
+        "terrortylor/nvim-comment",
+        config = function()
+            require("nvim_comment").setup({ create_mappings = false })
+            vim.keymap.set({ "n", "v" }, "<leader>/", ":CommentToggle<CR>", { desc = "Toggle Comment" })
+        end,
+    },
+    {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = {},
+        init = function()
+            vim.cmd.colorscheme("tokyonight-night")
+        end,
+    },
+    { "christoomey/vim-tmux-navigator" },
 }
